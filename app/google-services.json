@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1090439214725",
+    "project_id": "i7bachelorprojekt",
+    "storage_bucket": "i7bachelorprojekt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090439214725:android:be3271eff88fac61c91bec",
+        "android_client_info": {
+          "package_name": "mmm.i7bachelor_smartsale.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090439214725-vbqckhn8ijrc25u5koj7flpiktb7c1bc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mmm.i7bachelor_smartsale.app",
+            "certificate_hash": "2e93524ba0cb2a54e112f1c891db5c83c7623bf7"
+          }
+        },
+        {
+          "client_id": "1090439214725-qh1qfakd420n1i6idg2faqbov7d3f0fh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0YYXhaoBvzLNFChgE03_qW-EdcIlhI4U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090439214725-qh1qfakd420n1i6idg2faqbov7d3f0fh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
