@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/userTxt"
+        android:title="@string/menu_user"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/messagesTxt"
+        android:title="@string/menu_messages"
+        android:visible="false" />
+
+
+    <item
+        android:id="@+id/logoutTxt"
+        android:title="@string/menu_Logout"
+        android:visible="false" />
+</menu>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.LoginActivity"
+    android:background="@drawable/loginbackground">
+
+    <Button
+        android:id="@+id/CreateASale"
+        android:layout_width="203dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="#31FF9800"
+        android:text="@string/btn_make_a_sale"
+        app:layout_constraintBottom_toTopOf="@+id/LogoutBtn"
+        app:layout_constraintStart_toStartOf="@+id/LogoutBtn" />
+
+    <Button
+        android:id="@+id/LogoutBtn"
+        android:layout_width="203dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="120dp"
+        android:backgroundTint="#31FF9800"
+        android:text="@string/btn_logout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/MarketsButton"
+        android:layout_width="203dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="#31FF9800"
+        android:text="@string/btn_market"
+        app:layout_constraintBottom_toTopOf="@+id/CreateASale"
+        app:layout_constraintStart_toStartOf="@+id/CreateASale" />
+
+    <Button
+        android:id="@+id/SignInBtn"
+        android:layout_width="203dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="#31FF9800"
+        android:text="@string/btn_login_register"
+        app:layout_constraintBottom_toTopOf="@+id/MarketsButton"
+        app:layout_constraintStart_toStartOf="@+id/MarketsButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

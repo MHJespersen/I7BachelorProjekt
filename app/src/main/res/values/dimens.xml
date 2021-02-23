@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_outer">16dp</dimen>
+    <!--default dimensions for phones -->
+    <!--Buttons -->
+    <dimen name="button_layout_width">120dp</dimen>
+    <dimen name="button_layout_heigth">48dp</dimen>
+    <dimen name="button_text_size">12sp</dimen>
+
+    <!--General Texts -->
+    <dimen name="text_size">12sp</dimen>
+    <dimen name="text_size_larger">16sp</dimen>
+    <dimen name="header_text_size">32sp</dimen>
+</resources>

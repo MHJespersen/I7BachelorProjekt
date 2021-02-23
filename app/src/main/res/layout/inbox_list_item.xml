@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroundColor">
+
+    <ImageView
+        android:id="@+id/inboxImgUser"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/inboxLabelUser"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/inboxTextUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/inboxLabelUser"
+        app:layout_constraintStart_toEndOf="@+id/inboxLabelUser"
+        app:layout_constraintTop_toTopOf="@+id/inboxImgUser"
+        tools:text="SomeUsername" />
+
+    <TextView
+        android:id="@+id/inboxLabelUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/label_from_col"
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/inboxImgUser"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/inboxLabelRegarding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/label_regarding_col"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintStart_toStartOf="@+id/inboxLabelUser"
+        app:layout_constraintTop_toBottomOf="@+id/inboxLabelUser" />
+
+    <TextView
+        android:id="@+id/inboxTextRegarding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/inboxLabelRegarding"
+        app:layout_constraintStart_toEndOf="@+id/inboxLabelRegarding"
+        tools:text="Some Item" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/label_date_col"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintStart_toStartOf="@+id/inboxLabelRegarding"
+        app:layout_constraintTop_toBottomOf="@+id/inboxLabelRegarding" />
+
+    <TextView
+        android:id="@+id/inboxTextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        tools:text="26/04/2020" />
+
+    <TextView
+        android:id="@+id/inboxTextReadStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/label_unread" />
+</androidx.constraintlayout.widget.ConstraintLayout>

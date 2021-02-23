@@ -42,7 +42,21 @@
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="label" />
 
-        <activity android:name=".Activities.MainActivity">
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <service
+            android:name=".Services.ForegroundService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity android:name=".Activities.MainActivity"/>
+        <activity android:name=".Activities.InboxActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
