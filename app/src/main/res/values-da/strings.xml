@@ -32,8 +32,8 @@
     <string name="label_regarding_col">Angående:</string>
     <string name="label_from_col">Fra:</string>
     <string name="label_date_col">Dato:</string>
-    <string name="facebook_app_id">809327973247815</string>
-    <string name="fb_login_protocol_scheme">fb809327973247815</string>
+    <string name="facebook_application_id">2849288035311754</string>
+    <string name="fb_login_protocol_scheme">fb2849288035311754</string>
     <string name="title_activity_maps">Kort</string>
     <string name="AppBarMenuSettings">Bruger indstillinger</string>
     <string name="AppBarMenuLogOut">Log ud</string>

@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         MenuItem messagesItem = menu.findItem(R.id.messagesTxt);
         MenuItem userItem = menu.findItem(R.id.userTxt);
 
+        //If user is logged in, display user specific information.
         if(auth.getCurrentUser() != null)
         {
             logoutItem.setVisible(true);

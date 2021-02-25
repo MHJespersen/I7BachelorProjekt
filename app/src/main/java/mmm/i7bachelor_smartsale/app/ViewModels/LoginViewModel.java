@@ -14,7 +14,7 @@ public class LoginViewModel extends ViewModel {
         repo = Repository.getInstance(context);
     }
 
-    //public void InitMessages() {
-    //    repo.initializePrivateMessages();
-    //}
+    public void InitMessages() {
+       repo.initializePrivateMessages();
+    }
 }

@@ -23,7 +23,7 @@ public class PrivateMessage implements Serializable {
         this.path = path;
     }
 
-    /*
+
     public static PrivateMessage fromSnapshot(DocumentSnapshot d) {
         PrivateMessage message = new PrivateMessage(d.get("Receiver").toString(),
                 d.get("Sender").toString(),
@@ -33,7 +33,6 @@ public class PrivateMessage implements Serializable {
                 d.get("Regarding").toString(), d.get("Path").toString());
         return message;
     }
-     */
 
     public String getRegarding(){return this.regarding;}
 

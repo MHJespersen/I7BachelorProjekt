@@ -42,8 +42,11 @@
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="label" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
+        <!--
+        <meta-data tools:replace="android:value"
+         android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
+        -->
 
         <service
             android:name=".Services.ForegroundService"
@@ -63,6 +66,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.CreateSaleActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.MarketsActivity" />
+        <activity android:name=".Activities.DetailsActivity"/>
 
 
 

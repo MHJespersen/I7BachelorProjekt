@@ -33,7 +33,7 @@
     <string name="label_message">Message</string>
     <string name="label_title">Title</string>
     <string name="title_activity_maps">Map</string>
-    <string name="facebook_app_id">2849288035311754</string>
+    <string name="facebook_application_id">2849288035311754</string>
     <string name="fb_login_protocol_scheme">fb2849288035311754</string>
     <string name="AppBarMenuSettings">Account settings</string>
     <string name="AppBarMenuLogOut">Log out</string>

@@ -2,13 +2,21 @@ package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Arrays;
+import java.util.List;
 
 import mmm.i7bachelor_smartsale.app.R;
 import mmm.i7bachelor_smartsale.app.Services.ForegroundService;
+import mmm.i7bachelor_smartsale.app.Utilities.Constants;
 import mmm.i7bachelor_smartsale.app.ViewModels.LoginViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.LoginViewModelFactory;
 
@@ -33,7 +41,7 @@ public class LoginActivity extends MainActivity {
         startService(serviceIntent);
     }
 
-    /*
+
     public void SignIn(View view) {
         if (auth == null) {
             auth = FirebaseAuth.getInstance();
@@ -70,7 +78,7 @@ public class LoginActivity extends MainActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(context, getString(R.string.logged_in_as) + " " + auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                 //Invalidate menu bar to load buttons and user Email
-                viewModel.InitMessages();
+                //viewModel.InitMessages();
                 invalidateOptionsMenu();
             }
         }
@@ -97,19 +105,25 @@ public class LoginActivity extends MainActivity {
     }
 
     public void OpenMarket(View view) {
-        if(auth.getCurrentUser() != null)
-        {
+        //if(auth.getCurrentUser() != null)
+        //{
             Intent Markets = new Intent(this, MarketsActivity.class);
             startActivity(Markets);
+        /*
         }
         else
         {
             view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake));
             Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show();
         }
+
+         */
     }
 
     public void MakeASale(View view) {
+        Intent Markets = new Intent(this, CreateSaleActivity.class);
+        startActivity(Markets);
+        /*
         if(auth.getCurrentUser() != null)
         {
             Intent Markets = new Intent(this, CreateSaleActivity.class);
@@ -120,6 +134,8 @@ public class LoginActivity extends MainActivity {
             view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake));
             Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show();
         }
+
+         */
     }
-    */
+
 }

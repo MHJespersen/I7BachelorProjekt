@@ -32,7 +32,7 @@ public class SalesItem implements Serializable {
         this.path = path;
     }
 
-    /*
+
     public static SalesItem fromSnapshot(DocumentSnapshot d) {
         SalesItem s = new SalesItem(d.get("title").toString(), d.get("description").toString(),
                 Float.parseFloat(d.get("price").toString()),
@@ -41,8 +41,6 @@ public class SalesItem implements Serializable {
                 d.getReference().getPath());
         return s;
     }
-
-     */
 
     public static Location createLocationPoint(GeoPoint geoPoint)
     {

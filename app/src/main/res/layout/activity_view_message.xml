@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ViewMessageActivity">
+
+    <TextView
+        android:id="@+id/viewMessageLabelFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_outer"
+        android:layout_marginTop="@dimen/margin_outer"
+        android:text="@string/label_from_col"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/viewMessageLabelRegarding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/label_regarding_col"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="@+id/viewMessageLabelFrom"
+        app:layout_constraintTop_toBottomOf="@+id/viewMessageLabelFrom" />
+
+    <TextView
+        android:id="@+id/viewMessageTextFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_outer"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/viewMessageLabelFrom"
+        tools:text="SomeUser" />
+
+    <TextView
+        android:id="@+id/viewMessageTextRegarding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/viewMessageLabelRegarding"
+        app:layout_constraintEnd_toEndOf="@+id/viewMessageTextFrom"
+        tools:text="Some Item" />
+
+    <TextView
+        android:id="@+id/viewMessageLabelMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/label_message"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="@+id/viewMessageLabelRegarding"
+        app:layout_constraintTop_toBottomOf="@+id/viewMessageLabelRegarding" />
+
+    <TextView
+        android:id="@+id/viewMessageTextMessage"
+        android:layout_width="381dp"
+        android:layout_height="248dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewMessageBtnReply"
+        app:layout_constraintEnd_toEndOf="@+id/viewMessageTextRegarding"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/viewMessageLabelMessage"
+        app:layout_constraintTop_toBottomOf="@+id/viewMessageLabelMessage"
+        app:layout_constraintVertical_bias="0.142"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eget mauris leo. Pellentesque pulvinar sagittis pulvinar. Donec sagittis quam quis dolor fringilla luctus. Nullam libero urna, malesuada suscipit tempor et, viverra nec nisl. Maecenas at nibh consequat, interdum dolor eget, pellentesque tellus." />
+
+    <Button
+        android:id="@+id/viewMessageBtnReply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/buttonColor"
+        android:layout_marginEnd="@dimen/margin_outer"
+        android:layout_marginBottom="16dp"
+        android:text="@string/btn_reply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/viewMessageReply"
+        android:layout_width="369dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="118dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="Reply"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/viewMessageBtnReply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewMessageTextMessage" />
+</androidx.constraintlayout.widget.ConstraintLayout>

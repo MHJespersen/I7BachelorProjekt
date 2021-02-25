@@ -13,6 +13,7 @@
         android:layout_height="52dp"
         android:layout_marginBottom="60dp"
         android:backgroundTint="#31FF9800"
+        android:onClick="MakeASale"
         android:text="@string/btn_make_a_sale"
         app:layout_constraintBottom_toTopOf="@+id/LogoutBtn"
         app:layout_constraintStart_toStartOf="@+id/LogoutBtn" />
@@ -24,6 +25,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginBottom="120dp"
         android:backgroundTint="#31FF9800"
+        android:onClick="LogOut"
         android:text="@string/btn_logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -34,6 +36,7 @@
         android:layout_height="52dp"
         android:layout_marginBottom="60dp"
         android:backgroundTint="#31FF9800"
+        android:onClick="OpenMarket"
         android:text="@string/btn_market"
         app:layout_constraintBottom_toTopOf="@+id/CreateASale"
         app:layout_constraintStart_toStartOf="@+id/CreateASale" />
@@ -44,6 +47,7 @@
         android:layout_height="52dp"
         android:layout_marginBottom="60dp"
         android:backgroundTint="#31FF9800"
+        android:onClick="SignIn"
         android:text="@string/btn_login_register"
         app:layout_constraintBottom_toTopOf="@+id/MarketsButton"
         app:layout_constraintStart_toStartOf="@+id/MarketsButton" />
