@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.SendMessageActivity"
+    android:background="@color/backgroundColor">
+
+    <TextView
+        android:id="@+id/sendMessageLabelRecipient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_outer"
+        android:layout_marginTop="@dimen/margin_outer"
+        android:text="@string/label_recipient_col"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendMessageLabelSendMessage" />
+
+    <TextView
+        android:id="@+id/sendMessageLabelRegarding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/label_regarding_col"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="@+id/sendMessageLabelRecipient"
+        app:layout_constraintTop_toBottomOf="@+id/sendMessageLabelRecipient" />
+
+    <EditText
+        android:id="@+id/sendMessageInputMessage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/margin_outer"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="@dimen/margin_outer"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Type message here"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toTopOf="@+id/sendMessageBtnSend"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendMessageLabelRegarding" />
+
+    <TextView
+        android:id="@+id/sendMessageTextRecipient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_outer"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/sendMessageLabelRecipient"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="SomeUser" />
+
+    <TextView
+        android:id="@+id/sendMessageTextItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/sendMessageLabelRegarding"
+        app:layout_constraintEnd_toEndOf="@+id/sendMessageTextRecipient"
+        tools:text="Some Item" />
+
+    <Button
+        android:id="@+id/sendMessageBtnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/buttonColor"
+        android:layout_marginStart="@dimen/margin_outer"
+        android:layout_marginBottom="@dimen/margin_outer"
+        android:text="@string/btn_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/sendMessageBtnSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/buttonColor"
+        android:layout_marginEnd="@dimen/margin_outer"
+        android:layout_marginBottom="@dimen/margin_outer"
+        android:text="@string/btn_send"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/sendMessageLabelSendMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_outer"
+        android:layout_marginTop="@dimen/margin_outer"
+        android:text="@string/label_send_message"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
