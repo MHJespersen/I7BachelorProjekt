@@ -3,6 +3,7 @@ package mmm.i7bachelor_smartsale.app.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -56,12 +57,16 @@ public class LoginActivity extends MainActivity {
             List<AuthUI.IdpConfig> providers = Arrays.asList(
                     new AuthUI.IdpConfig.EmailBuilder().build(),
                     new AuthUI.IdpConfig.GoogleBuilder().build(),
+                    new AuthUI.IdpConfig.FacebookBuilder().build(),
                     new AuthUI.IdpConfig.GitHubBuilder().build(),
-                    new AuthUI.IdpConfig.FacebookBuilder().build()
+                    new AuthUI.IdpConfig.MicrosoftBuilder().build()
+
             );
             startActivityForResult(
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
+                            .setTheme(R.style.Theme_AppCompat_DayNight_DarkActionBar)
+                            .setLogo(R.mipmap.ic_launcher_foreground)
                             .setAvailableProviders(providers)
                             .setIsSmartLockEnabled(false)
                             .build(), Constants.REQUEST_LOGIN
@@ -121,9 +126,6 @@ public class LoginActivity extends MainActivity {
     }
 
     public void MakeASale(View view) {
-        Intent Markets = new Intent(this, CreateSaleActivity.class);
-        startActivity(Markets);
-        /*
         if(auth.getCurrentUser() != null)
         {
             Intent Markets = new Intent(this, CreateSaleActivity.class);
@@ -134,8 +136,6 @@ public class LoginActivity extends MainActivity {
             view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake));
             Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show();
         }
-
-         */
     }
 
 }

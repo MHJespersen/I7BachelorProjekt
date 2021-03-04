@@ -2,6 +2,8 @@ package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -20,6 +22,7 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
     MarketsActivity context;
     MarketsViewModel viewModel;
     private RecyclerView itemList;
+    private SearchView searchView;
     private MarketAdapter adapter;
 
     @Override
@@ -28,7 +31,9 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
         setContentView(R.layout.activity_markets);
         context = this;
 
+
         itemList = findViewById(R.id.rcvItems);
+        searchView = findViewById(R.id.marketSearch);
 
         viewModel = new ViewModelProvider(context, new MarketsViewModelFactory(this.getApplicationContext())).get(MarketsViewModel.class);
         viewModel.getItems().observe(this, updateObserver);
@@ -50,5 +55,26 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
     public void OnItemClicked(int index) {
         viewModel.SetSelected(index);
         startActivity(new Intent(this, DetailsActivity.class));
+    }
+
+    // https://stackoverflow.com/questions/48314254/how-to-get-text-from-searchview/48314286
+    public void Search() {
+    //search for items in database.
+        if(searchView.getQuery().toString() !=null)
+        {
+
+        }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Toast.makeText(getApplicationContext(),newText,Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
 }

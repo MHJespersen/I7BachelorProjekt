@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.userTxt:
+                OpenProfile();
+                return true;
             case R.id.messagesTxt:
                 OpenMessages();
                 return true;
@@ -59,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
             userItem.setTitle( getString(R.string.menu_user) + ": " + auth.getCurrentUser().getEmail());
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void OpenProfile() {
+        Intent intent = new Intent(this, InboxActivity.class);
+        startActivity(intent);
     }
 
     private void OpenMessages() {

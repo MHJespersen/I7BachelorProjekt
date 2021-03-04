@@ -12,7 +12,6 @@
         android:title="@string/menu_messages"
         android:visible="false" />
 
-
     <item
         android:id="@+id/logoutTxt"
         android:title="@string/menu_Logout"

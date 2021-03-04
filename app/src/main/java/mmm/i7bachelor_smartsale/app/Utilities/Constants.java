@@ -6,6 +6,9 @@ public class Constants {
     //CreateSale
     public static final String CREATE_SALE_ACTIVITY = "CreateSaleActivity";
 
+    //ProfilePage
+    public static final String PROFILE_PAGE_ACTIVITY = "ProfilePageActivity";
+
     //Details
     public static final String DETAILS_ACTIVITY = "DetailsActivity";
     public static final String EXTRA_ITEM_ID = "extra_itemId";

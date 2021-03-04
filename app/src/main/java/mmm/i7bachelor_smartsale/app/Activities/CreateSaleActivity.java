@@ -239,21 +239,25 @@ public class CreateSaleActivity extends MainActivity {
 
     public void Save() {
         salesItem = new SalesItem();
+        //set imageName
         if (photoFileName != null) {
             salesItem.setImage(photoFileName);
         } else {
             salesItem.setImage("emptycart.png");
         }
+        //set Text
         if (title.getText().toString() != null) {
             salesItem.setTitle(title.getText().toString());
         }
+        //set price
         if (price.getText().toString() != null) {
             salesItem.setPrice(Double.parseDouble(price.getText().toString()));
         }
+        //set location
         if (location.getText().toString() != null) {
             if (lastLocation == null) {
-                //Location loc = locationUtility.getLocationFromString(location.getText().toString());
-                //salesItem.setLocation(loc);
+                Location loc = locationUtility.getLocationFromString(location.getText().toString());
+                salesItem.setLocation(loc);
             } else {
                 salesItem.setLocation(lastLocation);
             }
@@ -282,10 +286,10 @@ public class CreateSaleActivity extends MainActivity {
                         if (lastLocation != null) {
                             double lat = lastLocation.getLatitude();
                             double lon = lastLocation.getLongitude();
-                            //String s = locationUtility.getCityName(lat, lon);
+                            String s = locationUtility.getCityName(lat, lon);
                             Log.d(Constants.CREATE_SALE_ACTIVITY, "getDeviceLocation: " + lat + ", " + lon);
-                            //Log.d(Constants.CREATE_SALE_ACTIVITY, "getDeviceLocation: " + s);
-                            //location.setText(s);
+                            Log.d(Constants.CREATE_SALE_ACTIVITY, "getDeviceLocation: " + s);
+                            location.setText(s);
                         } else {
                             Toast.makeText(this, getString(R.string.location_not_found), Toast.LENGTH_SHORT).show();
                         }
