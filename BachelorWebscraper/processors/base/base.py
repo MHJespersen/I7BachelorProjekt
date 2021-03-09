@@ -1,27 +1,25 @@
 from abc import abstractmethod
+from processors.util import LOGGING_NAME
+from processors.logging import logging
 import logging
-from sys import stderr
-
-# Quick fix
-logging.info = print
 
 
 class IHarvester:
     def __init__(self):
-        logging.basicConfig(stream=stderr, level=logging.DEBUG)
-        #self.harvested_items = []
+        self.harvested_items = []
+        self.logger = logging.getLogger(LOGGING_NAME)
 
     @abstractmethod
     def harvest(self):
         """
         Interface for implementing harvester, to scrape data from web applications
         """
-        #return self.harvested_items
+        return self.harvested_items
 
 
 class IParser:
     def __init__(self):
-        logging.basicConfig(stream=stderr, level=logging.DEBUG)
+        self.logger = logging.getLogger(LOGGING_NAME)
         self.parsed_items = []
 
     @abstractmethod

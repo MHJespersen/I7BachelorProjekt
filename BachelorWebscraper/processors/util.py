@@ -1,20 +1,21 @@
 import logging
 import os
 import csv
-from datetime import datetime
-logging.info = print
+
 # ----------- GENERAL -----------
 
 SALES_ITEM_TEMPLATE = {'Overskrift': '', 'Mærke': '', 'Type': '', 'Model': '', 'Tommer': '', 'Stand': '', 'Pris': ''}
 CSV_COLUMNS = ['Overskrift', 'Mærke', 'Type', 'Model', 'Tommer', 'Stand', 'Pris']
 FILE_DIR = "C:\\Users\\mathi\\Aarhus Universitet\\Marcus Bech Lorenzen - 6.Semester\\Bachelor\\MachineLearning\\Data"
 DATE_TIME_FORMAT = '%d-%m-%Y %H:%M:%S'
+LOGGING_NAME = "ScraperLogging"
 
 
 # Overskriv til ny fil -> set type til 'w' og sæt writer.writeheader()
 # Tilføj til eksisterende data -> set type til 'a' og udkommenter writer.writeheader()
 def write_to_csv(harvested_items, FILENAME, newFile=False):
-    logging.info("Saving data to .csv")
+    logger = logging.getLogger(LOGGING_NAME)
+    logger.info("Saving data to .csv")
     filename = os.path.join(FILE_DIR, FILENAME)
     write_append_format = 'a' if not newFile else 'w'
     try:
@@ -24,9 +25,9 @@ def write_to_csv(harvested_items, FILENAME, newFile=False):
                 writer.writeheader()
             for data in harvested_items:
                 writer.writerow(data)
-            logging.info("Saving data to .csv completed: " + datetime.strftime(datetime.now(), DATE_TIME_FORMAT))
+            logger.info("Saving data to .csv completed")
     except IOError as e:
-        logging.warning("Failed to write .csv" + str(e))
+        logger.warning("Failed to write .csv" + str(e))
 
 # ----------- DBA -----------
 
@@ -52,7 +53,3 @@ GOG_TV_LINK = "https://www.guloggratis.dk/elektronik/radio-tv/tv/?order=asc&pric
 GOG_TV_LINK_WPAGES = "https://www.guloggratis.dk/elektronik/radio-tv/tv/?order=asc&page={}&price=100-&sort=price"
 GOG_FJERNSYN_LINK_WPAGES = "https://www.guloggratis.dk/s/q-fjernsyn/?order=asc&price=100-&page={}&sort=price"
 FILE_NAME_GOG = 'Predictering_Data_TV_GOG.csv'
-
-
-
-

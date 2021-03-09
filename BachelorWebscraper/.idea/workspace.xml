@@ -5,14 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="16780c44-c8ea-4fc4-b9cd-be31c7bb69a5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/processors/DBAparser.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/processors/GOGparser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/processors/logging/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/processors/logging/logging.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/processors/DBAharvester.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/DBAharvester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/DBAparser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/DBAparser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/processors/GOGharvester.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/GOGharvester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/GOGparser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/GOGparser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/processors/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processors/parser.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/base/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/base/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/util.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +50,11 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mathi\Desktop\AU\7.Semester\I7BachelorProjekt\BachelorWebscraper\processors\logging" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -98,16 +106,5 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/processors/GOGparser.py</url>
-          <line>23</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
