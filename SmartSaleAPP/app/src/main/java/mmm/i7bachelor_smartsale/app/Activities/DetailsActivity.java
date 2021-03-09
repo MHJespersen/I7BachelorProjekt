@@ -17,7 +17,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <TextView
+        android:id="@+id/txtCreateSaleHeader"
+        android:layout_width="159dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="144dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginBottom="14dp"
+        android:gravity="center"
+        android:text="@string/txtCreateSaleHeader"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/edit_overskrift"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/testml_publish"
+        android:layout_width="217dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="42dp"
+        android:backgroundTint="@color/buttonColor"
+        android:text="Publish"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_overskrift"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:ems="10"
+        android:hint="Overskrift"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCreateSaleHeader" />
+
+    <EditText
+        android:id="@+id/edit_mærke"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:ems="10"
+        android:hint="Mærke"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_type"
+        app:layout_constraintStart_toStartOf="@+id/edit_overskrift"
+        app:layout_constraintTop_toBottomOf="@+id/edit_overskrift" />
+
+    <EditText
+        android:id="@+id/edit_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="33dp"
+        android:ems="10"
+        android:hint="Type"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_model"
+        app:layout_constraintStart_toStartOf="@+id/edit_mærke"
+        app:layout_constraintTop_toBottomOf="@+id/edit_mærke" />
+
+    <EditText
+        android:id="@+id/edit_model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="Model"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_tommer"
+        app:layout_constraintStart_toStartOf="@+id/edit_type"
+        app:layout_constraintTop_toBottomOf="@+id/edit_type" />
+
+    <EditText
+        android:id="@+id/edit_stand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:ems="10"
+        android:hint="Stand"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_pris"
+        app:layout_constraintStart_toStartOf="@+id/edit_tommer"
+        app:layout_constraintTop_toBottomOf="@+id/edit_tommer" />
+
+    <EditText
+        android:id="@+id/edit_pris"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        android:ems="10"
+        android:hint="Pris"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/textView_testml"
+        app:layout_constraintStart_toStartOf="@+id/edit_stand"
+        app:layout_constraintTop_toBottomOf="@+id/edit_stand" />
+
+    <TextView
+        android:id="@+id/textView_testml"
+        android:layout_width="137dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="38dp"
+        android:text="Predicted pris: "
+        app:layout_constraintBottom_toTopOf="@+id/testml_publish"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_tommer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="29dp"
+        android:ems="10"
+        android:hint="Tommer"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/edit_stand"
+        app:layout_constraintStart_toStartOf="@+id/edit_model"
+        app:layout_constraintTop_toBottomOf="@+id/edit_model" />
+</androidx.constraintlayout.widget.ConstraintLayout>

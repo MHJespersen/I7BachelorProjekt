@@ -52,4 +52,16 @@
         app:layout_constraintBottom_toTopOf="@+id/MarketsButton"
         app:layout_constraintStart_toStartOf="@+id/MarketsButton" />
 
+    <Button
+        android:id="@+id/testml"
+        android:layout_width="203dp"
+        android:layout_height="52dp"
+        android:backgroundTint="#31FF9800"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="52dp"
+        android:text="Test ML"
+        android:onClick="TestMl"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

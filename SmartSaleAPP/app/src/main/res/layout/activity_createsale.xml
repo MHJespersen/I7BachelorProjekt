@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
-    tools:context="mhj.Grp10_AppProject.Activities.CreateSaleActivity"
+    tools:context="mmm.i7bachelor_smartsale.app.Activities.CreateSaleActivity"
     >
 
     <Button

@@ -138,4 +138,9 @@ public class LoginActivity extends MainActivity {
         }
     }
 
+    public void TestMl(View view) {
+            Intent TestML = new Intent(this, TestMLActivity.class);
+            startActivity(TestML);
+    }
+
 }

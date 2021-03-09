@@ -24,6 +24,9 @@ public class Constants {
     //Maps
     public static final String MAPS_ACTIVITY = "MapsActivity";
 
+    //Market
+
+
     //SendMessageActivity
     public static final String SEND_MESSAGE_ACTIVITY = "SendMessageActivity";
     public static final String DETAILS_TITLE = "Title";

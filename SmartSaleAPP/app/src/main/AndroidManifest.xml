@@ -30,9 +30,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher_foreground"
         android:label="SmartSale"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.I7BachelorProjekt"
         tools:ignore="ExtraText">
@@ -73,6 +73,7 @@
         </activity>
         <activity android:name=".Activities.MarketsActivity" />
         <activity android:name=".Activities.DetailsActivity"/>
+        <activity android:name=".Activities.TestMLActivity"/>
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" />
