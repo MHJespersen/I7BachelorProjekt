@@ -4,8 +4,6 @@ from processors.util import DBA_TV_LINK_M_SIDE_P_LOW, DBA_TV_LINK_M_SIDE_P_HIGH,
     SALES_ITEM_TEMPLATE, CSV_COLUMNS, FILE_NAME_DBA, FILE_DIR, DATE_TIME_FORMAT, write_to_csv
 from processors.base.base import IHarvester
 from bs4 import BeautifulSoup
-import csv
-import os
 from datetime import datetime
 import time
 
@@ -72,7 +70,6 @@ class DBAHarvester(IHarvester):
         except Exception as e:
             logging.warning("Harvesting stopped with error: " + str(e))
             # Evt skriv en state til en .txt fil og send data vi allerede har hentet til write_to_csv
-
         finally:
             session.close()
 

@@ -17,6 +17,7 @@ class GOGHarvester(IHarvester):
         session = requests.session()
 
         try:
+            return "test data"
             response = session.get(GOG_GENERAL_LINK)
             response_search = session.get(GOG_TV_LINK)
             soup = BeautifulSoup(response_search.content, "html.parser")
@@ -49,7 +50,6 @@ class GOGHarvester(IHarvester):
                     table_dict = self.extract_from_table(rows_data_table)
                     if table_dict.get('Str.', None) is None:
                         continue
-
                     new_sales_item['Overskrift'] = soup.find('h1').text
                     pris_dict = soup.find(
                         'div', attrs={'class': '_1fR4KkNLWJ7OOZU9yP9H3m'}).text.replace('.', '').split(' ')

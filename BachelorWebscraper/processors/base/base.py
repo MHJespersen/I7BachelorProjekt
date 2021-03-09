@@ -25,7 +25,7 @@ class IParser:
         self.parsed_items = []
 
     @abstractmethod
-    def parse(self):
+    def parse(self, data):
         """
         Interface for implementing parser to convert harvested data
         """

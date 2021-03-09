@@ -1,6 +1,7 @@
 import requests
 import logging
-from processors.util import FB_LOGIN_LINK, FB_STARTPAGE_LINK, SALES_ITEM_TEMPLATE, CSV_COLUMNS, FILE_DIR, DATE_TIME_FORMAT, PASSWORD, EMAIL
+from processors.util import FB_LOGIN_LINK, FB_STARTPAGE_LINK, SALES_ITEM_TEMPLATE, CSV_COLUMNS, FILE_DIR,\
+    DATE_TIME_FORMAT, PASSWORD, EMAIL
 from processors.base.base import IHarvester
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -27,10 +28,6 @@ class FBHarvester(IHarvester):
         jazoest = soup.find('input', attrs={"name": "jazoest"})['value']
         lsd = soup.find('input', attrs={"name": "lsd"})['value']
         cuid = soup.find('a', attrs={'title': 'Mike Tennant'})['href']
-
-        print(jazoest)
-        print(lsd)
-        print(cuid.split("cuid=")[1].split("&next")[0])
 
         form_data = {
             "jazoest": jazoest,
