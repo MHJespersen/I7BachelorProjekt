@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="16780c44-c8ea-4fc4-b9cd-be31c7bb69a5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/processors/DBAparser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/processors/GOGparser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/processors/DBAharvester.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/DBAharvester.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processors/FBHarvester.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/FBHarvester.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processors/base/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/base/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processors/harvester.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/GOGharvester.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processors/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/GOGharvester.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/GOGharvester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/parser.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1pIKz6SrY5dOpCCS6mgRVkB0FNF" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -79,5 +98,16 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/processors/GOGparser.py</url>
+          <line>23</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

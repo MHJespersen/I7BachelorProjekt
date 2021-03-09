@@ -1,2 +1,2 @@
 from .DBAharvester import *
-from .parser import *
+from .GOGparser import *

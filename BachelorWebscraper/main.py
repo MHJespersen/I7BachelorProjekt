@@ -1,7 +1,8 @@
 from processors.DBAharvester import DBAHarvester
 from processors.FBHarvester import FBHarvester
 from processors.GOGharvester import GOGHarvester
-from processors.parser import Parser
+from processors.GOGparser import GOGParser
+from processors.DBAparser import DBAParser
 from processors.util import *
 import sys
 
@@ -12,6 +13,9 @@ sys.argv = [
 ]
 
 if __name__ == '__main__':
-    #DBAHarvester.harvest(DBAHarvester)
-    rawdata = GOGHarvester.harvest(GOGHarvester)
-    Parser.parse(Parser, rawdata)
+    # ---- Gul og Gratis ----
+    #rawdata = GOGHarvester.harvest(GOGHarvester)
+    #GOGParser.parse(GOGParser, rawdata)
+    # ---- DBA ----
+    rawdata = DBAHarvester.harvest(DBAHarvester)
+    DBAParser.parse(DBAParser, rawdata)
