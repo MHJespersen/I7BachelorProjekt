@@ -30,18 +30,26 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;
 import mmm.i7bachelor_smartsale.app.Utilities.Constants;
+import mmm.i7bachelor_smartsale.app.Utilities.InternetCheck;
 import mmm.i7bachelor_smartsale.app.Utilities.LocationUtility;
 import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModelFactory;
@@ -74,7 +82,7 @@ public class CreateSaleActivity extends MainActivity {
     public String photoFileName;
 
     //widgets
-    private TextView saleHeader;
+    private TextView saleHeader, mlconfidencevalue;
     private EditText title, price, description, location;
     private ImageView itemImage;
     private Button btnCapture, btnGetLocation, btnCreate;
@@ -194,6 +202,45 @@ public class CreateSaleActivity extends MainActivity {
         }
     }
 
+    private void runDetector(Bitmap bitmap) throws IOException {
+        FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(context, Uri.parse(photoFile.getPath()));
+        new InternetCheck(new InternetCheck.Consumer() {
+            @Override
+            public void accept(boolean internet) {
+                if (internet){
+                    // if internet connection is there, we will use cloud api
+                    FirebaseVisionCloudImageLabelerOptions options =
+                             new FirebaseVisionCloudImageLabelerOptions.Builder()
+                                .setConfidenceThreshold(0.7f)
+                                .build();
+         FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance()
+             .getCloudImageLabeler(options);
+
+                    Task<List<FirebaseVisionImageLabel>> task = labeler.processImage(image);
+                    task.addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
+                        @Override
+                        public void onSuccess(List<FirebaseVisionImageLabel> labels) {
+                            for (FirebaseVisionImageLabel label: labels) {
+                                Log.d("CreateSaleML", "Getting ML labels successfully ");
+                                String labeltext = label.getText();
+                                String entityId = label.getEntityId();
+                                float confidence = label.getConfidence();
+                                title.setText(labeltext);
+                                mlconfidencevalue.setText((int) confidence);
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        Log.d("CreateSaleML", "Could not get result from machine learning api. " +
+                                "Error: " + e);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     //Returns the File for a photo stored on disk given the fileName
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
@@ -216,7 +263,14 @@ public class CreateSaleActivity extends MainActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 Bitmap bp = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                //Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getPath());
+                //try {
+                    //runDetector(bitmap);
+                //} catch (IOException e) {
+                //    e.printStackTrace();
+                //}
                 itemImage.setImageBitmap(bp);
+
 
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, getString(R.string.canceled), Toast.LENGTH_LONG).show();

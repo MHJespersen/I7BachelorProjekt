@@ -119,5 +119,14 @@
         app:layout_constraintBottom_toBottomOf="@+id/createSaleTextLocation"
         app:layout_constraintEnd_toEndOf="@+id/createSaleTextPrice" />
 
+    <TextView
+        android:id="@+id/textViewmlconfidence"
+        android:layout_width="145dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="16dp"
+        android:hint="mlconfidence: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgTaken" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
