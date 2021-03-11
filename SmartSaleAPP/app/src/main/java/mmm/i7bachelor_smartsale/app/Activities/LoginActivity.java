@@ -81,7 +81,7 @@ public class LoginActivity extends MainActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(context, getString(R.string.logged_in_as) + " " + auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                 //Invalidate menu bar to load buttons and user Email
-                //viewModel.InitMessages();
+                viewModel.InitMessages();
                 invalidateOptionsMenu();
             }
         }
@@ -101,6 +101,7 @@ public class LoginActivity extends MainActivity {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(this, getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
             invalidateOptionsMenu();
+            repo.uninitializePrivateMessages();
         } else {
             Toast.makeText(this, getString(R.string.logged_out_already), Toast.LENGTH_SHORT).show();
 

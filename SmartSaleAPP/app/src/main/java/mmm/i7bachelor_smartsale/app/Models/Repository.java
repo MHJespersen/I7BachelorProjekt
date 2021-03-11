@@ -176,6 +176,11 @@ public class Repository {
         return this.PrivateMessagesList;
     }
 
+    public void uninitializePrivateMessages()
+    {
+        PrivateMessagesList = new MutableLiveData<>();
+    }
+
     public void initializePrivateMessages()
     {
         auth = FirebaseAuth.getInstance();

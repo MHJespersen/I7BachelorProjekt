@@ -9,18 +9,22 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.core.Repo;
 
+import mmm.i7bachelor_smartsale.app.Models.Repository;
 import mmm.i7bachelor_smartsale.app.R;
 
 public class MainActivity extends AppCompatActivity {
 
     //Inspired from: https://stackoverflow.com/questions/17889240/reuse-the-action-bar-in-all-the-activities-of-app
     FirebaseAuth auth;
+    Repository repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         auth = FirebaseAuth.getInstance();
+        repo = Repository.getInstance(this);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(this, getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
             invalidateOptionsMenu();
+            repo.uninitializePrivateMessages();
 
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
