@@ -101,7 +101,6 @@ public class LoginActivity extends MainActivity {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(this, getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
             invalidateOptionsMenu();
-            repo.uninitializePrivateMessages();
         } else {
             Toast.makeText(this, getString(R.string.logged_out_already), Toast.LENGTH_SHORT).show();
 

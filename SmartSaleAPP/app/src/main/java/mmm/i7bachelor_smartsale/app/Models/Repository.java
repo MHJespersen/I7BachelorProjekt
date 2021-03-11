@@ -176,10 +176,6 @@ public class Repository {
         return this.PrivateMessagesList;
     }
 
-    public void uninitializePrivateMessages()
-    {
-        PrivateMessagesList = new MutableLiveData<>();
-    }
 
     public void initializePrivateMessages()
     {
@@ -197,9 +193,7 @@ public class Repository {
                             privateMessages.add(PrivateMessage.fromSnapshot(snap));
                         }
                     }
-                    if (!privateMessages.isEmpty()) {
-                        PrivateMessagesList.postValue(privateMessages);
-                    }
+                    PrivateMessagesList.setValue(privateMessages);
                 }
             });
         }

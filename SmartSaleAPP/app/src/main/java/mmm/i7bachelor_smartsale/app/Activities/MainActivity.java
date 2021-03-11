@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(this, getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
             invalidateOptionsMenu();
-            repo.uninitializePrivateMessages();
 
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
