@@ -30,11 +30,8 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_markets);
         context = this;
-
-
         itemList = findViewById(R.id.rcvItems);
         searchView = findViewById(R.id.marketSearch);
-
         viewModel = new ViewModelProvider(context, new MarketsViewModelFactory(this.getApplicationContext())).get(MarketsViewModel.class);
         viewModel.getItems().observe(this, updateObserver);
     }

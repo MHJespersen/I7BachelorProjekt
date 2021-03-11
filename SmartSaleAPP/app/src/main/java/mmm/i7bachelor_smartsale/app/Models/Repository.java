@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class Repository {
             @Override
             public void run() {
                 Map<String, Object> map = new HashMap<>();
-                CollectionReference CollRef = firestore.collection("Messages").
+                CollectionReference CollRef = firestore.collection("PrivateMessages").
                         document(privateMessage.getReceiver()).collection("Messages");
                 String UniqueID = CollRef.document().getId();
                 map.put("Receiver", privateMessage.getReceiver());
@@ -152,7 +153,7 @@ public class Repository {
                 map.put("Read", false);
                 map.put("Regarding", privateMessage.getRegarding());
                 map.put("Path", UniqueID);
-                firestore.collection("Messages").document(privateMessage.getReceiver())
+                firestore.collection("PrivateMessages").document(privateMessage.getReceiver())
                         .collection("Messages").document(UniqueID).set(map)
                         .addOnCompleteListener(new OnCompleteListener() {
                             @Override
@@ -180,13 +181,12 @@ public class Repository {
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             firestore.collection(
-                    "Messages").document(auth.getCurrentUser().getEmail()).
+                    "PrivateMessages").document(auth.getCurrentUser().getEmail()).
                     collection("Messages").orderBy("MessageDate",
                     Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                     ArrayList privateMessages = new ArrayList();
-                    /*
                     if (!value.isEmpty()) {
                         for (QueryDocumentSnapshot snap : value) {
                             privateMessages.add(PrivateMessage.fromSnapshot(snap));
@@ -195,8 +195,6 @@ public class Repository {
                     if (!privateMessages.isEmpty()) {
                         PrivateMessagesList.postValue(privateMessages);
                     }
-
-                     */
                 }
             });
         }
@@ -209,7 +207,7 @@ public class Repository {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    firestore.collection("Messages").
+                    firestore.collection("PrivateMessages").
                             document(auth.getCurrentUser().getEmail()).collection("Messages")
                             .document(message.getPath()).update("Read", true);
                 }

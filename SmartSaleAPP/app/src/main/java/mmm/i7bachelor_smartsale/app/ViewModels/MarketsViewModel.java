@@ -34,7 +34,7 @@ public class MarketsViewModel extends ViewModel {
         //Hvis noget tilføjes (fra en anden bruger) skal dette opdateres i vores liste, hvilket gøres her.
         if(salesitemLiveData != null)
         {
-            //salesitemLiveData = repository.getItems();
+            salesitemLiveData = repository.getItems();
         }
     }
 

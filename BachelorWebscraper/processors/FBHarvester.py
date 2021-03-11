@@ -13,7 +13,6 @@ class FBHarvester(IHarvester):
         IHarvester.__init__(self)
 
     def harvest(self):
-        harvested_items = [] # Flyt til interface
         logging.info("Harvesting started: " + datetime.strftime(datetime.now(), DATE_TIME_FORMAT))
 
         # Create session so we keep state and cookies

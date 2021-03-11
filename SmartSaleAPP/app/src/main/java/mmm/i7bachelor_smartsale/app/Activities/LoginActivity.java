@@ -49,8 +49,6 @@ public class LoginActivity extends MainActivity {
         }
         if (auth.getCurrentUser() != null) {
             Toast.makeText(context, getString(R.string.logged_in_already), Toast.LENGTH_SHORT).show();
-            // Bruger er logget ind
-            // Åben ListActivity eller hvad den første activity er
         }
         else {
             //Set up suported builders

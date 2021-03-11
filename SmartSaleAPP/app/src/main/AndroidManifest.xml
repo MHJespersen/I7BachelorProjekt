@@ -73,6 +73,7 @@
         </activity>
         <activity android:name=".Activities.MarketsActivity" />
         <activity android:name=".Activities.DetailsActivity"/>
+        <activity android:name=".Activities.ViewMessageActivity"/>
         <activity android:name=".Activities.TestMLActivity"/>
         <activity
             android:name=".Activities.MapsActivity"

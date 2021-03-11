@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/43ed210d219e7d0cfde9f90a93b700b6/jetified-firebase-ml-vision-image-label-model-15.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/43ed210d219e7d0cfde9f90a93b700b6/jetified-firebase-ml-vision-image-label-model-15.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/43ed210d219e7d0cfde9f90a93b700b6/jetified-firebase-ml-vision-image-label-model-15.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f0f7a9fa02ee03ee94da5ec238f8fa0a/jetified-firebase-ml-vision-image-label-model-15.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f0f7a9fa02ee03ee94da5ec238f8fa0a/jetified-firebase-ml-vision-image-label-model-15.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f0f7a9fa02ee03ee94da5ec238f8fa0a/jetified-firebase-ml-vision-image-label-model-15.0.0/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
