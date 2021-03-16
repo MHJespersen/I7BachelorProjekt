@@ -62,5 +62,6 @@
     <string name="map_marker_text">Vare lokation</string>
     <string name="reply_to">Svar til</string>
     <string name="reply_sent">Svar sendt</string>
+    <string name="created_sale">Annoncen er oprettet!, Se Annoncen på markedspladsen</string>>
 
 </resources>
