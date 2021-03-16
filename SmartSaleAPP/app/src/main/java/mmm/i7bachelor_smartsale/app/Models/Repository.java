@@ -13,15 +13,16 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -74,7 +75,8 @@ public class Repository {
 
     public void setSelectedItem(String ItemID)
     {
-        Task<DocumentSnapshot> d = firestore.collection("SalesItems").document(ItemID).get();
+        Task<DocumentSnapshot> d = firestore.collection("SalesItems").
+                document(ItemID).get();
         d.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -121,7 +123,8 @@ public class Repository {
                                                 Float.parseFloat(item.get("price").toString()),
                                                 item.get("user").toString(),
                                                 item.get("image").toString(),
-                                                SalesItem.createLocationPoint(item.get("location", GeoPoint.class)),
+                                                SalesItem.createLocationPoint(item.get(
+                                                        "location", GeoPoint.class)),
                                                 item.get("documentPath").toString()
                                         );
                                         updatedListOfItems.add(newItem);
@@ -153,7 +156,8 @@ public class Repository {
                 map.put("Read", false);
                 map.put("Regarding", privateMessage.getRegarding());
                 map.put("Path", UniqueID);
-                firestore.collection("PrivateMessages").document(privateMessage.getReceiver())
+                firestore.collection("PrivateMessages").
+                        document(privateMessage.getReceiver())
                         .collection("Messages").document(UniqueID).set(map)
                         .addOnCompleteListener(new OnCompleteListener() {
                             @Override
@@ -183,19 +187,27 @@ public class Repository {
         if (auth.getCurrentUser() != null) {
             firestore.collection(
                     "PrivateMessages").document(auth.getCurrentUser().getEmail()).
-                    collection("Messages").orderBy("MessageDate",
-                    Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    ArrayList privateMessages = new ArrayList();
-                    if (!value.isEmpty()) {
-                        for (QueryDocumentSnapshot snap : value) {
-                            privateMessages.add(PrivateMessage.fromSnapshot(snap));
+                    collection("Conversations").
+                    addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            ArrayList privateMessages = new ArrayList();
+                            if (!value.isEmpty()) {
+                                for (QueryDocumentSnapshot snap : value) {
+                                    Log.d("TEST", "" + snap.getId()); //User we have a conversation with
+                                    snap.getReference().collection("Messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            for (QueryDocumentSnapshot snap : value) {
+                                                privateMessages.add(PrivateMessage.fromSnapshot(snap));
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                            PrivateMessagesList.setValue(privateMessages);
                         }
-                    }
-                    PrivateMessagesList.setValue(privateMessages);
-                }
-            });
+                    });
         }
     }
 
@@ -207,7 +219,9 @@ public class Repository {
                 @Override
                 public void run() {
                     firestore.collection("PrivateMessages").
-                            document(auth.getCurrentUser().getEmail()).collection("Messages")
+                            document(auth.getCurrentUser().getEmail()).
+                            collection("Conversations").document(message.getReceiver())
+                            .collection("Messages")
                             .document(message.getPath()).update("Read", true);
                 }
             });
@@ -247,13 +261,13 @@ public class Repository {
         });
     }
 
-    public void setSelectedMessage(PrivateMessage message) {
-        Task<DocumentSnapshot> d = firestore.collection("PrivateMessages").document(message.getReceiver()).collection("Messages").document(message.getPath()).get();
-        d.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                SelectedMessageLive.postValue(PrivateMessage.fromSnapshot(task.getResult()));
-            }
-        });
-    }
+//    public void setSelectedMessage(PrivateMessage message) {
+//        Task<DocumentSnapshot> d = firestore.collection("PrivateMessages").document(message.getReceiver()).collection("Messages").document(message.getPath()).get();
+//        d.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                SelectedMessageLive.postValue(PrivateMessage.fromSnapshot(task.getResult()));
+//            }
+//        });
+//    }
 }

@@ -23,7 +23,7 @@ class GOGParser(IParser):
                 if not rows_data_table:
                     continue
                 rows_data_table = rows_data_table.findAll(lambda tag: tag.name == 'dt' or tag.name == 'dd')
-                new_sales_item['Overskrift'] = soup.find('h1').text
+                new_sales_item['Overskrift'] = soup.find('h1').text.replace('"', '')
                 pris_dict = soup.find(
                     'div', attrs={'class': '_1fR4KkNLWJ7OOZU9yP9H3m'}).text.replace('.', '').split(' ')
 
@@ -33,7 +33,7 @@ class GOGParser(IParser):
                 new_sales_item['Pris'] = [item for item in pris_dict if item.isdigit()][0]
                 new_sales_item['Mærke'] = table_dict.get('Mærke', None)
                 new_sales_item['Stand'] = table_dict.get('Varens stand', 'Ukendt')
-                tommer_dict = table_dict.get('Str.', None).strip('"').split(' ')
+                tommer_dict = table_dict.get('Str.', None).split(' ')
                 new_sales_item['Tommer'] = [item for item in tommer_dict if item.isdigit()][0]
                 parsed_items.append(new_sales_item)
 
@@ -41,10 +41,9 @@ class GOGParser(IParser):
                 self.logger.error("Harvesting stopped with error: " + str(e))
                 # Evt skriv en state til en .txt fil og send data vi allerede har hentet til write_to_csv
 
-        write_to_csv(parsed_items, "test.csv", True)
+        write_to_csv(parsed_items, "Predictering_Data_TV_GOG.csv", True)
 
     def extract_from_table(self, section):
-        self.logger.info("Extracting data from table")
-        values = [items.string for items in section]
+        values = [str(items.string).replace('"', '') for items in section]
         table_dict = {item: values[index + 1] for index, item in enumerate(values) if index % 2 == 0}
         return table_dict

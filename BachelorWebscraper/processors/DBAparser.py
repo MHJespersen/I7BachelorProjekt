@@ -24,7 +24,7 @@ class DBAParser(IParser):
                 if table_dict.get('Str. (tommer)', None) is None:
                     continue
 
-                new_sales_item['Overskrift'] = soup.find('h1').text
+                new_sales_item['Overskrift'] = soup.find('h1').text.replace('"', '')
                 new_sales_item['Pris'] = int(soup.find('span', attrs={'class': 'price-tag'}).
                                              text.split(' ')[0].replace('.', ''))
                 new_sales_item['Model'] = table_dict.get('Model', None)
@@ -32,20 +32,19 @@ class DBAParser(IParser):
                 new_sales_item['Mærke'] = table_dict.get('Mærke', None)
                 new_sales_item['Stand'] = table_dict.get('Stand', 'Ukendt')
                 new_sales_item['Tommer'] = table_dict.get('Str. (tommer)', None)
-                new_sales_item['Tommer'] = new_sales_item['Tommer'].strip('"').split(' ')
+                new_sales_item['Tommer'] = new_sales_item['Tommer'].split(' ')
                 new_sales_item['Tommer'] = [item for item in new_sales_item['Tommer'] if item.isdigit()][0]
                 parsed_items.append(new_sales_item)
 
             except Exception as e:
-                self.logger.error("Harvesting stopped with error: " + str(e))
+                self.logger.error("Parser stopped with error: " + str(e))
                 # Evt skriv en state til en .txt fil og send data vi allerede har hentet til write_to_csv
 
-        write_to_csv(parsed_items, "test.csv", True)
+        write_to_csv(parsed_items, "Predictering_Data_TV_DBA.csv", False)
 
     def extract_from_table(self, rows):
-        self.logger.info("Extracting data from table")
         tds = BeautifulSoup(str(rows), "html.parser")
         values = [tds.string for tds in tds.find_all('td')]
-        values = [i for i in values if i is not None]
+        values = [str(i).replace('"', '') for i in values if i is not None]
         table_dict = {item: values[index + 1] for index, item in enumerate(values) if index % 2 == 0}
         return table_dict
