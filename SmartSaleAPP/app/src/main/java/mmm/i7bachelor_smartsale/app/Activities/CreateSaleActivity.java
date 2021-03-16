@@ -35,11 +35,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
-//import com.google.firebase.ml.vision.FirebaseVision;
-//import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-//import com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions;
-//import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
-//import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -55,13 +50,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;
 import mmm.i7bachelor_smartsale.app.Utilities.Constants;
-import mmm.i7bachelor_smartsale.app.Utilities.InternetCheck;
 import mmm.i7bachelor_smartsale.app.Utilities.LocationUtility;
 import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModelFactory;
@@ -225,44 +218,45 @@ public class CreateSaleActivity extends MainActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
         String base64encoded = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-                    mFunctions = FirebaseFunctions.getInstance();
 
-                    // Create json request to cloud vision
-                    JsonObject request = new JsonObject();
-                    // Add image to request
-                    JsonObject image = new JsonObject();
-                    image.add("content", new JsonPrimitive(base64encoded));
-                    request.add("image", image);
-                    //Add features to the request
-                    JsonObject feature = new JsonObject();
-                    feature.add("maxResults", new JsonPrimitive(5));
-                    feature.add("type", new JsonPrimitive("LABEL_DETECTION"));
-                    JsonArray features = new JsonArray();
-                    features.add(feature);
-                    request.add("features", features);
+        mFunctions = FirebaseFunctions.getInstance();
 
-                    annotateImage(request.toString())
-                            .addOnCompleteListener(new OnCompleteListener<JsonElement>() {
-                                @Override
-                                public void onComplete(@NonNull Task<JsonElement> task) {
-                                    if (!task.isSuccessful()) {
-                                        // Task failed with an exception
-                                        Log.d("CreateSaleML", "Could not get result from machine learning api. " +
-                                                "Error: " + task.getException());
-                                    } else {
-                                        // Task completed successfully
-                                        for (JsonElement label : task.getResult().getAsJsonArray().get(0).getAsJsonObject().get("labelAnnotations").getAsJsonArray()) {
-                                            JsonObject labelObj = label.getAsJsonObject();
-                                            String text = labelObj.get("description").getAsString();
-                                            String entityId = labelObj.get("mid").getAsString();
-                                            float score = labelObj.get("score").getAsFloat();
-                                            //set result to activity objects
-                                            title.setText(text);
-                                            mlconfidencevalue.setText("Score: " +score);
-                                        }
-                                    }
-                                }
-                            });
+        // Create json request to cloud vision
+        JsonObject request = new JsonObject();
+        // Add image to request
+        JsonObject image = new JsonObject();
+        image.add("content", new JsonPrimitive(base64encoded));
+        request.add("image", image);
+        //Add features to the request
+        JsonObject feature = new JsonObject();
+        feature.add("maxResults", new JsonPrimitive(5));
+        feature.add("type", new JsonPrimitive("LABEL_DETECTION"));
+        JsonArray features = new JsonArray();
+        features.add(feature);
+        request.add("features", features);
+
+        annotateImage(request.toString())
+                .addOnCompleteListener(new OnCompleteListener<JsonElement>() {
+                    @Override
+                    public void onComplete(@NonNull Task<JsonElement> task) {
+                        if (!task.isSuccessful()) {
+                            // Task failed with an exception
+                            Log.d("CreateSaleML", "Could not get result from machine learning api. " +
+                                    "Error: " + task.getException());
+                        } else {
+                            // Task completed successfully
+                            for (JsonElement label : task.getResult().getAsJsonArray().get(0).getAsJsonObject().get("labelAnnotations").getAsJsonArray()) {
+                                JsonObject labelObj = label.getAsJsonObject();
+                                String text = labelObj.get("description").getAsString();
+                                String entityId = labelObj.get("mid").getAsString();
+                                float score = labelObj.get("score").getAsFloat();
+                                //set result to activity objects
+                                title.setText(text);
+                                mlconfidencevalue.setText("Score: " +score);
+                            }
+                        }
+                    }
+                });
     }
 
     private Task<JsonElement> annotateImage(String requestJson) {
