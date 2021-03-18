@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 public class Repository {
 
@@ -183,6 +185,7 @@ public class Repository {
 
     public void initializePrivateMessages()
     {
+        //Self-note.. det her må kunne gøres bedre..?
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             firestore.collection(
@@ -194,21 +197,23 @@ public class Repository {
                             ArrayList privateMessages = new ArrayList();
                             if (!value.isEmpty()) {
                                 for (QueryDocumentSnapshot snap : value) {
-                                    Log.d("TEST", "" + snap.getId()); //User we have a conversation with
                                     snap.getReference().collection("Messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @SuppressLint("NewApi")
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                            for (QueryDocumentSnapshot snap : value) {
-                                                privateMessages.add(PrivateMessage.fromSnapshot(snap));
+                                            for (QueryDocumentSnapshot snapMsg : value) {
+                                                Predicate<PrivateMessage> condition = msg -> msg.getPath().equals(snapMsg.get("Path"));
+                                                privateMessages.removeIf(condition);
+                                                privateMessages.add(PrivateMessage.fromSnapshot(snapMsg, snap.getId()));
                                             }
+                                            PrivateMessagesList.postValue(privateMessages);
                                         }
                                     });
                                 }
                             }
-                            PrivateMessagesList.setValue(privateMessages);
                         }
                     });
-        }
+            }
     }
 
     public void setMessageRead(PrivateMessage message)
@@ -220,7 +225,7 @@ public class Repository {
                 public void run() {
                     firestore.collection("PrivateMessages").
                             document(auth.getCurrentUser().getEmail()).
-                            collection("Conversations").document(message.getReceiver())
+                            collection("Conversations").document(message.getSender())
                             .collection("Messages")
                             .document(message.getPath()).update("Read", true);
                 }

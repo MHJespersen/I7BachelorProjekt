@@ -28,16 +28,10 @@ public class PrivateMessage implements Serializable {
     }
 
 
-    public static PrivateMessage fromSnapshot(DocumentSnapshot d) {
-        Log.d("TEST", d.get("Receiver").toString());
-        Log.d("TEST", d.get("Sender").toString());
-        Log.d("TEST", d.get("MessageBody").toString());
-        Log.d("TEST", d.get("MessageDate").toString());
-        Log.d("TEST", d.get("Read").toString());
-        Log.d("TEST", d.get("Regarding").toString());
-
+    public static PrivateMessage fromSnapshot(DocumentSnapshot d, String sender) {
+        Log.d("Sender", sender);
         PrivateMessage message = new PrivateMessage(d.get("Receiver").toString(),
-                d.get("Sender").toString(),
+                sender,
                 d.get("MessageBody").toString(),
                 d.get("MessageDate").toString(),
                 Boolean.parseBoolean(d.get("Read").toString()),
