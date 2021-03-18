@@ -1,6 +1,5 @@
 package mmm.i7bachelor_smartsale.app.Adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -18,15 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
 import mmm.i7bachelor_smartsale.app.R;
-
-import static com.google.firebase.firestore.core.UserData.Source.Set;
-import static java.util.stream.Collectors.toList;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHolder> {
@@ -38,6 +33,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
     private IMessageClickedListener listener;
     private FirebaseStorage mStorageRef;
     private List<PrivateMessage> messagelist;
+    private List<String> uniqueNames;
 
     public InboxAdapter(IMessageClickedListener listener) {
         mStorageRef = FirebaseStorage.getInstance();
@@ -45,7 +41,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
         this.con = (Context)listener;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void updateMessageList(List<PrivateMessage> list){
+        uniqueNames = list.stream().map(PrivateMessage::getSender)
+                .distinct().collect(Collectors.toList());
+
         messagelist = list;
         notifyDataSetChanged();
     }
@@ -62,7 +62,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
     @Override
     public void onBindViewHolder(@NonNull InboxViewHolder holder, int position)
     {
-        holder.senderUserName.setText(messagelist.get(position).getSender().split("@")[0]);
+        holder.senderUserName.setText(uniqueNames.get(position).split("@")[0]);
         holder.readStatus.setText(messagelist.get(position).getMessageRead()?
                 con.getString(R.string.label_read) : con.getString(R.string.label_unread));
         holder.readStatus.setTextColor(messagelist.get(position).getMessageRead()? Color.GREEN: Color.RED);
@@ -76,14 +76,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
     public int getItemCount()
     {
         //Return size of list
-        return messagelist.size();
+        return uniqueNames.size();
     }
 
     public class InboxViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         //viewholder ui widget references
         ImageView senderUserImg;
-        TextView senderUserName, itemRegarding, messageDate, readStatus;
+        TextView senderUserName, readStatus;
 
         //custom callback interface for user actions
         //IMessageClickedListener listener;
