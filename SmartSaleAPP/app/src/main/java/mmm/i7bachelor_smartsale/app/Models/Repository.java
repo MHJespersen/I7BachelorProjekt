@@ -206,7 +206,7 @@ public class Repository {
                                                 privateMessages.removeIf(condition);
                                                 privateMessages.add(PrivateMessage.fromSnapshot(snapMsg, snap.getId()));
                                             }
-                                            PrivateMessagesList.postValue(privateMessages);
+                                            PrivateMessagesList.setValue(privateMessages);
                                         }
                                     });
                                 }
