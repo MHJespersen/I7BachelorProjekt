@@ -67,6 +67,7 @@ public class ViewMessageActivity extends AppCompatActivity {
         public void onChanged(PrivateMessage message) {
             if(message != null)
             {
+                Log.d("PrivateMessage", "Set privateMessage info");
                 _privatemessage = message;
                 textMessage.setText(message.getMessageBody());
                 textRegarding.setText(message.getRegarding());
