@@ -1,7 +1,10 @@
 package mmm.i7bachelor_smartsale.app.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +12,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
 import mmm.i7bachelor_smartsale.app.R;
+
+import static com.google.firebase.firestore.core.UserData.Source.Set;
+import static java.util.stream.Collectors.toList;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHolder> {
@@ -54,8 +63,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
     public void onBindViewHolder(@NonNull InboxViewHolder holder, int position)
     {
         holder.senderUserName.setText(messagelist.get(position).getSender().split("@")[0]);
-        holder.messageDate.setText(messagelist.get(position).getMessageDate());
-        holder.itemRegarding.setText(messagelist.get(position).getRegarding());
         holder.readStatus.setText(messagelist.get(position).getMessageRead()?
                 con.getString(R.string.label_read) : con.getString(R.string.label_unread));
         holder.readStatus.setTextColor(messagelist.get(position).getMessageRead()? Color.GREEN: Color.RED);
@@ -88,8 +95,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
             //references from layout
             senderUserImg = itemView.findViewById(R.id.inboxImgUser);
             senderUserName = itemView.findViewById(R.id.inboxTextUser);
-            itemRegarding = itemView.findViewById(R.id.inboxTextRegarding);
-            messageDate = itemView.findViewById(R.id.inboxTextDate);
             readStatus = itemView.findViewById(R.id.inboxTextReadStatus);
 
             itemView.setOnClickListener(this);
