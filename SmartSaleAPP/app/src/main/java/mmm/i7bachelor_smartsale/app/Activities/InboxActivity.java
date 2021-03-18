@@ -2,6 +2,7 @@ package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -36,9 +37,9 @@ public class InboxActivity extends MainActivity implements InboxAdapter.IMessage
         viewModel.getMessages().observe(this, updateObserver);
     }
 
-    Observer<List<PrivateMessage>> updateObserver = new Observer<List<PrivateMessage>>() {
+    Observer<List<Pair<String, Integer>>> updateObserver = new Observer<List<Pair<String, Integer>>>() {
         @Override
-        public void onChanged(List<PrivateMessage> UpdatedItems) {
+        public void onChanged(List<Pair<String, Integer>> UpdatedItems) {
             adapter = new InboxAdapter(context);
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(adapter);

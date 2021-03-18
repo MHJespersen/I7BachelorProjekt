@@ -9,33 +9,53 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
+import mmm.i7bachelor_smartsale.app.Adapter.ConversationAdapter;
+import mmm.i7bachelor_smartsale.app.Adapter.InboxAdapter;
 import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
 import mmm.i7bachelor_smartsale.app.R;
+import mmm.i7bachelor_smartsale.app.ViewModels.InboxViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.ViewMessageViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.ViewMessageViewModelFactory;
 
-public class ViewConversationActivity extends AppCompatActivity {
+public class ViewConversationActivity extends MainActivity implements ConversationAdapter.IMessageClickedListener {
     private ViewMessageViewModel viewModel;
     private PrivateMessage _privatemessage;
 
     // widgets
     private TextView textSender, textRegarding, textMessage, textReply;
     private Button btnReply;
+    private RecyclerView recyclerView;
+    private ConversationAdapter adapter;
+    ViewConversationActivity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_view_message);
         setupUI();
+        recyclerView = findViewById(R.id.RCVMessages);
+
         viewModel = new ViewModelProvider(this, new ViewMessageViewModelFactory(this.getApplicationContext()))
                 .get(ViewMessageViewModel.class);
-        viewModel.returnSelected().observe(this, updateObserver );
+        viewModel.getMessages().observe(this, updateObserver );
     }
+    Observer<List<PrivateMessage>> updateObserver = new Observer<List<PrivateMessage>>() {
+        @Override
+        public void onChanged(List<PrivateMessage> messages) {
+            adapter = new ConversationAdapter(context);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(adapter);
+            adapter.updateMessageList(messages);
+        }};
 
     private void setupUI() {
         textSender = findViewById(R.id.viewMessageTextFrom);
@@ -60,18 +80,8 @@ public class ViewConversationActivity extends AppCompatActivity {
         finish();
     }
 
-    Observer<PrivateMessage> updateObserver = new Observer<PrivateMessage>() {
-        @Override
-        public void onChanged(PrivateMessage message) {
-            if(message != null)
-            {
-                Log.d("PrivateMessage", "Set privateMessage info");
-                _privatemessage = message;
-//                textMessage.setText(message.getMessageBody());
-//                textRegarding.setText(message.getRegarding());
-//                textSender.setText(message.getSender());
-            }
-            Log.d("PrivateMessage", "ViewMessage:failed. Message = null ");
-        }
-    };
+    @Override
+    public void onMessageClicked(int index) {
+
+    }
 }

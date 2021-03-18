@@ -1,9 +1,9 @@
 package mmm.i7bachelor_smartsale.app.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
-import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
 import mmm.i7bachelor_smartsale.app.R;
@@ -33,7 +31,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
     private IMessageClickedListener listener;
     private FirebaseStorage mStorageRef;
     private List<PrivateMessage> messagelist;
-    private List<String> uniqueNames;
+    private List<Pair<String, Integer>> uniqueNamesAndStatus;
 
     public InboxAdapter(IMessageClickedListener listener) {
         mStorageRef = FirebaseStorage.getInstance();
@@ -41,12 +39,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
         this.con = (Context)listener;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void updateMessageList(List<PrivateMessage> list){
-        uniqueNames = list.stream().map(PrivateMessage::getSender)
-                .distinct().collect(Collectors.toList());
+    @SuppressLint("NewApi")
+    public void updateMessageList(List<Pair<String, Integer>> list){
 
-        messagelist = list;
+        uniqueNamesAndStatus = list;
         notifyDataSetChanged();
     }
 
@@ -62,10 +58,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
     @Override
     public void onBindViewHolder(@NonNull InboxViewHolder holder, int position)
     {
-        holder.senderUserName.setText(uniqueNames.get(position).split("@")[0]);
-        holder.readStatus.setText(messagelist.get(position).getMessageRead()?
+        holder.senderUserName.setText(uniqueNamesAndStatus.get(position).first.split("@")[0]);
+        holder.readStatus.setText(uniqueNamesAndStatus.get(position).second == 0?
                 con.getString(R.string.label_read) : con.getString(R.string.label_unread));
-        holder.readStatus.setTextColor(messagelist.get(position).getMessageRead()? Color.GREEN: Color.RED);
+        holder.readStatus.setTextColor(uniqueNamesAndStatus.get(position).second ==0? Color.GREEN: Color.RED);
 
         Glide.with(holder.senderUserImg.getContext())
                 .load(R.drawable.fui_ic_mail_white_24dp)
@@ -76,7 +72,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
     public int getItemCount()
     {
         //Return size of list
-        return uniqueNames.size();
+        return uniqueNamesAndStatus.size();
     }
 
     public class InboxViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener

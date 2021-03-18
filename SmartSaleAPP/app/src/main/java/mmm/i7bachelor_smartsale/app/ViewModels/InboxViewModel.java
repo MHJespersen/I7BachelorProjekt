@@ -1,6 +1,7 @@
 package mmm.i7bachelor_smartsale.app.ViewModels;
 
 import android.content.Context;
+import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -14,6 +15,7 @@ import mmm.i7bachelor_smartsale.app.Models.Repository;
 public class InboxViewModel extends ViewModel {
 
     private LiveData<List<PrivateMessage>> privateMessagelist;
+    private MutableLiveData<List<Pair<String, Integer>>> ConvoAndStatus;
     private final Repository repository;
 
     public InboxViewModel(Context context) {
@@ -21,24 +23,24 @@ public class InboxViewModel extends ViewModel {
         privateMessagelist = new MutableLiveData<>();
     }
 
-    public LiveData<List<PrivateMessage>> getMessages()
+    public MutableLiveData<List<Pair<String, Integer>>> getMessages()
     {
         UpdateList();
-        return privateMessagelist;
+        return ConvoAndStatus;
     }
 
 
     private void UpdateList()
     {
-        privateMessagelist = repository.getPrivateMessages();
+        ConvoAndStatus = repository.getConvosAndReadStatus();
     }
 
     public void setRead(int index) {
-        repository.setMessageRead(privateMessagelist.getValue().get(index));
+        repository.setMessageRead(ConvoAndStatus.getValue().get(index).first);
     }
 
 
     public void SetSelectedMessage(int index) {
-        repository.setSelectedMessage(privateMessagelist.getValue().get(index));
+        //repository.setSelectedMessage(privateMessagelist.getValue().get(index));
     }
 }

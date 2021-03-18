@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/profilePic"
         android:layout_width="49dp"
         android:layout_height="47dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -15,13 +15,13 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtMessage"
         android:layout_width="404dp"
         android:layout_height="55dp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/profilePic"
         tools:text="Message"
         android:background="@color/backgroundColor"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

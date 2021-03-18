@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,12 +14,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,6 +42,7 @@ public class Repository {
     private MutableLiveData<PrivateMessage> SelectedMessageLive;
     private MutableLiveData<List<PrivateMessage>> PrivateMessagesList;
     private MutableLiveData<List<SalesItem>> MarketsList;
+    private MutableLiveData<List<Pair<String, Integer>>> ConvoAndUnread;
 
     private ExecutorService executor;
     private static Context con;
@@ -60,6 +59,7 @@ public class Repository {
 
     private Repository()
     {
+        ConvoAndUnread = new MutableLiveData<>();
         SelectedMessageLive = new MutableLiveData<>();
         PrivateMessagesList = new MutableLiveData<>();
         SelectedItemLive = new MutableLiveData<>();
@@ -181,6 +181,44 @@ public class Repository {
     public MutableLiveData<List<PrivateMessage>> getPrivateMessages(){
         return this.PrivateMessagesList;
     }
+    public MutableLiveData<List<Pair<String, Integer>>> getConvosAndReadStatus()
+    {
+        InitInbox();
+        return ConvoAndUnread;
+    }
+
+    public void InitInbox()
+    {
+        //Lytter på hvilke samtaler man har, og ser om nogen af beskderne er ulæste for en bestemt samtale.
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            firestore.collection(
+                    "PrivateMessages").document(auth.getCurrentUser().getEmail()).
+                    collection("Conversations").
+                    addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            List<Pair<String, Integer>> usersAndRead = new ArrayList();
+                            if (!value.isEmpty()) {
+                                for (QueryDocumentSnapshot snap : value) {
+                                    snap.getReference().collection("Messages").
+                                            whereEqualTo("Read", false).
+                                            addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @SuppressLint("NewApi")
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            Predicate<Pair<String,Integer>> condition = msg -> msg.first.equals(snap.getId());
+                                            usersAndRead.removeIf(condition);
+                                           usersAndRead.add(new Pair<>(snap.getId(),
+                                                   value.getDocuments().size()));
+                                            ConvoAndUnread.setValue(usersAndRead);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+    }}
 
 
     public void initializePrivateMessages()
@@ -216,18 +254,26 @@ public class Repository {
             }
     }
 
-    public void setMessageRead(PrivateMessage message)
+    public void setMessageRead(String Convo)
     {
-        if(!message.getMessageRead())
+        if(!Convo.isEmpty())
         {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
                     firestore.collection("PrivateMessages").
                             document(auth.getCurrentUser().getEmail()).
-                            collection("Conversations").document(message.getSender())
-                            .collection("Messages")
-                            .document(message.getPath()).update("Read", true);
+                            collection("Conversations").document(Convo)
+                            .collection("Messages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                           List<DocumentSnapshot> docs =  task.getResult().getDocuments();
+                           for(DocumentSnapshot doc : docs)
+                           {
+                               doc.getReference().update("Read", true);
+                           }
+                        }
+                    });
                 }
             });
         }
