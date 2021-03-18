@@ -1,12 +1,8 @@
 package mmm.i7bachelor_smartsale.app.Models;
 
-import android.util.Log;
-
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class PrivateMessage implements Serializable {
 
@@ -29,7 +25,6 @@ public class PrivateMessage implements Serializable {
 
 
     public static PrivateMessage fromSnapshot(DocumentSnapshot d, String sender) {
-        Log.d("Sender", sender);
         PrivateMessage message = new PrivateMessage(d.get("Receiver").toString(),
                 sender,
                 d.get("MessageBody").toString(),

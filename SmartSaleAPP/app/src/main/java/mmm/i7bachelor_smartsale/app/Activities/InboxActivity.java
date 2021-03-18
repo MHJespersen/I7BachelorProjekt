@@ -51,7 +51,7 @@ public class InboxActivity extends MainActivity implements InboxAdapter.IMessage
 
         viewModel.SetSelectedMessage(index);
         viewModel.setRead(index);
-        Intent ViewMessage = new Intent(this, ViewMessageActivity.class);
+        Intent ViewMessage = new Intent(this, ViewConversationActivity.class);
         startActivity(ViewMessage);
     }
 

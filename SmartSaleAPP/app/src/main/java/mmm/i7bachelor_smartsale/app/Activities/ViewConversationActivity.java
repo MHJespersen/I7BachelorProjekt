@@ -19,7 +19,7 @@ import mmm.i7bachelor_smartsale.app.R;
 import mmm.i7bachelor_smartsale.app.ViewModels.ViewMessageViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.ViewMessageViewModelFactory;
 
-public class ViewMessageActivity extends AppCompatActivity {
+public class ViewConversationActivity extends AppCompatActivity {
     private ViewMessageViewModel viewModel;
     private PrivateMessage _privatemessage;
 
@@ -39,8 +39,6 @@ public class ViewMessageActivity extends AppCompatActivity {
 
     private void setupUI() {
         textSender = findViewById(R.id.viewMessageTextFrom);
-        textRegarding = findViewById(R.id.viewMessageTextRegarding);
-        textMessage = findViewById(R.id.viewMessageTextMessage);
         btnReply = findViewById(R.id.viewMessageBtnReply);
         textReply = findViewById(R.id.viewMessageReply);
         btnReply.setOnClickListener(view -> reply());
@@ -69,9 +67,9 @@ public class ViewMessageActivity extends AppCompatActivity {
             {
                 Log.d("PrivateMessage", "Set privateMessage info");
                 _privatemessage = message;
-                textMessage.setText(message.getMessageBody());
-                textRegarding.setText(message.getRegarding());
-                textSender.setText(message.getSender());
+//                textMessage.setText(message.getMessageBody());
+//                textRegarding.setText(message.getRegarding());
+//                textSender.setText(message.getSender());
             }
             Log.d("PrivateMessage", "ViewMessage:failed. Message = null ");
         }

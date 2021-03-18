@@ -275,7 +275,8 @@ public class Repository {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot res = task.getResult();
-                SelectedMessageLive.postValue(PrivateMessage.fromSnapshot(res, res.get("Sender").toString()));
+                SelectedMessageLive.postValue(PrivateMessage.fromSnapshot(res,
+                        res.get("Sender").toString()));
             }
         });
     }
