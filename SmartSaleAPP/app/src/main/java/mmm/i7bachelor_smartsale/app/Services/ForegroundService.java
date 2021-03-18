@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.Observer;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import mmm.i7bachelor_smartsale.app.Models.Repository;
 import mmm.i7bachelor_smartsale.app.R;
 import mmm.i7bachelor_smartsale.app.Utilities.Constants;
 
-public class ForegroundService extends Service{
+public class ForegroundService extends LifecycleService {
 
     private static final String TAG = "ForegroundService";
     private static final int SERVICE_NOTIFICATION_ID = 40;
@@ -44,7 +45,7 @@ public class ForegroundService extends Service{
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate: ");
-        //repo.getPrivateMessages().observe(this ,privateMessageObserver);
+        repo.getPrivateMessages().observe(this ,privateMessageObserver);
     }
 
     Observer<List<PrivateMessage>> privateMessageObserver = new Observer<List<PrivateMessage>>() {
@@ -82,6 +83,7 @@ public class ForegroundService extends Service{
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        super.onBind(intent);
         return null;
     }
 

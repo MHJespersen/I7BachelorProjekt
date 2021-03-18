@@ -10,9 +10,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import mmm.i7bachelor_smartsale.app.Models.ExchangeRates;
+
 public class WebAPI {
-
-
     private static final String TAG = "WebAPI";
     RequestQueue queue;
     Context context;
@@ -24,8 +24,8 @@ public class WebAPI {
 
     public void loadData(Callback callback){
         this.callback = callback;
-        String url = "https://api.ratesapi.io/api/latest?base=DKK";
-        sendRequest(url);
+        String base = "https://api.ratesapi.io/api/latest?base=DKK";
+        sendRequest(base);
     }
 
     private void sendRequest(String url){
@@ -43,11 +43,9 @@ public class WebAPI {
 
     private void parseJson(String json){
         Gson gson = new GsonBuilder().create();
-       // ExchangeRates exchangeRates =  gson.fromJson(json, ExchangeRates.class);
-        //if(exchangeRates!=null){
-            //callback.OnApiCallback(exchangeRates);
-        //}
+        ExchangeRates exchangeRates =  gson.fromJson(json, ExchangeRates.class);
+        if(exchangeRates!=null){
+            callback.OnApiCallback(exchangeRates);
+        }
     }
-
-     
 }

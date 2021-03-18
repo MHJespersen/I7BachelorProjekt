@@ -4,18 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     android:scrollbars="vertical"
-    tools:context="mmm.i7bachelor_smartsale.app.Activities.DetailsActivity"
-    android:background="@color/backgroundColor">
+    tools:context="mmm.i7bachelor_smartsale.app.Activities.DetailsActivity">
 
     <View
         android:id="@+id/dividerTop"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginStart="@dimen/margin_outer"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="@dimen/margin_outer"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/detailsImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailsTextTitle" />
@@ -24,9 +26,10 @@
         android:id="@+id/detailsTextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_outer"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="@+id/dividerTop"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Magic Chair" />
 
@@ -34,81 +37,92 @@
         android:id="@+id/detailsImage"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/dividerTop"
-        app:layout_constraintStart_toStartOf="@+id/dividerTop"
-        app:layout_constraintTop_toBottomOf="@+id/dividerTop"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="71dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="67dp"
+        app:layout_constraintBottom_toBottomOf="@+id/detailsLabelEur"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/sample_chair" />
 
     <TextView
         android:id="@+id/detailsLabelPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/label_price_col"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintStart_toStartOf="@+id/detailsImage"
-        app:layout_constraintTop_toBottomOf="@+id/detailsImage" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/detailsTextPrice"
+        app:layout_constraintEnd_toStartOf="@+id/detailsTextPrice"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/detailsTextLocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="7dp"
         android:textAlignment="textEnd"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintEnd_toStartOf="@+id/detailsBtnMap"
         app:layout_constraintStart_toEndOf="@+id/detailsTextPrice"
-        app:layout_constraintTop_toTopOf="@+id/detailsTextPrice"
+        app:layout_constraintTop_toTopOf="@+id/detailsBtnMap"
         tools:text="Vesuvius" />
 
     <TextView
         android:id="@+id/detailsTextPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toStartOf="@+id/detailsTextLocation"
         app:layout_constraintStart_toEndOf="@+id/detailsLabelPrice"
-        app:layout_constraintTop_toTopOf="@+id/detailsLabelPrice"
+        app:layout_constraintTop_toTopOf="@+id/detailsTextLocation"
         tools:text="42 kr" />
 
     <TextView
         android:id="@+id/detailsTextDesc"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="43dp"
         android:scrollbars="vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintBottom_toTopOf="@+id/detailsBtnMessage"
-        app:layout_constraintEnd_toEndOf="@+id/dividerTop"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/detailsLabelPrice"
-        app:layout_constraintTop_toBottomOf="@+id/detailsTextEur"
+        app:layout_constraintBottom_toBottomOf="@+id/mobilepayinfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailsLabelPrice"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce purus orci, faucibus id pretium et, imperdiet bibendum nisl. Duis ultricies consequat convallis. Cras nec odio sit amet augue placerat maximus quis id diam. In justo ante, ultricies sit amet turpis in, vehicula lacinia libero. Nullam fermentum elit non condimentum ullamcorper. Sed maximus quam ac molestie ornare. Cras ac vehicula nulla. Fusce porttitor lectus cursus lacus tincidunt, et ultricies urna ultrices. Mauris eleifend metus odio, vel maximus libero rhoncus ac. Vestibulum tincidunt odio ligula, quis vulputate risus commodo feugiat." />
 
     <Button
         android:id="@+id/detailsBtnMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/buttonColor"
-        android:layout_marginBottom="@dimen/margin_outer"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:text="@string/btn_message"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/detailsTextDesc" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageButton
         android:id="@+id/detailsBtnMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="283dp"
+        android:layout_marginEnd="16dp"
         android:background="#00FFFFFF"
         android:tint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="@+id/detailsTextLocation"
-        app:layout_constraintEnd_toEndOf="@+id/detailsImage"
-        app:layout_constraintTop_toTopOf="@+id/detailsTextLocation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/detailsTextLocation"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_location_32" />
 
     <TextView
@@ -124,9 +138,32 @@
         android:id="@+id/detailsLabelEur"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/label_eur_col"
-        app:layout_constraintStart_toStartOf="@+id/detailsLabelPrice"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailsLabelPrice" />
+
+    <Button
+        android:id="@+id/mobilepaybtn"
+        android:layout_width="124dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="22dp"
+        android:background="@drawable/mobilepay"
+        app:layout_constraintBottom_toBottomOf="@+id/detailsBtnMessage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/detailsBtnMessage" />
+
+    <TextView
+        android:id="@+id/mobilepayinfo"
+        android:layout_width="0dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/label_mobilepay"
+        app:layout_constraintBottom_toTopOf="@+id/mobilepaybtn"
+        app:layout_constraintEnd_toEndOf="@+id/mobilepaybtn"
+        app:layout_constraintStart_toStartOf="@+id/detailsTextDesc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;
@@ -24,6 +25,7 @@ import mmm.i7bachelor_smartsale.app.Utilities.Constants;
 import mmm.i7bachelor_smartsale.app.Utilities.LocationUtility;
 import mmm.i7bachelor_smartsale.app.ViewModels.DetailsViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.DetailsViewModelFactory;
+import mmm.i7bachelor_smartsale.app.Webapi.Callback;
 import mmm.i7bachelor_smartsale.app.Webapi.WebAPI;
 
 public class DetailsActivity extends MainActivity {
@@ -96,6 +98,8 @@ public class DetailsActivity extends MainActivity {
                 {
                     Glide.with(imgItem).load(R.drawable.emptycart).into(imgItem);
                 }
+
+                getExchangeRates(price);
             }
         }
     };
@@ -137,4 +141,25 @@ public class DetailsActivity extends MainActivity {
 
         startActivity(intent);
     }
+
+    public void getExchangeRates(double price) {
+
+        if (executor == null) {
+            executor = Executors.newSingleThreadExecutor();
+        }
+
+        executor.submit(() -> {
+            Callback callback = exchangeRates -> {
+                // What happens on API call completion
+                double eur = exchangeRates.getRates().getEUR();
+                double eurPrice = price*eur;
+                String sPrice = String.format(java.util.Locale.getDefault(),"%.2f \u20ac", eurPrice);
+                textPriceEur.setText(sPrice);
+
+            };
+
+            webAPI.loadData(callback);
+        });
+    }
+
 }

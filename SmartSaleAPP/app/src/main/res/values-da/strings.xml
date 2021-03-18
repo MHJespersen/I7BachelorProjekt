@@ -63,5 +63,6 @@
     <string name="reply_to">Svar til</string>
     <string name="reply_sent">Svar sendt</string>
     <string name="created_sale">Annoncen er oprettet!, Se Annoncen på markedspladsen</string>>
+    <string name="label_mobilepay">Køb med:</string>
 
 </resources>
