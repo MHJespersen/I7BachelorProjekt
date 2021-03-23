@@ -16,9 +16,11 @@ public class ViewMessageViewModel extends ViewModel {
     public ViewMessageViewModel(Context context) {
         repo = Repository.getInstance(context);
     }
+    public LiveData<List<PrivateMessage>> PBMessages;
     public LiveData<List<PrivateMessage>> getMessages()
     {
-        return repo.getPrivateMessages();
+        PBMessages = repo.getPrivateMessages();
+        return PBMessages;
     }
 
 

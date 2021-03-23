@@ -67,7 +67,6 @@ public class Repository {
         firestore = FirebaseFirestore.getInstance();
         executor = Executors.newSingleThreadExecutor();
         auth = FirebaseAuth.getInstance();
-        initializePrivateMessages();
     }
 
     public GeoPoint GeoCreater(Location l){
@@ -149,9 +148,11 @@ public class Repository {
             public void run() {
                 Map<String, Object> map = new HashMap<>();
                 CollectionReference CollRef = firestore.collection("PrivateMessages").
-                        document(privateMessage.getReceiver()).collection("Messages");
+                        document(privateMessage.getReceiver()).
+                        collection("Conversations").
+                        document(auth.getCurrentUser().getEmail()).collection("Messages");
                 String UniqueID = CollRef.document().getId();
-                map.put("Receiver", privateMessage.getReceiver());
+                map.put("Receiver", "N/A");
                 map.put("Sender", privateMessage.getSender());
                 map.put("MessageDate", privateMessage.getMessageDate());
                 map.put("MessageBody", privateMessage.getMessageBody());
@@ -159,8 +160,9 @@ public class Repository {
                 map.put("Regarding", privateMessage.getRegarding());
                 map.put("Path", UniqueID);
                 firestore.collection("PrivateMessages").
-                        document(privateMessage.getReceiver())
-                        .collection("Messages").document(UniqueID).set(map)
+                        document("TEST").
+                        collection("Conversations").
+                        document(auth.getCurrentUser().getEmail()).collection("Messages").document(UniqueID).set(map)
                         .addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
@@ -221,33 +223,25 @@ public class Repository {
     }}
 
 
-    public void initializePrivateMessages()
+    public void initializePrivateMessages(String reciever)
     {
         //Self-note.. det her må kunne gøres bedre..?
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             firestore.collection(
                     "PrivateMessages").document(auth.getCurrentUser().getEmail()).
-                    collection("Conversations").
+                    collection("Conversations").document(reciever).collection("Messages").
                     addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                             ArrayList privateMessages = new ArrayList();
                             if (!value.isEmpty()) {
-                                for (QueryDocumentSnapshot snap : value) {
-                                    snap.getReference().collection("Messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @SuppressLint("NewApi")
-                                        @Override
-                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                            for (QueryDocumentSnapshot snapMsg : value) {
-                                                Predicate<PrivateMessage> condition = msg -> msg.getPath().equals(snapMsg.get("Path"));
-                                                privateMessages.removeIf(condition);
-                                                privateMessages.add(PrivateMessage.fromSnapshot(snapMsg, snap.getId()));
-                                            }
-                                            PrivateMessagesList.setValue(privateMessages);
-                                        }
-                                    });
+                                for (QueryDocumentSnapshot snapMsg : value) {
+                                    //Predicate<PrivateMessage> condition = msg -> msg.getPath().equals(snapMsg.get("Path"));
+                                    // privateMessages.removeIf(condition);
+                                    privateMessages.add(PrivateMessage.fromSnapshot(snapMsg, snapMsg.getId()));
                                 }
+                                PrivateMessagesList.setValue(privateMessages);
                             }
                         }
                     });

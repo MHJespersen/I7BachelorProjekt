@@ -54,6 +54,7 @@ public class ViewConversationActivity extends MainActivity implements Conversati
             adapter = new ConversationAdapter(context);
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(adapter);
+            _privatemessage = messages.get(0);
             adapter.updateMessageList(messages);
         }};
 
@@ -67,13 +68,13 @@ public class ViewConversationActivity extends MainActivity implements Conversati
     private void reply() {
         String replyMessage = textReply.getText().toString();
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss", Locale.getDefault()).format(new Date());
-
+        Log.d("NEW RECIEVER" , _privatemessage.getSender());
         PrivateMessage privateMessage = new PrivateMessage();
         privateMessage.setMessageDate(timeStamp);
-        privateMessage.setSender(_privatemessage.getReceiver());
+        privateMessage.setSender(auth.getCurrentUser().getEmail());
         privateMessage.setReceiver(_privatemessage.getSender());
         privateMessage.setMessageBody(replyMessage);
-        privateMessage.setRegarding(_privatemessage.getRegarding());
+        privateMessage.setRegarding("/NA");
 
         viewModel.reply(privateMessage);
         Toast.makeText(this, getString(R.string.reply_sent), Toast.LENGTH_SHORT).show();

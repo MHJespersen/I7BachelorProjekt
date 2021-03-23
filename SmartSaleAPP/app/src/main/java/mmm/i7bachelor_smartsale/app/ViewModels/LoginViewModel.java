@@ -15,6 +15,6 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void InitMessages() {
-       repo.initializePrivateMessages();
+       repo.InitInbox();
     }
 }

@@ -49,7 +49,6 @@ public class InboxActivity extends MainActivity implements InboxAdapter.IMessage
 
     @Override
     public void onMessageClicked(int index) {
-
         viewModel.SetSelectedMessage(index);
         viewModel.setRead(index);
         Intent ViewMessage = new Intent(this, ViewConversationActivity.class);
