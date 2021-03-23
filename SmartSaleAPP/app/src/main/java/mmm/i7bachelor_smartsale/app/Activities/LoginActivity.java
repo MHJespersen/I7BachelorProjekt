@@ -108,16 +108,8 @@ public class LoginActivity extends MainActivity {
     }
 
     public void OpenMarket(View view) {
-        if(auth.getCurrentUser() != null)
-        {
             Intent Markets = new Intent(this, MarketsActivity.class);
             startActivity(Markets);
-        }
-        else
-        {
-            view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake));
-            Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void MakeASale(View view) {
