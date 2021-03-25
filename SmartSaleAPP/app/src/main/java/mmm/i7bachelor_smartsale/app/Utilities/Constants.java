@@ -13,6 +13,14 @@ public class Constants {
     public static final String DETAILS_ACTIVITY = "DetailsActivity";
     public static final String EXTRA_ITEM_ID = "extra_itemId";
     public static final String EXTRA_COORDS = "extra_coords";
+    //https://mobilepaydev.github.io/MobilePay-PoS-v10/pos_integratorauthentication#client_onboarding
+    //These are all mobilepay smartsale project related
+    public static final String SANDBOX_URL = "https://api.sandbox.mobilepay.dk/integrator-authentication/connect/token";
+    public static final String CLIENT_ID = "1170825e-c923-47c2-bdb7-ef35c7967efc";
+    public static final String CLIENT_CREDENTIALS_SECRET = "hEt5IUrYrVY8pKnyp2SAOvWAqqpIzC3qqAAz9tOA3JE";
+    public static final String MERCHANT_VAT = "DK90000093";
+
+
 
     //Inbox
     public static final String INBOX_ACTIVITY = "InboxActivity";

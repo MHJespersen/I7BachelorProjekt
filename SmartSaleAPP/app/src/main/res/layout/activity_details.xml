@@ -150,6 +150,7 @@
         android:layout_height="49dp"
         android:layout_marginStart="22dp"
         android:background="@drawable/mobilepay"
+        android:onClick="sendMobilepayrequest"
         app:layout_constraintBottom_toBottomOf="@+id/detailsBtnMessage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/detailsBtnMessage" />

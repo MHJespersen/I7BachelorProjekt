@@ -2,23 +2,51 @@ package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import mmm.i7bachelor_smartsale.app.Models.AccessToken;
+import mmm.i7bachelor_smartsale.app.Models.ExchangeRates;
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;
 import mmm.i7bachelor_smartsale.app.Utilities.Constants;
@@ -31,12 +59,14 @@ import mmm.i7bachelor_smartsale.app.Webapi.WebAPI;
 public class DetailsActivity extends MainActivity {
 
     private DetailsViewModel viewModel;
+    RequestQueue queue;
 
     // widgets
     private TextView textTitle, textPrice, textPriceEur, textDescription, textLocation;
     private ImageView imgItem;
     private Button btnMessage;
     private ImageButton btnMap;
+    AccessToken accessToken;
 
     private ExecutorService executor;
     private WebAPI webAPI;
@@ -120,6 +150,51 @@ public class DetailsActivity extends MainActivity {
 
         btnMessage.setOnClickListener(view -> gotoSendMessage());
         btnMap.setOnClickListener(view -> gotoMap());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void sendMobilepayrequest(View view) throws JSONException {
+        //Send authentication request to get access token for the PoS API
+        sendAuthenticationRequest(Constants.SANDBOX_URL);
+
+        //Send PoS request with access token granted.
+        //sendPoSRequest(accessToken);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void sendAuthenticationRequest(String url) throws JSONException {
+        //RequestQueue queue = Volley.newRequestQueue(this);
+        if(queue==null){
+            queue = Volley.newRequestQueue(this);
+        }
+        //encode client id + secret
+        String authString = (Constants.CLIENT_ID + ":" + Constants.CLIENT_CREDENTIALS_SECRET);
+        String encodedAuth = Base64.getEncoder().encodeToString(authString.getBytes());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("Mobilepay", "onResponse: " + response);
+                    Gson gson = new GsonBuilder().create();
+                    accessToken =  gson.fromJson(response, AccessToken.class);
+                },
+                error -> Log.d("Mobilepay", "onError: " + error)) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                params.put("x-ibm-client-id", Constants.CLIENT_ID);
+                params.put("Authorization", "Basic " + encodedAuth);
+
+                return params;
+            }
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<>();
+                params.put("grant_type", "client_credentials");
+                params.put("merchant_vat", Constants.MERCHANT_VAT);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     private void gotoSendMessage() {
