@@ -9,19 +9,25 @@
         android:id="@+id/profilePic"
         android:layout_width="49dp"
         android:layout_height="47dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/txtMessage"
-        android:layout_width="404dp"
-        android:layout_height="55dp"
+        android:layout_width="320dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/backgroundColor"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profilePic"
-        tools:text="Message"
-        android:background="@color/backgroundColor"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Message" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,6 +47,9 @@ public class ViewConversationActivity extends MainActivity implements Conversati
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
 
+        //Hande re-use of viewholders properly so text and img positions don't swap
+        recyclerView.getRecycledViewPool().setMaxRecycledViews(1,0);
+
         viewModel = new ViewModelProvider(this, new ViewMessageViewModelFactory(this.getApplicationContext()))
                 .get(ViewMessageViewModel.class);
         viewModel.getMessages().observe(this, updateObserver );

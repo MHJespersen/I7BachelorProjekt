@@ -1,6 +1,8 @@
 package mmm.i7bachelor_smartsale.app.Adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Collections;
@@ -19,6 +22,8 @@ import java.util.List;
 
 import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
 import mmm.i7bachelor_smartsale.app.R;
+
+import static java.security.AccessController.getContext;
 
 
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
@@ -30,21 +35,21 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private IMessageClickedListener listener;
     private FirebaseStorage mStorageRef;
     private List<PrivateMessage> messagelist;
+    private String UserEmail;
+    int ScreenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+    FirebaseAuth auth;
 
     public ConversationAdapter(IMessageClickedListener listener) {
         mStorageRef = FirebaseStorage.getInstance();
+        auth = FirebaseAuth.getInstance();
+        UserEmail = auth.getCurrentUser().getEmail();
         this.listener = listener;
         this.con = (Context)listener;
     }
 
     public void updateMessageList(List<PrivateMessage> list){
-        Log.d("Sort msg 0", "" + list.size());
-        Log.d("Sort", "Start sort");
         Collections.sort(list);
-        Log.d("Sort", "End sort");
         messagelist = list;
-        Log.d("Sort msg 0", list.get(0).getMessageDate());
-        Log.d("Sort msg 0", "" + list.size());
         notifyDataSetChanged();
     }
 
@@ -60,11 +65,25 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position)
     {
+        Log.d("Sender", messagelist.get(position).getSender());
         holder.Message.setText(messagelist.get(position).getMessageBody());
+        if(messagelist.get(position).getSender().equals(UserEmail))
+        {
+            holder.Message.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        }
+        else
+        {
+            holder.Message.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        }
 
         Glide.with(holder.ProfilePic.getContext())
                 .load(R.drawable.com_facebook_profile_picture_blank_portrait) //Set blank til default og hent det rigtige profile pic fra FB / Github?
                 .into(holder.ProfilePic);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 1;
     }
 
     @Override
