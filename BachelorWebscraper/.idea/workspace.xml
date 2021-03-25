@@ -6,16 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="16780c44-c8ea-4fc4-b9cd-be31c7bb69a5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processors/DBAparser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/DBAparser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processors/GOGparser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/GOGparser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SmartSaleAPP/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../SmartSaleAPP/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SmartSaleAPP/.idea/libraries/Gradle__com_android_installreferrer_installreferrer_1_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../SmartSaleAPP/.idea/libraries/Gradle__com_android_installreferrer_installreferrer_1_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SmartSaleAPP/.idea/libraries/Gradle__com_android_volley_volley_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../SmartSaleAPP/.idea/libraries/Gradle__com_android_volley_volley_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SmartSaleAPP/app/src/main/java/mmm/i7bachelor_smartsale/app/Activities/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SmartSaleAPP/app/src/main/java/mmm/i7bachelor_smartsale/app/Activities/LoginActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SmartSaleAPP/app/src/main/java/mmm/i7bachelor_smartsale/app/Models/PrivateMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SmartSaleAPP/app/src/main/java/mmm/i7bachelor_smartsale/app/Models/PrivateMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SmartSaleAPP/app/src/main/java/mmm/i7bachelor_smartsale/app/Models/Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SmartSaleAPP/app/src/main/java/mmm/i7bachelor_smartsale/app/Models/Repository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SmartSaleAPP/app/src/main/java/mmm/i7bachelor_smartsale/app/ViewModels/InboxViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SmartSaleAPP/app/src/main/java/mmm/i7bachelor_smartsale/app/ViewModels/InboxViewModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

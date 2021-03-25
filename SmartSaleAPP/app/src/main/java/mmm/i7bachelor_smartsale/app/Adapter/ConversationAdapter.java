@@ -1,7 +1,7 @@
 package mmm.i7bachelor_smartsale.app.Adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.Collections;
 import java.util.List;
 
 import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
@@ -36,9 +37,14 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         this.con = (Context)listener;
     }
 
-    @SuppressLint("NewApi")
     public void updateMessageList(List<PrivateMessage> list){
+        Log.d("Sort msg 0", "" + list.size());
+        Log.d("Sort", "Start sort");
+        Collections.sort(list);
+        Log.d("Sort", "End sort");
         messagelist = list;
+        Log.d("Sort msg 0", list.get(0).getMessageDate());
+        Log.d("Sort msg 0", "" + list.size());
         notifyDataSetChanged();
     }
 

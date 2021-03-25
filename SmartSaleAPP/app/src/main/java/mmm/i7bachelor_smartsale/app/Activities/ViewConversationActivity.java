@@ -30,7 +30,7 @@ public class ViewConversationActivity extends MainActivity implements Conversati
     private PrivateMessage _privatemessage;
 
     // widgets
-    private TextView textSender, textRegarding, textMessage, textReply;
+    private TextView textReply;
     private Button btnReply;
     private RecyclerView recyclerView;
     private ConversationAdapter adapter;
@@ -43,6 +43,9 @@ public class ViewConversationActivity extends MainActivity implements Conversati
         setContentView(R.layout.activity_view_message);
         setupUI();
         recyclerView = findViewById(R.id.RCVMessages);
+        adapter = new ConversationAdapter(context);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(adapter);
 
         viewModel = new ViewModelProvider(this, new ViewMessageViewModelFactory(this.getApplicationContext()))
                 .get(ViewMessageViewModel.class);
@@ -51,15 +54,11 @@ public class ViewConversationActivity extends MainActivity implements Conversati
     Observer<List<PrivateMessage>> updateObserver = new Observer<List<PrivateMessage>>() {
         @Override
         public void onChanged(List<PrivateMessage> messages) {
-            adapter = new ConversationAdapter(context);
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(adapter);
             _privatemessage = messages.get(0);
             adapter.updateMessageList(messages);
         }};
 
     private void setupUI() {
-        textSender = findViewById(R.id.viewMessageTextFrom);
         btnReply = findViewById(R.id.viewMessageBtnReply);
         textReply = findViewById(R.id.viewMessageReply);
         btnReply.setOnClickListener(view -> reply());
@@ -68,7 +67,6 @@ public class ViewConversationActivity extends MainActivity implements Conversati
     private void reply() {
         String replyMessage = textReply.getText().toString();
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss", Locale.getDefault()).format(new Date());
-        Log.d("NEW RECIEVER" , _privatemessage.getSender());
         PrivateMessage privateMessage = new PrivateMessage();
         privateMessage.setMessageDate(timeStamp);
         privateMessage.setSender(auth.getCurrentUser().getEmail());
@@ -78,7 +76,6 @@ public class ViewConversationActivity extends MainActivity implements Conversati
 
         viewModel.reply(privateMessage);
         Toast.makeText(this, getString(R.string.reply_sent), Toast.LENGTH_SHORT).show();
-        finish();
     }
 
     @Override

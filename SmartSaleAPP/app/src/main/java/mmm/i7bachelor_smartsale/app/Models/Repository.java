@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,7 +161,7 @@ public class Repository {
                 map.put("Regarding", privateMessage.getRegarding());
                 map.put("Path", UniqueID);
                 firestore.collection("PrivateMessages").
-                        document("TEST").
+                        document(privateMessage.getReceiver()).
                         collection("Conversations").
                         document(auth.getCurrentUser().getEmail()).collection("Messages").document(UniqueID).set(map)
                         .addOnCompleteListener(new OnCompleteListener() {
@@ -191,7 +192,7 @@ public class Repository {
 
     public void InitInbox()
     {
-        //Lytter på hvilke samtaler man har, og ser om nogen af beskderne er ulæste for en bestemt samtale.
+        //Listen for new conversations
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             firestore.collection(
@@ -223,28 +224,47 @@ public class Repository {
     }}
 
 
-    public void initializePrivateMessages(String reciever)
+    public void initializePrivateMessages(String receiver)
     {
-        //Self-note.. det her må kunne gøres bedre..?
+        //Get messages from selected conversation on both ends
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
+            ArrayList privateMessages = new ArrayList();
             firestore.collection(
                     "PrivateMessages").document(auth.getCurrentUser().getEmail()).
-                    collection("Conversations").document(reciever).collection("Messages").
+                    collection("Conversations").document(receiver).collection("Messages").
                     addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @SuppressLint("NewApi")
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            ArrayList privateMessages = new ArrayList();
                             if (!value.isEmpty()) {
                                 for (QueryDocumentSnapshot snapMsg : value) {
-                                    //Predicate<PrivateMessage> condition = msg -> msg.getPath().equals(snapMsg.get("Path"));
-                                    // privateMessages.removeIf(condition);
-                                    privateMessages.add(PrivateMessage.fromSnapshot(snapMsg, snapMsg.getId()));
+                                    Predicate<PrivateMessage> condition = msg -> msg.getPath().equals(snapMsg.get("Path"));
+                                    privateMessages.removeIf(condition);
+                                    privateMessages.add(PrivateMessage.fromSnapshot(snapMsg));
+                                    PrivateMessagesList.postValue(privateMessages);
                                 }
-                                PrivateMessagesList.setValue(privateMessages);
                             }
                         }
                     });
+            firestore.collection(
+                    "PrivateMessages").document(receiver).
+                    collection("Conversations").document(auth.getCurrentUser().getEmail()).collection("Messages").
+                    addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @SuppressLint("NewApi")
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if (!value.isEmpty()) {
+                                for (QueryDocumentSnapshot snapMsg : value) {
+                                    Predicate<PrivateMessage> condition = msg -> msg.getPath().equals(snapMsg.get("Path"));
+                                    privateMessages.removeIf(condition);
+                                    privateMessages.add(PrivateMessage.fromSnapshot(snapMsg));
+                                    PrivateMessagesList.postValue(privateMessages);
+                                }
+                            }
+                        }
+                    });
+            //PrivateMessagesList = new MutableLiveData<>();
             }
     }
 
@@ -302,21 +322,6 @@ public class Repository {
                                 Toast.makeText(con,"Creating sale Failed", Toast.LENGTH_SHORT);
                             }
                         });
-            }
-        });
-    }
-
-    public void setSelectedMessage(PrivateMessage message) {
-        Task<DocumentSnapshot> d = firestore.collection("PrivateMessages").
-                document(auth.getCurrentUser().getEmail()).collection("Conversations")
-                .document(message.getSender()).collection("Messages")
-                .document(message.getPath()).get();
-        d.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot res = task.getResult();
-                SelectedMessageLive.postValue(PrivateMessage.fromSnapshot(res,
-                        res.get("Sender").toString()));
             }
         });
     }
