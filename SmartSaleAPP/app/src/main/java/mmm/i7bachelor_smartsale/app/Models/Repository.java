@@ -153,7 +153,7 @@ public class Repository {
                         collection("Conversations").
                         document(auth.getCurrentUser().getEmail()).collection("Messages");
                 String UniqueID = CollRef.document().getId();
-                map.put("Receiver", "N/A");
+                map.put("Receiver", privateMessage.getReceiver());
                 map.put("Sender", privateMessage.getSender());
                 map.put("MessageDate", privateMessage.getMessageDate());
                 map.put("MessageBody", privateMessage.getMessageBody());

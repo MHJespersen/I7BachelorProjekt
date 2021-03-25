@@ -30,7 +30,7 @@ public class ViewConversationActivity extends MainActivity implements Conversati
     private PrivateMessage _privatemessage;
 
     // widgets
-    private TextView textReply;
+    private TextView textReply, fromtxt;
     private Button btnReply;
     private RecyclerView recyclerView;
     private ConversationAdapter adapter;
@@ -58,11 +58,13 @@ public class ViewConversationActivity extends MainActivity implements Conversati
         @Override
         public void onChanged(List<PrivateMessage> messages) {
             _privatemessage = messages.get(0);
+            fromtxt.setText(_privatemessage.getSender());
             adapter.updateMessageList(messages);
         }};
 
     private void setupUI() {
         btnReply = findViewById(R.id.viewMessageBtnReply);
+        fromtxt = findViewById(R.id.viewMessageLabelFrom);
         textReply = findViewById(R.id.viewMessageReply);
         btnReply.setOnClickListener(view -> reply());
     }

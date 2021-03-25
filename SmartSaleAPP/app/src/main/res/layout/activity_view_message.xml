@@ -11,22 +11,11 @@
         android:id="@+id/viewMessageLabelFrom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_outer"
-        android:layout_marginTop="@dimen/margin_outer"
         android:text="@string/label_from_col"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/viewMessageTextFrom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_outer"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/viewMessageLabelFrom"
-        tools:text="SomeUser" />
 
     <Button
         android:id="@+id/viewMessageBtnReply"
@@ -57,9 +46,9 @@
         android:id="@+id/RCVMessages"
         android:layout_width="match_parent"
         android:layout_height="480dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/viewMessageReply"
-        app:layout_constraintTop_toBottomOf="@+id/viewMessageTextFrom"
+        app:layout_constraintTop_toBottomOf="@+id/viewMessageLabelFrom"
         tools:layout_editor_absoluteX="0dp"
         tools:listitem="@layout/message_list_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>

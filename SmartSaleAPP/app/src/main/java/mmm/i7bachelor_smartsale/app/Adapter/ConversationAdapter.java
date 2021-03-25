@@ -70,10 +70,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         if(messagelist.get(position).getSender().equals(UserEmail))
         {
             holder.Message.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+            holder.ProfilePic.setX(ScreenWidth*(float)0.3);
         }
         else
         {
             holder.Message.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            holder.ProfilePic.setX(ScreenWidth*(float)-0.3);
+
         }
 
         Glide.with(holder.ProfilePic.getContext())
