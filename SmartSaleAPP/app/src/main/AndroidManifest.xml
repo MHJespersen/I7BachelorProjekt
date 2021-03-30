@@ -15,6 +15,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <queries>
         <!-- Allow map to open in Google Maps app-->
@@ -74,6 +75,7 @@
         <activity android:name=".Activities.MarketsActivity" />
         <activity android:name=".Activities.DetailsActivity"/>
         <activity android:name=".Activities.ViewConversationActivity"/>
+        <activity android:name=".Activities.MobilePayActivity"/>
         <activity android:name=".Activities.TestMLActivity"/>
         <activity
             android:name=".Activities.MapsActivity"

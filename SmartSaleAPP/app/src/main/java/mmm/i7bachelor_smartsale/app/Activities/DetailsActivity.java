@@ -159,6 +159,7 @@ public class DetailsActivity extends MainActivity {
 
         //Send PoS request with access token granted.
         //sendPoSRequest(accessToken);
+        gotoMobilepayQR();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -195,6 +196,15 @@ public class DetailsActivity extends MainActivity {
             }
         };
         queue.add(stringRequest);
+    }
+
+    private void gotoMobilepayQR() {
+        Intent intent = new Intent(this, MobilePayActivity.class);
+
+        //Title of salesItem is used to set regarding field of message example:(Regarding: Chair)
+        //intent.putExtra(Constants.DETAILS_TITLE, selectedItem.getTitle());
+        //intent.putExtra(Constants.DETAILS_USER, selectedItem.getUser());
+        startActivity(intent);
     }
 
     private void gotoSendMessage() {

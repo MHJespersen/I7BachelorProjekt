@@ -64,4 +64,5 @@
     <string name="reply_sent">Reply sent</string>
     <string name="created_sale">Created Sale Successfully!, See the Article in the marketplace</string>>
     <string name="label_mobilepay">Buy with:</string>
+    <string name="label_mobilepayQR">Press the QR Code to start payment in MobilePay APP</string>
 </resources>

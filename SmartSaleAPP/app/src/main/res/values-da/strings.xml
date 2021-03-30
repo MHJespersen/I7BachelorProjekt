@@ -64,5 +64,6 @@
     <string name="reply_sent">Svar sendt</string>
     <string name="created_sale">Annoncen er oprettet!, Se Annoncen på markedspladsen</string>>
     <string name="label_mobilepay">Køb med:</string>
+    <string name="label_mobilepayQR">Tryk på QR koden for at start betalingen i Mobilepay App</string>
 
 </resources>

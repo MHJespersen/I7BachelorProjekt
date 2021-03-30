@@ -19,6 +19,7 @@ public class Constants {
     public static final String CLIENT_ID = "1170825e-c923-47c2-bdb7-ef35c7967efc";
     public static final String CLIENT_CREDENTIALS_SECRET = "hEt5IUrYrVY8pKnyp2SAOvWAqqpIzC3qqAAz9tOA3JE";
     public static final String MERCHANT_VAT = "DK90000093";
+    public static final String BEACON_ID = "9522134410";
 
 
 
