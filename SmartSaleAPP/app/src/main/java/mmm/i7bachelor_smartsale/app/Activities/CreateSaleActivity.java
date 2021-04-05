@@ -14,9 +14,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +54,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -63,7 +68,7 @@ import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModelFactory;
 
 import static mmm.i7bachelor_smartsale.app.R.string.created_sale;
 
-public class CreateSaleActivity extends MainActivity {
+public class CreateSaleActivity extends MainActivity implements AdapterView.OnItemSelectedListener {
 
     //upload
     private FirebaseStorage firebaseStorage;
@@ -96,6 +101,8 @@ public class CreateSaleActivity extends MainActivity {
     private EditText title, price, description, location;
     private ImageView itemImage;
     private Button btnCapture, btnGetLocation, btnCreate;
+    private Spinner dropdown;
+    private ArrayList<String> suggestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +155,11 @@ public class CreateSaleActivity extends MainActivity {
 
     private void setupUI() {
         btnCreate = findViewById(R.id.btnPublish);
+        dropdown = findViewById(R.id.createSaleSpinner);
+        suggestions = new ArrayList<String>(Arrays.asList(new String[]{"Title suggestions"}));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, suggestions);
+        dropdown.setAdapter(adapter);
+        dropdown.setOnItemSelectedListener(this);
         btnCreate.setOnClickListener(view -> {
             //Save file:
             if (photoFile != null) {
@@ -231,7 +243,7 @@ public class CreateSaleActivity extends MainActivity {
         request.add("image", image);
         //Add features to the request
         JsonObject feature = new JsonObject();
-        feature.add("maxResults", new JsonPrimitive(5));
+        feature.add("maxResults", new JsonPrimitive(7));
         feature.add("type", new JsonPrimitive("LABEL_DETECTION"));
         JsonArray features = new JsonArray();
         features.add(feature);
@@ -252,7 +264,11 @@ public class CreateSaleActivity extends MainActivity {
                                 String text = labelObj.get("description").getAsString();
                                 String entityId = labelObj.get("mid").getAsString();
                                 float score = labelObj.get("score").getAsFloat();
+                                if (suggestions.size() == 8){
+                                    suggestions.clear();
+                                }
                                 //set result to activity objects
+                                suggestions.add(text);
                                 title.setText(text);
                                 mlconfidencevalue.setText("Score: " +score);
                             }
@@ -523,4 +539,37 @@ public class CreateSaleActivity extends MainActivity {
         public void onProviderDisabled(String provider) {
         }
     };
+
+    //When selecting items in the dropdown, handle these selections.
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position){
+            case 1:
+                title.setText(parent.getItemAtPosition(position).toString());
+                break;
+            case 2:
+                title.setText(parent.getItemAtPosition(position).toString());
+                break;
+            case 3:
+                title.setText(parent.getItemAtPosition(position).toString());
+                break;
+            case 4:
+                title.setText(parent.getItemAtPosition(position).toString());
+                break;
+            case 5:
+                title.setText(parent.getItemAtPosition(position).toString());
+                break;
+            case 6:
+                title.setText(parent.getItemAtPosition(position).toString());
+                break;
+            case 7:
+                title.setText(parent.getItemAtPosition(position).toString());
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
