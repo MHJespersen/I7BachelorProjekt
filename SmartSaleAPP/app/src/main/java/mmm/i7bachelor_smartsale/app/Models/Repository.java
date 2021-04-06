@@ -163,12 +163,10 @@ public class Repository {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         String UniqueID = DocRef.collection("Messages").document().getId();
-                        mmap.put("Receiver", privateMessage.getReceiver());
                         mmap.put("Sender", privateMessage.getSender());
                         mmap.put("MessageDate", privateMessage.getMessageDate());
                         mmap.put("MessageBody", privateMessage.getMessageBody());
                         mmap.put("Read", false);
-                        mmap.put("Regarding", "N/A");
                         mmap.put("Path", UniqueID);
                         DocRef.collection("Messages").document(UniqueID).set(mmap)
                                 .addOnCompleteListener(new OnCompleteListener() {

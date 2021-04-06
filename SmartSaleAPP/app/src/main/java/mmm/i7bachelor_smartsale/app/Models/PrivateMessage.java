@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class PrivateMessage  implements Comparable<PrivateMessage> {
 
-    private String messageBody, messageDate, receiver, sender, regarding, path;
+    private String messageBody, messageDate, receiver, sender, path;
     private Boolean messageRead;
 
     public PrivateMessage(){
@@ -19,7 +19,6 @@ public class PrivateMessage  implements Comparable<PrivateMessage> {
         this.messageBody = messageBody;
         this.messageDate = messageDate;
         this.messageRead = messageRead;
-        this.regarding = regarding;
         this.path = path;
     }
 
@@ -40,10 +39,6 @@ public class PrivateMessage  implements Comparable<PrivateMessage> {
         return getMessageDate().compareTo(m.getMessageDate());
     }
 
-
-    public String getRegarding(){return this.regarding;}
-
-    public void setRegarding(String regarding){this.regarding = regarding;}
 
     public String getReceiver(){return receiver;}
 

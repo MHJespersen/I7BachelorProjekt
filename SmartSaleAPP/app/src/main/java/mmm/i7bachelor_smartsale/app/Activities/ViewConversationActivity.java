@@ -77,7 +77,6 @@ public class ViewConversationActivity extends MainActivity implements Conversati
         privateMessage.setSender(auth.getCurrentUser().getEmail());
         privateMessage.setReceiver(_privatemessage.getSender());
         privateMessage.setMessageBody(replyMessage);
-        privateMessage.setRegarding("/NA");
 
         viewModel.reply(privateMessage);
         Toast.makeText(this, getString(R.string.reply_sent), Toast.LENGTH_SHORT).show();
