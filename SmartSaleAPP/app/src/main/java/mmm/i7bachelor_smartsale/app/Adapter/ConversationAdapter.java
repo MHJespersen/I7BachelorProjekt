@@ -1,7 +1,9 @@
 package mmm.i7bachelor_smartsale.app.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -66,17 +69,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position)
     {
         holder.Message.setText(messagelist.get(position).getMessageBody());
+        holder.Datetime.setText(messagelist.get(position).getMessageDate());
         if(messagelist.get(position).getSender().equals(UserEmail))
         {
-            holder.Message.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
             holder.ProfilePic.setX(ScreenWidth*(float)0.3);
             holder.Message.setX(ScreenWidth*(float)0.03);
+            holder.Message.setBackgroundColor(ContextCompat.getColor(con, R.color.messageColorSend));
         }
         else
         {
-            holder.Message.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
             holder.ProfilePic.setX(ScreenWidth*(float)-0.3);
             holder.Message.setX(ScreenWidth*(float)-0.03);
+            holder.Message.setBackgroundColor(ContextCompat.getColor(con, R.color.messageColorReceived));
         }
 
         Glide.with(holder.ProfilePic.getContext())
@@ -100,6 +104,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         //viewholder ui widget references
         ImageView ProfilePic;
         TextView Message;
+        TextView Datetime;
 
         //custom callback interface for user actions
         public ConversationViewHolder(@NonNull View itemView)
@@ -107,6 +112,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             super(itemView);
             ProfilePic = itemView.findViewById(R.id.profilePic);
             Message = itemView.findViewById(R.id.txtMessage);
+            Datetime = itemView.findViewById(R.id.txtDatetime);
             itemView.setOnClickListener(this);
         }
 

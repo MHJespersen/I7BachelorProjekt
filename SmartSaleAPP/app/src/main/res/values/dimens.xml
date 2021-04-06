@@ -6,7 +6,6 @@
     <dimen name="button_layout_width">120dp</dimen>
     <dimen name="button_layout_heigth">48dp</dimen>
     <dimen name="button_text_size">12sp</dimen>
-
     <!--General Texts -->
     <dimen name="text_size">12sp</dimen>
     <dimen name="text_size_larger">16sp</dimen>

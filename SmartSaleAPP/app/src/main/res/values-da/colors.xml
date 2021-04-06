@@ -7,4 +7,6 @@
     <color name="loginTextColor">#170BBF</color>
     <color name="backgroundForActivities">#EEF1BD</color>
     <color name="buttonColor">#b6ccfe</color>
+    <color name="messageColorReceived">#94979E</color>
+    <color name="messageColorSend">#CCDAF4</color>
 </resources>
