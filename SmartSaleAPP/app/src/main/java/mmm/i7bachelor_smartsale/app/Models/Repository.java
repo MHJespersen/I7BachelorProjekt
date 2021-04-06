@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.firestore.model.Document;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -147,38 +150,43 @@ public class Repository {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Map<String, Object> map = new HashMap<>();
-                CollectionReference CollRef = firestore.collection("PrivateMessages").
+                Map<String, Object> mmap = new HashMap<>();
+                Map<String, Object> cmap = new HashMap<>();
+                cmap.put("Initialized", "");
+                DocumentReference DocRef = firestore.collection("PrivateMessages").
                         document(privateMessage.getReceiver()).
                         collection("Conversations").
-                        document(auth.getCurrentUser().getEmail()).collection("Messages");
-                String UniqueID = CollRef.document().getId();
-                map.put("Receiver", privateMessage.getReceiver());
-                map.put("Sender", privateMessage.getSender());
-                map.put("MessageDate", privateMessage.getMessageDate());
-                map.put("MessageBody", privateMessage.getMessageBody());
-                map.put("Read", false);
-                map.put("Regarding", privateMessage.getRegarding());
-                map.put("Path", UniqueID);
-                firestore.collection("PrivateMessages").
-                        document(privateMessage.getReceiver()).
-                        collection("Conversations").
-                        document(auth.getCurrentUser().getEmail()).collection("Messages").document(UniqueID).set(map)
-                        .addOnCompleteListener(new OnCompleteListener() {
-                            @Override
-                            public void onComplete(@NonNull Task task) {
-                                Log.d("PrivateMessages", "Completed");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("PrivateMessages", "Failed");
-                            }
-                        });
+                        document(auth.getCurrentUser().getEmail());
+                //To avoid having virtual documents in firebase that we can only see subcollections of.
+                //We add the cmap to initialize and make the possibly new document non-virtual.
+                DocRef.set(cmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String UniqueID = DocRef.collection("Messages").document().getId();
+                        mmap.put("Receiver", privateMessage.getReceiver());
+                        mmap.put("Sender", privateMessage.getSender());
+                        mmap.put("MessageDate", privateMessage.getMessageDate());
+                        mmap.put("MessageBody", privateMessage.getMessageBody());
+                        mmap.put("Read", false);
+                        mmap.put("Regarding", "N/A");
+                        mmap.put("Path", UniqueID);
+                        DocRef.collection("Messages").document(UniqueID).set(mmap)
+                                .addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        Log.d("PrivateMessages", "Completed");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("PrivateMessages", "Failed");
+                                    }
+                                });
+                    }
+                });
             }
         });
-
     }
 
     public MutableLiveData<List<PrivateMessage>> getPrivateMessages(){
@@ -205,11 +213,12 @@ public class Repository {
                             if (!value.isEmpty()) {
                                 for (QueryDocumentSnapshot snap : value) {
                                     snap.getReference().collection("Messages").
+                                            //Listen to unread messages
                                             whereEqualTo("Read", false).
                                             addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @SuppressLint("NewApi")
                                         @Override
-                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                          public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             Predicate<Pair<String,Integer>> condition = msg -> msg.first.equals(snap.getId());
                                             usersAndRead.removeIf(condition);
                                            usersAndRead.add(new Pair<>(snap.getId(),
@@ -264,7 +273,6 @@ public class Repository {
                             }
                         }
                     });
-            //PrivateMessagesList = new MutableLiveData<>();
             }
     }
 
