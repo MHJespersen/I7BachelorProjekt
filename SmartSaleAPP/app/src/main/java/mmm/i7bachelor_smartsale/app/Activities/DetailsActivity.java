@@ -60,7 +60,6 @@ public class DetailsActivity extends MainActivity {
 
     private DetailsViewModel viewModel;
     RequestQueue queue;
-
     // widgets
     private TextView textTitle, textPrice, textPriceEur, textDescription, textLocation;
     private ImageView imgItem;
@@ -75,7 +74,6 @@ public class DetailsActivity extends MainActivity {
     private SalesItem selectedItem;
     private Location location;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +86,6 @@ public class DetailsActivity extends MainActivity {
                 .get(DetailsViewModel.class);
 
         setupUI();
-
         viewModel.returnSelected().observe(this, updateObserver );
     }
 
@@ -154,12 +151,88 @@ public class DetailsActivity extends MainActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void sendMobilepayrequest(View view) throws JSONException {
-        //Send authentication request to get access token for the PoS API
-        sendAuthenticationRequest(Constants.SANDBOX_URL);
+        // 1. Perform a check in on a beaconId: POST /app/usersimulation/checkin
+        // 2. Initiate a payment through the PoS API: POST /api/v10/payments
+        //  A. Accept the payment: POST /app/usersimulation/acceptpayment
+        //  B. Cancel payment: POST /app/usersimulation/cancelpaymentbyuser
 
-        //Send PoS request with access token granted.
+        //Send authentication request to get access token for the PoS API
+        //sendAuthenticationRequest(Constants.SANDBOX_URL);
+
+        // Send User Simulation Checkin.
+        sendPoSCheckinRequests(Constants.PoS_CHECKIN_URL);
+
+        //Initiate payment through the PoS API
+        //sendPaymentRequest(Constants.PoS_CHECKIN_URL);
+
         //sendPoSRequest(accessToken);
         gotoMobilepayQR();
+    }
+
+    private void sendPaymentRequest(String url) throws JSONException {
+        if(queue==null){
+            queue = Volley.newRequestQueue(this);
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("Mobilepay", "onResponse: " + response);
+                    Gson gson = new GsonBuilder().create();
+                    accessToken =  gson.fromJson(response, AccessToken.class);
+                },
+                error -> Log.d("Mobilepay", "onError: " + error)) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Accept", "application/json");
+                params.put("Content-Type", "application/json");
+                params.put("x-ibm-client-id", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL"); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
+                params.put("X-IBM-Client-Secret", Constants.CLIENT_CREDENTIALS_SECRET);
+
+                return params;
+            }
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<>();
+                params.put("beaconId", "147025836912345");
+                params.put("phoneNumber", "+4522134410");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    private void sendPoSCheckinRequests(String url) throws JSONException {
+        if(queue==null){
+            queue = Volley.newRequestQueue(this);
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("Mobilepay", "onResponse: " + response);
+                    Gson gson = new GsonBuilder().create();
+                    accessToken =  gson.fromJson(response, AccessToken.class);
+                },
+                error -> Log.d("Mobilepay", "onError: " + error)) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Accept", "application/json");
+                params.put("Content-Type", "application/json");
+                params.put("x-ibm-client-id", Constants.CLIENT_ID); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
+                params.put("X-IBM-Client-Secret", Constants.CLIENT_CREDENTIALS_SECRET);
+
+                return params;
+            }
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<>();
+                params.put("beaconId", "147025836912345");
+                params.put("phoneNumber", "+4520031801"); //  +4520031801
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -200,10 +273,6 @@ public class DetailsActivity extends MainActivity {
 
     private void gotoMobilepayQR() {
         Intent intent = new Intent(this, MobilePayActivity.class);
-
-        //Title of salesItem is used to set regarding field of message example:(Regarding: Chair)
-        //intent.putExtra(Constants.DETAILS_TITLE, selectedItem.getTitle());
-        //intent.putExtra(Constants.DETAILS_USER, selectedItem.getUser());
         startActivity(intent);
     }
 
@@ -217,7 +286,6 @@ public class DetailsActivity extends MainActivity {
     }
 
     private void gotoMap() {
-
         double lat = location.getLatitude();
         double lng = location.getLongitude();
 
