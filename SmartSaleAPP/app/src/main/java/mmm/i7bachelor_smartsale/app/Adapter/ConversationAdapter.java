@@ -65,18 +65,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position)
     {
-        Log.d("Sender", messagelist.get(position).getSender());
         holder.Message.setText(messagelist.get(position).getMessageBody());
         if(messagelist.get(position).getSender().equals(UserEmail))
         {
             holder.Message.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
             holder.ProfilePic.setX(ScreenWidth*(float)0.3);
+            holder.Message.setX(ScreenWidth*(float)0.03);
         }
         else
         {
             holder.Message.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
             holder.ProfilePic.setX(ScreenWidth*(float)-0.3);
-
+            holder.Message.setX(ScreenWidth*(float)-0.03);
         }
 
         Glide.with(holder.ProfilePic.getContext())

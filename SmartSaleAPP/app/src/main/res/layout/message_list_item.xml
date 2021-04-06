@@ -18,16 +18,15 @@
 
     <TextView
         android:id="@+id/txtMessage"
-        android:layout_width="320dp"
-        android:layout_height="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="52dp"
         android:layout_marginEnd="24dp"
-        android:background="@color/backgroundColor"
-        android:textAlignment="center"
+        android:background="#CCDAF4"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Message" />
+        tools:text="Message"
+        android:textAlignment="center"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
