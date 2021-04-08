@@ -42,6 +42,7 @@ import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -159,14 +160,56 @@ public class DetailsActivity extends MainActivity {
         //Send authentication request to get access token for the PoS API
         //sendAuthenticationRequest(Constants.SANDBOX_URL);
 
+        //Create PoS
+        sendPoSCreationRequest(Constants.NEW_PAYMENT_URL);
+
         // Send User Simulation Checkin.
         sendPoSCheckinRequests(Constants.PoS_CHECKIN_URL);
 
         //Initiate payment through the PoS API
-        //sendPaymentRequest(Constants.PoS_CHECKIN_URL);
+        //sendPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
 
         //sendPoSRequest(accessToken);
         gotoMobilepayQR();
+    }
+
+    private void sendPoSCreationRequest(String url) throws JSONException {
+        if(queue==null){
+            queue = Volley.newRequestQueue(this);
+        }
+
+        String  uniqueID = UUID.randomUUID().toString();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    Log.d("Mobilepay", "onResponse: " + response);
+                },
+                error -> Log.d("Mobilepay", "onError: " + error)) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("accept", "application/json");
+                params.put("authorization", "application/json");
+                params.put("content-type", "application/json");
+                params.put("correlationid", "application/json");
+                params.put("x-ibm-client-id", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL"); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
+                params.put("x-mobilepay-client-system-version", Constants.CLIENT_CREDENTIALS_SECRET);
+                params.put("x-mobilepay-idempotency-key", Constants.CLIENT_CREDENTIALS_SECRET);
+                params.put("x-mobilepay-merchant-vat-number", Constants.CLIENT_CREDENTIALS_SECRET);
+
+                return params;
+            }
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<>();
+                params.put("amount", "11");
+                params.put("currencyCode", "DKK");
+                params.put("orderId", "12");
+                params.put("plannedCaptureDelay", "None");
+                params.put("posId", uniqueID);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     private void sendPaymentRequest(String url) throws JSONException {
@@ -177,8 +220,6 @@ public class DetailsActivity extends MainActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("Mobilepay", "onResponse: " + response);
-                    Gson gson = new GsonBuilder().create();
-                    accessToken =  gson.fromJson(response, AccessToken.class);
                 },
                 error -> Log.d("Mobilepay", "onError: " + error)) {
             @Override
@@ -210,8 +251,8 @@ public class DetailsActivity extends MainActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("Mobilepay", "onResponse: " + response);
-                    Gson gson = new GsonBuilder().create();
-                    accessToken =  gson.fromJson(response, AccessToken.class);
+                    //Gson gson = new GsonBuilder().create();
+                    //accessToken =  gson.fromJson(response, AccessToken.class);
                 },
                 error -> Log.d("Mobilepay", "onError: " + error)) {
             @Override
@@ -219,7 +260,7 @@ public class DetailsActivity extends MainActivity {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
-                params.put("x-ibm-client-id", Constants.CLIENT_ID); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
+                params.put("x-ibm-client-id", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL"); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
                 params.put("X-IBM-Client-Secret", Constants.CLIENT_CREDENTIALS_SECRET);
 
                 return params;

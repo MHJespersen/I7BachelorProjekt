@@ -17,6 +17,8 @@ public class Constants {
     //These are all mobilepay smartsale project related
     public static final String SANDBOX_URL = "https://api.sandbox.mobilepay.dk/integrator-authentication/connect/token";
     public static final String PoS_CHECKIN_URL = "https://api.sandbox.mobilepay.dk/pos/app/usersimulation/checkin";
+    public static final String ACCEPT_PAYMENT_URL = "https://api.sandbox.mobilepay.dk/pos/app/usersimulation/acceptpayment";
+    public static final String NEW_PAYMENT_URL = "https://api.mobilepay.dk/pos/v10/payments";
     public static final String CLIENT_ID = "1170825e-c923-47c2-bdb7-ef35c7967efc";
     public static final String CLIENT_CREDENTIALS_SECRET = "hEt5IUrYrVY8pKnyp2SAOvWAqqpIzC3qqAAz9tOA3JE";
     public static final String MERCHANT_VAT = "DK90000093";
