@@ -1,12 +1,10 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,10 +16,8 @@ import java.util.List;
 import java.util.Locale;
 
 import mmm.i7bachelor_smartsale.app.Adapter.ConversationAdapter;
-import mmm.i7bachelor_smartsale.app.Adapter.InboxAdapter;
 import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
 import mmm.i7bachelor_smartsale.app.R;
-import mmm.i7bachelor_smartsale.app.ViewModels.InboxViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.ViewMessageViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.ViewMessageViewModelFactory;
 

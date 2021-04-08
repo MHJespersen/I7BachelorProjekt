@@ -9,7 +9,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.core.Repo;
 
 import mmm.i7bachelor_smartsale.app.Models.Repository;
 import mmm.i7bachelor_smartsale.app.R;

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import mmm.i7bachelor_smartsale.app.Adapter.InboxAdapter;
-import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
 import mmm.i7bachelor_smartsale.app.R;
 import mmm.i7bachelor_smartsale.app.ViewModels.InboxViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.InboxViewModelFactory;
