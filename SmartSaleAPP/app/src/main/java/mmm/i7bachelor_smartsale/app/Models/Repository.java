@@ -25,11 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.firestore.model.Document;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +40,6 @@ public class Repository {
     private final FirebaseFirestore firestore;
     FirebaseAuth auth;
     private MutableLiveData<SalesItem> SelectedItemLive;
-    private MutableLiveData<PrivateMessage> SelectedMessageLive;
     private MutableLiveData<List<PrivateMessage>> PrivateMessagesList;
     private MutableLiveData<List<SalesItem>> MarketsList;
     private MutableLiveData<List<Pair<String, Integer>>> ConvoAndUnread;
@@ -64,7 +60,6 @@ public class Repository {
     private Repository()
     {
         ConvoAndUnread = new MutableLiveData<>();
-        SelectedMessageLive = new MutableLiveData<>();
         PrivateMessagesList = new MutableLiveData<>();
         SelectedItemLive = new MutableLiveData<>();
         MarketsList = new MutableLiveData<>();
@@ -92,10 +87,6 @@ public class Repository {
 
     public LiveData<SalesItem> getSelectedItem() {
         return SelectedItemLive;
-    }
-
-    public MutableLiveData<PrivateMessage> getSelectedMessage() {
-        return SelectedMessageLive;
     }
 
     public MutableLiveData<List<SalesItem>> getItems()

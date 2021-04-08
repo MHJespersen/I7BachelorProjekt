@@ -1,5 +1,7 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -48,16 +50,23 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.protobuf.Internal;
+import com.google.zxing.common.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;
@@ -67,6 +76,7 @@ import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModelFactory;
 
 import static mmm.i7bachelor_smartsale.app.R.string.created_sale;
+import static mmm.i7bachelor_smartsale.app.R.string.missing_title;
 
 public class CreateSaleActivity extends MainActivity implements AdapterView.OnItemSelectedListener {
 
@@ -85,9 +95,11 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final long MIN_TIME_BETWEEN_LOCATION_UPDATES = 5 * 1000;    // milliseconds
     private static final float MIN_DISTANCE_MOVED_BETWEEN_LOCATION_UPDATES = 1;  // meters
-    private static final int PERMISSIONS_REQUEST_LOCATION = 789;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 100;
+    private static final int PERMISSIONS_REQUEST_CAMERA = 200;
     private static final String KEY_PHOTO = "photo";
     private static boolean locationPermissionGranted = false;
+    private static boolean CameraPermissionGranted = false;
 
 
     private LocationManager locationManager;
@@ -102,6 +114,7 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private ImageView itemImage;
     private Button btnCapture, btnGetLocation, btnCreate;
     private Spinner dropdown;
+    private Map<String, String> suggestionsMap;
     private ArrayList<String> suggestions;
 
     @Override
@@ -110,8 +123,6 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_createsale);
         firebaseStorage = FirebaseStorage.getInstance();
         locationUtility = new LocationUtility(this);
-        photoFileName = createFileName();
-
         // Calling / creating ViewModel with the factory pattern is inspired from:
         // https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
         viewModel = new ViewModelProvider(this, new CreateSaleViewModelFactory(this.getApplicationContext()))
@@ -153,13 +164,18 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         super.onDestroy();
     }
 
-    private void setupUI() {
-        btnCreate = findViewById(R.id.btnPublish);
+    private void resetSuggestions()
+    {   suggestions = new ArrayList<String>(Arrays.asList(new String("Tag suggestions")));
+        suggestionsMap = new HashMap<String, String>();
         dropdown = findViewById(R.id.createSaleSpinner);
-        suggestions = new ArrayList<String>(Arrays.asList(new String[]{"Title suggestions"}));
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, suggestions);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, suggestions);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
+    }
+
+    private void setupUI() {
+        resetSuggestions();
+        btnCreate = findViewById(R.id.btnPublish);
         btnCreate.setOnClickListener(view -> {
             //Save file:
             if (photoFile != null) {
@@ -185,11 +201,14 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         });
 
         btnCapture = findViewById(R.id.btnTakePhoto);
-        btnCapture.setOnClickListener(view -> buttonCapture());
+        btnCapture.setOnClickListener(view -> {
+            getCameraPermission();
+            buttonCapture();
+        });
 
         btnGetLocation = findViewById(R.id.createSaleBtnGetLocation);
         btnGetLocation.setOnClickListener(view -> {
-            checkPermissions();
+            getLocationPermission();
             getDeviceLocation();
         });
 
@@ -207,26 +226,36 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     //https://www.tutlane.com/tutorial/android/android-camera-app-with-examples
     //https://guides.codepath.com/android/Accessing-the-Camera-and-Stored-Media#using-capture-intent
     private void buttonCapture() {
-
-        //Create intent to take picture and return control to the calling application
-        Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //Create a File reference for future access
-        createFileName();
-        photoFile = getPhotoFileUri(photoFileName);
-
-        //Wrap file object into a content provider, Required for API >= 24
-        //See  https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(CreateSaleActivity.this, "mmm.fileprovider", photoFile);
-        cInt.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (cInt.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(cInt, REQUEST_IMAGE_CAPTURE);
+        try {
+            if(CameraPermissionGranted)
+            {
+                //Create a File reference for future access
+                photoFileName = createFileName();
+                //Create intent to take picture and return control to the calling application
+                Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                photoFile = getPhotoFileUri(photoFileName);
+                //Wrap file object into a content provider, Required for API >= 24
+                //See  https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
+                Uri fileProvider = FileProvider.getUriForFile(CreateSaleActivity.this, "mmm.fileprovider", photoFile);
+                cInt.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+                // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+                // So as long as the result is not null, it's safe to use the intent.
+                if (cInt.resolveActivity(getPackageManager()) != null) {
+                    resetSuggestions();
+                    startActivityForResult(cInt, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        }
+        catch (IllegalArgumentException e) {
+            Log.e("ILLGA Execption: %s", e.getMessage(), e);
+        }
+        catch ( SecurityException e)
+        {
+            Log.e("Security Exception: %s", e.getMessage(), e);
         }
     }
 
     private void runDetector(Bitmap bitmap){
-
         // Convert bitmap to base64 encoded string
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -261,16 +290,11 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
                             // Task completed successfully
                             for (JsonElement label : task.getResult().getAsJsonArray().get(0).getAsJsonObject().get("labelAnnotations").getAsJsonArray()) {
                                 JsonObject labelObj = label.getAsJsonObject();
-                                String text = labelObj.get("description").getAsString();
-                                String entityId = labelObj.get("mid").getAsString();
-                                float score = labelObj.get("score").getAsFloat();
-                                if (suggestions.size() == 8){
-                                    suggestions.clear();
-                                }
                                 //set result to activity objects
+                                String text = labelObj.get("description").getAsString();
+                                String score = labelObj.get("score").getAsString();
                                 suggestions.add(text);
-                                title.setText(text);
-                                mlconfidencevalue.setText("Score: " +score);
+                                suggestionsMap.put(text, score);
                             }
                         }
                     }
@@ -358,8 +382,8 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     }
 
     private String createFileName() {
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-        return "JPEG_" + timeStamp + ".jpg";
+        String UUID = java.util.UUID.randomUUID().toString();
+        return "JPEG_" + UUID + ".jpg";
     }
 
     public void Save() {
@@ -370,13 +394,12 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         } else {
             salesItem.setImage("emptycart.png");
         }
-        //set Text
-        if (title.getText().toString() != null) {
-            salesItem.setTitle(title.getText().toString());
-        }
         //set price
-        if (price.getText().toString() != null) {
+        if (price.getText().toString() != null && !price.getText().toString().equals("")) {
             salesItem.setPrice(Double.parseDouble(price.getText().toString()));
+        }
+        else {
+            salesItem.setPrice(0.0);
         }
         //set location
         if (location.getText().toString() != null) {
@@ -390,10 +413,16 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         if (description.getText().toString() != null) {
             salesItem.setDescription(description.getText().toString());
         }
-        salesItem.setUser(auth.getCurrentUser().getEmail());
-        viewModel.updateSalesItem(salesItem);
-        Toast.makeText(this, created_sale, Toast.LENGTH_LONG).show();
-        finish();
+        if (title.getText().toString() != null && !title.getText().toString().equals("")) {
+            salesItem.setTitle(title.getText().toString());
+            salesItem.setUser(auth.getCurrentUser().getEmail());
+            viewModel.updateSalesItem(salesItem);
+            Toast.makeText(this, created_sale, Toast.LENGTH_LONG).show();
+            finish();
+        }
+        else {
+            Toast.makeText(this, missing_title, Toast.LENGTH_LONG).show();
+        }
     }
 
     // Location permissions - should apparently not be in view model?
@@ -430,24 +459,7 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         }
     }
 
-    private void checkPermissions() {
-        try {
-            if (locationPermissionGranted) {
-                // something
-            } else {
-                getLocationPermission();
-            }
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }
-
     private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -459,10 +471,27 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         }
     }
 
+    private void getCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            CameraPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PERMISSIONS_REQUEST_CAMERA);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        locationPermissionGranted = false;
         switch (requestCode) {
+            case PERMISSIONS_REQUEST_CAMERA:{
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    CameraPermissionGranted = true;
+                }
+            }
             case PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
@@ -543,30 +572,13 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     //When selecting items in the dropdown, handle these selections.
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (position){
-            case 1:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 2:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 3:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 4:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 5:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 6:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 7:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
+        if (position > 0) {
+            String text = parent.getItemAtPosition(position).toString();
+            title.setText(text);
+            mlconfidencevalue.setText("Score: " + suggestionsMap.get(text).substring(0,5));
         }
     }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {

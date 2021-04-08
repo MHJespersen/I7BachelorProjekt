@@ -2,8 +2,6 @@ package mmm.i7bachelor_smartsale.app.Models;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.io.Serializable;
-
 public class PrivateMessage  implements Comparable<PrivateMessage> {
 
     private String messageBody, messageDate, receiver, sender, path;
@@ -13,7 +11,7 @@ public class PrivateMessage  implements Comparable<PrivateMessage> {
     }
 
     public PrivateMessage(String receiver, String sender, String messageBody, String messageDate,
-                          Boolean messageRead, String regarding, String path) {
+                          Boolean messageRead, String path) {
         this.receiver = receiver;
         this.sender = sender;
         this.messageBody = messageBody;
@@ -29,7 +27,6 @@ public class PrivateMessage  implements Comparable<PrivateMessage> {
                 d.get("MessageBody").toString(),
                 d.get("MessageDate").toString(),
                 Boolean.parseBoolean(d.get("Read").toString()),
-                d.get("Regarding").toString(),
                 d.get("Path").toString());
         return message;
     }
@@ -38,7 +35,6 @@ public class PrivateMessage  implements Comparable<PrivateMessage> {
     public int compareTo(PrivateMessage m) {
         return getMessageDate().compareTo(m.getMessageDate());
     }
-
 
     public String getReceiver(){return receiver;}
 

@@ -62,7 +62,8 @@
     <string name="map_marker_text">Item location</string>
     <string name="reply_to">Reply to</string>
     <string name="reply_sent">Reply sent</string>
-    <string name="created_sale">Created Sale Successfully!, See the Article in the marketplace</string>>
+    <string name="created_sale">Created Sale Successfully!, See the Article in the marketplace</string>
+    <string name="missing_title">Title must be set</string>
     <string name="label_mobilepay">Buy with:</string>
     <string name="label_mobilepayQR">Press the QR Code to start payment in MobilePay APP</string>
 </resources>
