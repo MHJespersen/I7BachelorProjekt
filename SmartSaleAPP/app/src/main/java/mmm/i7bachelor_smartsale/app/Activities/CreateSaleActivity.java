@@ -1,6 +1,7 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -49,16 +50,23 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.protobuf.Internal;
 import com.google.zxing.common.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;
@@ -106,6 +114,7 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private ImageView itemImage;
     private Button btnCapture, btnGetLocation, btnCreate;
     private Spinner dropdown;
+    private Map<String, String> suggestionsMap;
     private ArrayList<String> suggestions;
 
     @Override
@@ -155,13 +164,18 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         super.onDestroy();
     }
 
-    private void setupUI() {
-        btnCreate = findViewById(R.id.btnPublish);
+    private void resetSuggestions()
+    {   suggestions = new ArrayList<String>(Arrays.asList(new String("Tag suggestions")));
+        suggestionsMap = new HashMap<String, String>();
         dropdown = findViewById(R.id.createSaleSpinner);
-        suggestions = new ArrayList<String>(Arrays.asList(new String[]{"Title suggestions"}));
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, suggestions);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, suggestions);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
+    }
+
+    private void setupUI() {
+        resetSuggestions();
+        btnCreate = findViewById(R.id.btnPublish);
         btnCreate.setOnClickListener(view -> {
             //Save file:
             if (photoFile != null) {
@@ -227,6 +241,7 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
                 // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
                 // So as long as the result is not null, it's safe to use the intent.
                 if (cInt.resolveActivity(getPackageManager()) != null) {
+                    resetSuggestions();
                     startActivityForResult(cInt, REQUEST_IMAGE_CAPTURE);
                 }
             }
@@ -241,7 +256,6 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     }
 
     private void runDetector(Bitmap bitmap){
-
         // Convert bitmap to base64 encoded string
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -276,16 +290,11 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
                             // Task completed successfully
                             for (JsonElement label : task.getResult().getAsJsonArray().get(0).getAsJsonObject().get("labelAnnotations").getAsJsonArray()) {
                                 JsonObject labelObj = label.getAsJsonObject();
-                                String text = labelObj.get("description").getAsString();
-                                String entityId = labelObj.get("mid").getAsString();
-                                float score = labelObj.get("score").getAsFloat();
-                                if (suggestions.size() == 8){
-                                    suggestions.clear();
-                                }
                                 //set result to activity objects
+                                String text = labelObj.get("description").getAsString();
+                                String score = labelObj.get("score").getAsString();
                                 suggestions.add(text);
-                                title.setText(text);
-                                mlconfidencevalue.setText("Score: " +score);
+                                suggestionsMap.put(text, score);
                             }
                         }
                     }
@@ -563,9 +572,13 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     //When selecting items in the dropdown, handle these selections.
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(position > 0)
-            title.setText(parent.getItemAtPosition(position).toString());
+        if (position > 0) {
+            String text = parent.getItemAtPosition(position).toString();
+            title.setText(text);
+            mlconfidencevalue.setText("Score: " + suggestionsMap.get(text).substring(0,5));
         }
+    }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
