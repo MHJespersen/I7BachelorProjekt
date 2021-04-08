@@ -1,5 +1,6 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -84,9 +85,11 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final long MIN_TIME_BETWEEN_LOCATION_UPDATES = 5 * 1000;    // milliseconds
     private static final float MIN_DISTANCE_MOVED_BETWEEN_LOCATION_UPDATES = 1;  // meters
-    private static final int PERMISSIONS_REQUEST_LOCATION = 789;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 100;
+    private static final int PERMISSIONS_REQUEST_CAMERA = 200;
     private static final String KEY_PHOTO = "photo";
     private static boolean locationPermissionGranted = false;
+    private static boolean CameraPermissionGranted = false;
 
 
     private LocationManager locationManager;
@@ -109,8 +112,6 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_createsale);
         firebaseStorage = FirebaseStorage.getInstance();
         locationUtility = new LocationUtility(this);
-        photoFileName = createFileName();
-
         // Calling / creating ViewModel with the factory pattern is inspired from:
         // https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
         viewModel = new ViewModelProvider(this, new CreateSaleViewModelFactory(this.getApplicationContext()))
@@ -184,11 +185,14 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         });
 
         btnCapture = findViewById(R.id.btnTakePhoto);
-        btnCapture.setOnClickListener(view -> buttonCapture());
+        btnCapture.setOnClickListener(view -> {
+            getCameraPermission();
+            buttonCapture();
+        });
 
         btnGetLocation = findViewById(R.id.createSaleBtnGetLocation);
         btnGetLocation.setOnClickListener(view -> {
-            checkPermissions();
+            getLocationPermission();
             getDeviceLocation();
         });
 
@@ -206,21 +210,31 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     //https://www.tutlane.com/tutorial/android/android-camera-app-with-examples
     //https://guides.codepath.com/android/Accessing-the-Camera-and-Stored-Media#using-capture-intent
     private void buttonCapture() {
-
-        //Create intent to take picture and return control to the calling application
-        Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //Create a File reference for future access
-        createFileName();
-        photoFile = getPhotoFileUri(photoFileName);
-
-        //Wrap file object into a content provider, Required for API >= 24
-        //See  https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(CreateSaleActivity.this, "mmm.fileprovider", photoFile);
-        cInt.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (cInt.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(cInt, REQUEST_IMAGE_CAPTURE);
+        try {
+            if(CameraPermissionGranted)
+            {
+                //Create a File reference for future access
+                photoFileName = createFileName();
+                //Create intent to take picture and return control to the calling application
+                Intent cInt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                photoFile = getPhotoFileUri(photoFileName);
+                //Wrap file object into a content provider, Required for API >= 24
+                //See  https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
+                Uri fileProvider = FileProvider.getUriForFile(CreateSaleActivity.this, "mmm.fileprovider", photoFile);
+                cInt.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+                // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+                // So as long as the result is not null, it's safe to use the intent.
+                if (cInt.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(cInt, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        }
+        catch (IllegalArgumentException e) {
+            Log.e("ILLGA Execption: %s", e.getMessage(), e);
+        }
+        catch ( SecurityException e)
+        {
+            Log.e("Security Exception: %s", e.getMessage(), e);
         }
     }
 
@@ -429,24 +443,7 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         }
     }
 
-    private void checkPermissions() {
-        try {
-            if (locationPermissionGranted) {
-                // something
-            } else {
-                getLocationPermission();
-            }
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }
-
     private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -458,10 +455,27 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         }
     }
 
+    private void getCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            CameraPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PERMISSIONS_REQUEST_CAMERA);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        locationPermissionGranted = false;
         switch (requestCode) {
+            case PERMISSIONS_REQUEST_CAMERA:{
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    CameraPermissionGranted = true;
+                }
+            }
             case PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
