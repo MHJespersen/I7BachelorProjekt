@@ -563,30 +563,9 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     //When selecting items in the dropdown, handle these selections.
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (position){
-            case 1:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 2:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 3:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 4:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 5:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 6:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
-            case 7:
-                title.setText(parent.getItemAtPosition(position).toString());
-                break;
+        if(position > 0)
+            title.setText(parent.getItemAtPosition(position).toString());
         }
-    }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
