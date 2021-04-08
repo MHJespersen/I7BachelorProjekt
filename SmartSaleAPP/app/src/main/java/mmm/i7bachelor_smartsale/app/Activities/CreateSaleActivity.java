@@ -49,6 +49,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.zxing.common.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -67,6 +68,7 @@ import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModelFactory;
 
 import static mmm.i7bachelor_smartsale.app.R.string.created_sale;
+import static mmm.i7bachelor_smartsale.app.R.string.missing_title;
 
 public class CreateSaleActivity extends MainActivity implements AdapterView.OnItemSelectedListener {
 
@@ -371,8 +373,8 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     }
 
     private String createFileName() {
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-        return "JPEG_" + timeStamp + ".jpg";
+        String UUID = java.util.UUID.randomUUID().toString();
+        return "JPEG_" + UUID + ".jpg";
     }
 
     public void Save() {
@@ -383,13 +385,12 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         } else {
             salesItem.setImage("emptycart.png");
         }
-        //set Text
-        if (title.getText().toString() != null) {
-            salesItem.setTitle(title.getText().toString());
-        }
         //set price
-        if (price.getText().toString() != null) {
+        if (price.getText().toString() != null && !price.getText().toString().equals("")) {
             salesItem.setPrice(Double.parseDouble(price.getText().toString()));
+        }
+        else {
+            salesItem.setPrice(0.0);
         }
         //set location
         if (location.getText().toString() != null) {
@@ -403,10 +404,16 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         if (description.getText().toString() != null) {
             salesItem.setDescription(description.getText().toString());
         }
-        salesItem.setUser(auth.getCurrentUser().getEmail());
-        viewModel.updateSalesItem(salesItem);
-        Toast.makeText(this, created_sale, Toast.LENGTH_LONG).show();
-        finish();
+        if (title.getText().toString() != null && !title.getText().toString().equals("")) {
+            salesItem.setTitle(title.getText().toString());
+            salesItem.setUser(auth.getCurrentUser().getEmail());
+            viewModel.updateSalesItem(salesItem);
+            Toast.makeText(this, created_sale, Toast.LENGTH_LONG).show();
+            finish();
+        }
+        else {
+            Toast.makeText(this, missing_title, Toast.LENGTH_LONG).show();
+        }
     }
 
     // Location permissions - should apparently not be in view model?
