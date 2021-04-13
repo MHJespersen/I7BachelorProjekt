@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -34,7 +35,8 @@ public class ForegroundService extends LifecycleService {
     private NotificationManager serviceNotificationManager;
     private NotificationChannel notificationChannel;
     private NotificationManager notificationManager;
-
+    private boolean UnreadMessage = false;
+    private String UnreadMessageSender;
     public ForegroundService() {
     }
 
@@ -43,17 +45,22 @@ public class ForegroundService extends LifecycleService {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate: ");
-        repo.getPrivateMessages().observe(this ,privateMessageObserver);
+        repo.getConvosAndReadStatus().observe(this ,InboxObserver);
     }
 
-    Observer<List<PrivateMessage>> privateMessageObserver = new Observer<List<PrivateMessage>>() {
+    Observer<List<Pair<String, Integer>>> InboxObserver = new Observer<List<Pair<String, Integer>>>() {
         @Override
-        public void onChanged(List<PrivateMessage> UpdatedItems) {
-            List<PrivateMessage> list = UpdatedItems;
-            PrivateMessage lastMessage = list.get(0);
-            boolean read = lastMessage.getMessageRead();
-            if (!read) {
-                //updateNotification(regarding);
+        public void onChanged(List<Pair<String, Integer>> UpdatedItems) {
+            List<Pair<String, Integer>> list = UpdatedItems;
+            for(int i = 0; i < list.size(); i+=1) {
+                if(list.get(i).second!=0)
+                {
+                    UnreadMessage = true;
+                    UnreadMessageSender = list.get(i).first;
+                }
+            }
+            if (UnreadMessage) {
+                updateNotification(UnreadMessageSender);
             }
         }
     };
@@ -99,7 +106,7 @@ public class ForegroundService extends LifecycleService {
         }
     }
 
-    private void updateNotification(String regarding)
+    private void updateNotification(String sender)
     {
         Intent resultIntent = new Intent(this, InboxActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -108,7 +115,7 @@ public class ForegroundService extends LifecycleService {
 
         if(notificationManager != null)
         {
-            String notificationUpdate = getString(R.string.notification_update_string) + " " + regarding;
+            String notificationUpdate = getString(R.string.notification_update_string) + " " + sender;
             Notification notification = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
                     .setContentTitle(notificationUpdate)
                     .setSmallIcon(R.drawable.ic_service_draw)
