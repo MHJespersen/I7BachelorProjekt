@@ -48,7 +48,7 @@
     <string name="menu_user">Bruger</string>
     <string name="menu_messages">Beskeder</string>
     <string name="label_eur_col">EUR:</string>
-    <string name="notification_update_string">Ny besked ang.:</string>
+    <string name="notification_update_string">Ny besked fra:</string>
     <string name="service_notification_string">Velkommen til SmartSale</string>
     <string name="message_sent">Besked sendt</string>
     <string name="logged_out">Du er blevet logget ud</string>

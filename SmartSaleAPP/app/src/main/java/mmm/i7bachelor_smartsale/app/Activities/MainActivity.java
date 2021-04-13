@@ -1,6 +1,7 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     //Inspired from: https://stackoverflow.com/questions/17889240/reuse-the-action-bar-in-all-the-activities-of-app
     FirebaseAuth auth;
     Repository repo;
+    static Boolean MessagesOpen = false;
+    int LAUNCH_INBOX_ACTIVTY = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +39,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.userTxt:
-                OpenProfile();
+                if(!MessagesOpen)
+                {
+                    OpenProfile();
+                    MessagesOpen = true;
+                }
                 return true;
             case R.id.messagesTxt:
-                OpenMessages();
+                if(!MessagesOpen)
+                {
+                    OpenMessages();
+                    MessagesOpen = true;
+                }
                 return true;
             case R.id.logoutTxt:
                 LogOut();
@@ -72,8 +83,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void OpenMessages() {
-        Intent intent = new Intent(this, InboxActivity.class);
-        startActivity(intent);
+        Intent i = new Intent(this, InboxActivity.class);
+        startActivityForResult(i, LAUNCH_INBOX_ACTIVTY);
+    }
+
+    //When the Inbox is closed, allow it to open again. Added to avoid having multiple Inbox
+    //activities on top of each other.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LAUNCH_INBOX_ACTIVTY)
+            MessagesOpen = false;
     }
 
     public void LogOut() {
