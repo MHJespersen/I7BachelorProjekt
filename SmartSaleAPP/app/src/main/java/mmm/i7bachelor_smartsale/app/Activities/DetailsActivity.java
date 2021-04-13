@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -31,6 +32,7 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.HashMap;
@@ -48,6 +50,10 @@ import mmm.i7bachelor_smartsale.app.ViewModels.DetailsViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.DetailsViewModelFactory;
 import mmm.i7bachelor_smartsale.app.Webapi.Callback;
 import mmm.i7bachelor_smartsale.app.Webapi.WebAPI;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class DetailsActivity extends MainActivity {
 
@@ -58,7 +64,7 @@ public class DetailsActivity extends MainActivity {
     private ImageView imgItem;
     private Button btnMessage;
     private ImageButton btnMap;
-    AccessToken accessToken; //= new AccessToken();
+    private static AccessToken accessToken = new AccessToken();
 
     private ExecutorService executor;
     private WebAPI webAPI;
@@ -67,11 +73,13 @@ public class DetailsActivity extends MainActivity {
     private SalesItem selectedItem;
     private Location location;
     private String bearerToken = null;
+    private OkHttpClient client = new OkHttpClient().newBuilder().build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        executor = Executors.newSingleThreadExecutor();
         webAPI = new WebAPI(this);
         locationUtility = new LocationUtility(this);
         mStorageRef = FirebaseStorage.getInstance();
@@ -86,7 +94,6 @@ public class DetailsActivity extends MainActivity {
     Observer<SalesItem> updateObserver = new Observer<SalesItem>() {
         @Override
         public void onChanged(SalesItem Item) {
-
             if(Item != null)
             {
                 selectedItem = Item;
@@ -136,9 +143,7 @@ public class DetailsActivity extends MainActivity {
         imgItem= findViewById(R.id.detailsImage);
         btnMessage = findViewById(R.id.detailsBtnMessage);
         btnMap = findViewById(R.id.detailsBtnMap);
-
         textDescription.setMovementMethod(new ScrollingMovementMethod());
-
         btnMessage.setOnClickListener(view -> gotoSendMessage());
         btnMap.setOnClickListener(view -> gotoMap());
     }
@@ -157,131 +162,64 @@ public class DetailsActivity extends MainActivity {
         sendPoSCheckinRequests(Constants.PoS_CHECKIN_URL);
 
         //Create PoS, iniate payment
-        //sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
+        sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
 
         //Initiate payment through the PoS API
-        //sendPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
+        AcceptPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
 
-        //sendPoSRequest(accessToken);
-        gotoMobilepayQR();
+        //gotoMobilepayQR();
     }
 
     private void sendInitiatePaymentRequest(String url) throws JSONException {
-        if(queue==null){
-            queue = Volley.newRequestQueue(this);
-        }
-        JSONObject jsonBody = new JSONObject();
-        String price = textPrice.getText().toString();
-        String priceonly = price.split(" ")[0].trim();
-        jsonBody.put("amount", Integer.parseInt(priceonly));
-        final String mRequestBody = jsonBody.toString();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Log.d("Mobilepay", "onResponse: " + response);
-                },
-                error -> Log.d("Mobilepay", "onError: " + error)) {
+        String price = textPrice.getText().toString().split(" ")[0].trim();
+        executor.execute(new Runnable() {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("accept", "application/json");
-                params.put("authorization", bearerToken);
-                params.put("content-type", "application/*+json");
-                params.put("correlationid", Constants.CORRELATION_ID);
-                params.put("x-ibm-client-id", Constants.CLIENT_ID);
-                params.put("x-mobilepay-client-system-version", "2.1.1");
-                params.put("x-mobilepay-idempotency-key", "key1");
-                params.put("x-mobilepay-merchant-vat-number", Constants.MERCHANT_VAT);
-
-                return params;
-            }
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<>();
-                params.put("currencyCode", "DKK");
-                params.put("orderId", "Order - 1");
-                params.put("plannedCaptureDelay", "None");
-                params.put("posId", Constants.POS_ID);
-                params.put("merchantPaymentLabel", selectedItem.getUser());
-                return params;
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
+            public void run() {
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(mediaType, "{\r\n    \"posId\":\"5e6bbcc6-154c-44bb-9a82-45acc1aaea7b\",\r\n    \"orderId\":\"Order - 1\",\r\n    \"amount\": 50,\r\n    \"currencyCode\":\"DKK\",\r\n    \"merchantPaymentLabel\": \"TestUserName\",\r\n    \"plannedCaptureDelay\":\"None\"\r\n}");
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url("https://api.sandbox.mobilepay.dk/pos/v10/payments")
+                        .method("POST", body)
+                        .addHeader("Accept", "application/json")
+                        .addHeader("content-type", "application/json")
+                        .addHeader("x-ibm-client-id", "1170825e-c923-47c2-bdb7-ef35c7967efc")
+                        .addHeader("X-Mobilepay-Client-System-Version", "2.1.1")
+                        .addHeader("X-Mobilepay-Idempotency-Key", java.util.UUID.randomUUID().toString() )
+                        .addHeader("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkE5QTdBQ0NGMTg4NEQwMUQ0QUIwRkZEMTA0OTEyNEI3NEIxRThCQUQiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJxYWVzenhpRTBCMUtzUF9SQkpFa3Qwc2VpNjAifQ.eyJuYmYiOjE2MTgzMjEwNjUsImV4cCI6MTYxODMyNDY2NSwiaXNzIjoiaHR0cHM6Ly9hcGkubW9iaWxlcGF5LmRrL2ludGVncmF0b3ItYXV0aGVudGljYXRpb24iLCJhdWQiOiJodHRwczovL2FwaS5tb2JpbGVwYXkuZGsvaW50ZWdyYXRvci1hdXRoZW50aWNhdGlvbi9yZXNvdXJjZXMiLCJjbGllbnRfaWQiOiIxMTcwODI1ZS1jOTIzLTQ3YzItYmRiNy1lZjM1Yzc5NjdlZmMiLCJpbnRlZ3JhdG9yX2lkIjoiYmQzMjlhNDEtN2U2YS00ODZiLTljZDEtMzc3M2FhY2I3MGM3IiwiaW50ZWdyYXRvcl9uYW1lIjoiU21hcnRTYWxlIFN0dWRlbnQgUHJvamVjdCIsImludGVncmF0b3JjbGllbnRfbmFtZSI6IlNtYXJ0U2FsZSIsIm1lcmNoYW50X3ZhdCI6IkRLOTAwMDAwOTMiLCJqdGkiOiI2MDVCMjYyRTQ2MEY5NTBFNDc3MjdFQ0YxQzkwNUJCOSIsImlhdCI6MTYxODMyMTA2NSwic2NvcGUiOlsiaW50ZWdyYXRvcl9zY29wZSJdfQ.ZQli_vNPxGqXNs4sQC1jBwXOeR-cEImLYgIsRapysnSwyHEISgRuvM5bl3x2vhO3xkcpPsJTKbzrELkljCz7G0Dd_jyhkeNQfbEDUuUXFG0LQZz1MteIAECwwdMujkjsaaSS_W6wVKeN0YSvevalR0-VlStIcyHnhASug1oLqrkob9a6vjvNzGlX8Hndf_2J3q8zjvpsZv3uLeKKYe5IQM-EenegqslKAjLIR7Lvb8PY0DCbutgMNuo7S7z215YK3T0oXSMxDy7x7zRkjjlHdd-JGDZLxlKnAoPyOqXFxZ2agSZXHhf5HCGbBNht3nI527ajiBk7Pc3zSXtaiBJJqw")
+                        .build();
                 try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    Log.d("InitiatePayment body", "getBody: " + e);
-                    return null;
+                    Response response = client.newCall(request).execute();
+                    Log.d("Response", "" + response.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-        };
-        queue.add(stringRequest);
+        });
     }
 
-    private void sendPaymentRequest(String url) throws JSONException {
-        if(queue==null){
-            queue = Volley.newRequestQueue(this);
-        }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Log.d("Mobilepay", "onResponse: " + response);
-                },
-                error -> Log.d("Mobilepay", "onError: " + error)) {
+    private void AcceptPaymentRequest(String url) throws JSONException {
+        executor.execute(new Runnable() {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("Accept", "application/json");
-                params.put("Content-Type", "application/json");
-                params.put("x-ibm-client-id", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL"); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
-                params.put("X-IBM-Client-Secret", Constants.CLIENT_CREDENTIALS_SECRET);
-
-                return params;
+            public void run() {
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(mediaType, "{\r\n  \"beaconId\": \"147025836912345\",\r\n  \"phoneNumber\": \"+4520031801\"\r\n}");
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url("https://api.sandbox.mobilepay.dk/pos/app/usersimulation/acceptpayment")
+                        .method("POST", body)
+                        .addHeader("Accept", "application/json")
+                        .addHeader("x-ibm-client-id", "1170825e-c923-47c2-bdb7-ef35c7967efc")
+                        .addHeader("x-ibm-client-secret", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL")
+                        .addHeader("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkE5QTdBQ0NGMTg4NEQwMUQ0QUIwRkZEMTA0OTEyNEI3NEIxRThCQUQiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJxYWVzenhpRTBCMUtzUF9SQkpFa3Qwc2VpNjAifQ.eyJuYmYiOjE2MTgzMDI1NDIsImV4cCI6MTYxODMwNjE0MiwiaXNzIjoiaHR0cHM6Ly9hcGkubW9iaWxlcGF5LmRrL2ludGVncmF0b3ItYXV0aGVudGljYXRpb24iLCJhdWQiOiJodHRwczovL2FwaS5tb2JpbGVwYXkuZGsvaW50ZWdyYXRvci1hdXRoZW50aWNhdGlvbi9yZXNvdXJjZXMiLCJjbGllbnRfaWQiOiIxMTcwODI1ZS1jOTIzLTQ3YzItYmRiNy1lZjM1Yzc5NjdlZmMiLCJpbnRlZ3JhdG9yX2lkIjoiYmQzMjlhNDEtN2U2YS00ODZiLTljZDEtMzc3M2FhY2I3MGM3IiwiaW50ZWdyYXRvcl9uYW1lIjoiU21hcnRTYWxlIFN0dWRlbnQgUHJvamVjdCIsImludGVncmF0b3JjbGllbnRfbmFtZSI6IlNtYXJ0U2FsZSIsIm1lcmNoYW50X3ZhdCI6IkRLOTAwMDAwOTMiLCJqdGkiOiIxQjc0MDhFNzdGNUQxMzRDOTQzRjgwQUUzQzZEQzQ0OCIsImlhdCI6MTYxODMwMjU0Miwic2NvcGUiOlsiaW50ZWdyYXRvcl9zY29wZSJdfQ.Kc0PbceKTqAA5zjJbX_64dyIY7ZtTeqFYM7H7MZFE3X9iT8WuAlzCxIIoDe2qpFNm7uqCaMO9DQC_I6AbpfqZMhDZ4c1H486WMJtXhP9_jYN1OY5T6bD3YmuYIoVs494nwWj6TNjdvGL6YY9ElYtrU62KS4zoK-e0KJfJzg1vO077EXsnDlJxevBbAx-8sl2un079b3cz2tWVTaZvyOdnVqGSecs7jFl-KKc1HkLaJr3whYXUw2S5sPgSO2J57p4XzVQ8MGYNsjrA-Mcij2ubgLoaR0MuNnqOGvYzKE1TXgdeXSHkOoDorowpqemfOP-ITxLKi1SW_Jt11MtHKEklQ")
+                        .addHeader("Content-Type", "application/json")
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                } catch (Exception e) {
+                    Log.d("Exception","" + e);
+                    e.printStackTrace();
+                }
             }
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<>();
-                params.put("beaconId", "147025836912345");
-                params.put("phoneNumber", "+4522134410");
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-    }
-
-    private void sendPoSCheckinRequests(String url) throws JSONException {
-        if(queue==null){
-            queue = Volley.newRequestQueue(this);
-        }
-        bearerToken = "Bearer " + accessToken.getAccess_token();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Log.d("Mobilepay Checkin", "onResponse: " + response);
-                },
-                error -> Log.d("Mobilepay", "onError: " + error)) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("Accept", "application/json");
-                params.put("Content-Type", "application/json");
-                //params.put("Content-Length", "70");
-                //params.put("Host", "");
-                params.put("Authorization", bearerToken);
-                params.put("x-ibm-client-id", Constants.CLIENT_ID); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
-                params.put("X-IBM-Client-Secret", Constants.CLIENT_CREDENTIALS_SECRET);
-
-                return params;
-            }
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<>();
-                params.put("beaconId", Constants.BEACON_ID);
-                params.put("phoneNumber", "+4520031801"); //  +4520031801
-                return params;
-            }
-        };
-        queue.add(stringRequest);
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -294,10 +232,11 @@ public class DetailsActivity extends MainActivity {
         String encodedAuth = Base64.getEncoder().encodeToString(authString.getBytes());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d("Mobilepay", "onResponse: " + response);
                     Gson gson = new GsonBuilder().create();
                     accessToken =  gson.fromJson(response, AccessToken.class);
-                    Log.d("token", "accesstoken value: " + accessToken.getAccess_token());
+                    Log.d("Mobilepay", "Access token set");
+                    Log.d("Mobilepay", accessToken.getAccess_token());
+
                 },
                 error -> Log.d("Mobilepay", "onError: " + error)) {
             @Override
@@ -319,6 +258,32 @@ public class DetailsActivity extends MainActivity {
         };
         queue.add(stringRequest);
     }
+
+    private void sendPoSCheckinRequests(String url){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(mediaType, "{\r\n  \"beaconId\": \"147025836912345\",\r\n  \"phoneNumber\": \"+4520031801\"\r\n}");
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url("https://api.sandbox.mobilepay.dk/pos/app/usersimulation/checkin")
+                        .method("POST", body)
+                        .addHeader("Content-Length", "70")
+                        .addHeader("x-ibm-client-id", "1170825e-c923-47c2-bdb7-ef35c7967efc")
+                        .addHeader("x-ibm-client-secret", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL")
+                        .addHeader("Accept", "application/json")
+                        .addHeader("Content-Type", "application/json")
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    Log.d("Response", "" + response.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 
     private void gotoMobilepayQR() {
         Intent intent = new Intent(this, MobilePayActivity.class);
