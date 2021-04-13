@@ -337,9 +337,7 @@ public class DetailsActivity extends MainActivity {
                 double eurPrice = price*eur;
                 String sPrice = String.format(java.util.Locale.getDefault(),"%.2f \u20ac", eurPrice);
                 textPriceEur.setText(sPrice);
-
             };
-
             webAPI.loadData(callback);
         });
     }

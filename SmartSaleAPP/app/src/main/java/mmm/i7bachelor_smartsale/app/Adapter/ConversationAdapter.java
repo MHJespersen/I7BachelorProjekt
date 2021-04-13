@@ -89,7 +89,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public int getItemCount()
     {
-        return messagelist.size();
+        if(messagelist != null)
+            return messagelist.size();
+        return 0;
     }
 
     public class ConversationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
