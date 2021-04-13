@@ -20,9 +20,11 @@ public class Constants {
     public static final String ACCEPT_PAYMENT_URL = "https://api.sandbox.mobilepay.dk/pos/app/usersimulation/acceptpayment";
     public static final String NEW_PAYMENT_URL = "https://api.mobilepay.dk/pos/v10/payments";
     public static final String CLIENT_ID = "1170825e-c923-47c2-bdb7-ef35c7967efc";
-    public static final String CLIENT_CREDENTIALS_SECRET = "hEt5IUrYrVY8pKnyp2SAOvWAqqpIzC3qqAAz9tOA3JE";
+    public static final String CLIENT_CREDENTIALS_SECRET = "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL";
     public static final String MERCHANT_VAT = "DK90000093";
-    public static final String BEACON_ID = "9522134410";
+    public static final String BEACON_ID = "147025836912345";
+    public static final String CORRELATION_ID = "70bd51d7-da28-46b0-b26f-d19e2a44490a";
+    public static final String POS_ID = "5e6bbcc6-154c-44bb-9a82-45acc1aaea7b";
 
 
 

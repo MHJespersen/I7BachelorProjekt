@@ -26,8 +26,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +58,7 @@ public class DetailsActivity extends MainActivity {
     private ImageView imgItem;
     private Button btnMessage;
     private ImageButton btnMap;
-    AccessToken accessToken;
+    AccessToken accessToken; //= new AccessToken();
 
     private ExecutorService executor;
     private WebAPI webAPI;
@@ -62,6 +66,7 @@ public class DetailsActivity extends MainActivity {
     private FirebaseStorage mStorageRef;
     private SalesItem selectedItem;
     private Location location;
+    private String bearerToken = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,13 +151,13 @@ public class DetailsActivity extends MainActivity {
         //  B. Cancel payment: POST /app/usersimulation/cancelpaymentbyuser
 
         //Send authentication request to get access token for the PoS API
-        //sendAuthenticationRequest(Constants.SANDBOX_URL);
-
-        //Create PoS
-        sendPoSCreationRequest(Constants.NEW_PAYMENT_URL);
+        sendAuthenticationRequest(Constants.SANDBOX_URL);
 
         // Send User Simulation Checkin.
         sendPoSCheckinRequests(Constants.PoS_CHECKIN_URL);
+
+        //Create PoS, iniate payment
+        //sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
 
         //Initiate payment through the PoS API
         //sendPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
@@ -161,12 +166,16 @@ public class DetailsActivity extends MainActivity {
         gotoMobilepayQR();
     }
 
-    private void sendPoSCreationRequest(String url) throws JSONException {
+    private void sendInitiatePaymentRequest(String url) throws JSONException {
         if(queue==null){
             queue = Volley.newRequestQueue(this);
         }
+        JSONObject jsonBody = new JSONObject();
+        String price = textPrice.getText().toString();
+        String priceonly = price.split(" ")[0].trim();
+        jsonBody.put("amount", Integer.parseInt(priceonly));
+        final String mRequestBody = jsonBody.toString();
 
-        String  uniqueID = UUID.randomUUID().toString();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("Mobilepay", "onResponse: " + response);
@@ -176,25 +185,35 @@ public class DetailsActivity extends MainActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("accept", "application/json");
-                params.put("authorization", "application/json");
-                params.put("content-type", "application/json");
-                params.put("correlationid", "application/json");
-                params.put("x-ibm-client-id", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL"); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
-                params.put("x-mobilepay-client-system-version", Constants.CLIENT_CREDENTIALS_SECRET);
-                params.put("x-mobilepay-idempotency-key", Constants.CLIENT_CREDENTIALS_SECRET);
-                params.put("x-mobilepay-merchant-vat-number", Constants.CLIENT_CREDENTIALS_SECRET);
+                params.put("authorization", bearerToken);
+                params.put("content-type", "application/*+json");
+                params.put("correlationid", Constants.CORRELATION_ID);
+                params.put("x-ibm-client-id", Constants.CLIENT_ID);
+                params.put("x-mobilepay-client-system-version", "2.1.1");
+                params.put("x-mobilepay-idempotency-key", "key1");
+                params.put("x-mobilepay-merchant-vat-number", Constants.MERCHANT_VAT);
 
                 return params;
             }
             @Override
             protected Map<String, String> getParams(){
                 Map<String, String> params = new HashMap<>();
-                params.put("amount", "11");
                 params.put("currencyCode", "DKK");
-                params.put("orderId", "12");
+                params.put("orderId", "Order - 1");
                 params.put("plannedCaptureDelay", "None");
-                params.put("posId", uniqueID);
+                params.put("posId", Constants.POS_ID);
+                params.put("merchantPaymentLabel", selectedItem.getUser());
                 return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    Log.d("InitiatePayment body", "getBody: " + e);
+                    return null;
+                }
             }
         };
         queue.add(stringRequest);
@@ -235,12 +254,10 @@ public class DetailsActivity extends MainActivity {
         if(queue==null){
             queue = Volley.newRequestQueue(this);
         }
-
+        bearerToken = "Bearer " + accessToken.getAccess_token();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
-                    Log.d("Mobilepay", "onResponse: " + response);
-                    //Gson gson = new GsonBuilder().create();
-                    //accessToken =  gson.fromJson(response, AccessToken.class);
+                    Log.d("Mobilepay Checkin", "onResponse: " + response);
                 },
                 error -> Log.d("Mobilepay", "onError: " + error)) {
             @Override
@@ -248,7 +265,10 @@ public class DetailsActivity extends MainActivity {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
-                params.put("x-ibm-client-id", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL"); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
+                //params.put("Content-Length", "70");
+                //params.put("Host", "");
+                params.put("Authorization", bearerToken);
+                params.put("x-ibm-client-id", Constants.CLIENT_ID); //sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL
                 params.put("X-IBM-Client-Secret", Constants.CLIENT_CREDENTIALS_SECRET);
 
                 return params;
@@ -256,7 +276,7 @@ public class DetailsActivity extends MainActivity {
             @Override
             protected Map<String, String> getParams(){
                 Map<String, String> params = new HashMap<>();
-                params.put("beaconId", "147025836912345");
+                params.put("beaconId", Constants.BEACON_ID);
                 params.put("phoneNumber", "+4520031801"); //  +4520031801
                 return params;
             }
@@ -266,18 +286,18 @@ public class DetailsActivity extends MainActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendAuthenticationRequest(String url) throws JSONException {
-        //RequestQueue queue = Volley.newRequestQueue(this);
         if(queue==null){
             queue = Volley.newRequestQueue(this);
         }
         //encode client id + secret
-        String authString = (Constants.CLIENT_ID + ":" + Constants.CLIENT_CREDENTIALS_SECRET);
+        String authString = (Constants.CLIENT_ID + ":" + "hEt5IUrYrVY8pKnyp2SAOvWAqqpIzC3qqAAz9tOA3JE");
         String encodedAuth = Base64.getEncoder().encodeToString(authString.getBytes());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Log.d("Mobilepay", "onResponse: " + response);
                     Gson gson = new GsonBuilder().create();
                     accessToken =  gson.fromJson(response, AccessToken.class);
+                    Log.d("token", "accesstoken value: " + accessToken.getAccess_token());
                 },
                 error -> Log.d("Mobilepay", "onError: " + error)) {
             @Override

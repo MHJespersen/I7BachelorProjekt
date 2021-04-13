@@ -16,7 +16,6 @@ import mmm.i7bachelor_smartsale.app.R;
 
 public class MobilePayActivity extends MainActivity {
 
-    private Object BarcodeFormat;
     private TextView mobilepaytext;
     private ImageView qrcode;
     private Uri imageUri = null;
@@ -34,7 +33,7 @@ public class MobilePayActivity extends MainActivity {
     }
 
     private void scanBarcode(View view){
-        Uri uri = Uri.parse("mobilepaypos://pos?id=9522134410&source=qr");
+        Uri uri = Uri.parse("mobilepaypos://pos?id=5e6bbcc6-154c-44bb-9a82-45acc1aaea7b&source=qr");
         Intent pickIntent = new Intent(Intent.ACTION_VIEW, uri);
 
         startActivity(pickIntent);
