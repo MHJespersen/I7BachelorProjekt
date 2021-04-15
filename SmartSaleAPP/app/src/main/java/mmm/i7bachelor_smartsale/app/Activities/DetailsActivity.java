@@ -159,28 +159,28 @@ public class DetailsActivity extends MainActivity {
         sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
 
         //Initiate payment through the PoS API
-        AcceptPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
+        //AcceptPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
 
-        //gotoMobilepayQR();
+        gotoMobilepayQR();
     }
 
     private void sendInitiatePaymentRequest(String url) throws JSONException {
         String price = textPrice.getText().toString().split(" ")[0].trim();
-        //Integer priceonly= Integer.parseInt(price);
+        Integer priceonly= Integer.parseInt(price);
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(mediaType, "{\r\n    \"posId\":\"5e6bbcc6-154c-44bb-9a82-45acc1aaea7b\",\r\n    \"orderId\":\"Order - 1\",\r\n    \"amount\": 50,\r\n    \"currencyCode\":\"DKK\",\r\n    \"merchantPaymentLabel\": \"TestUserName\",\r\n    \"plannedCaptureDelay\":\"None\"\r\n}");
+                RequestBody body = RequestBody.create(mediaType, String.format("{\r\n    \"posId\":\"5e6bbcc6-154c-44bb-9a82-45acc1aaea7b\",\r\n    \"orderId\":\"Order - 1\",\r\n    \"amount\": %s,\r\n    \"currencyCode\":\"DKK\",\r\n    \"merchantPaymentLabel\": \"TestUserName\",\r\n    \"plannedCaptureDelay\":\"None\"\r\n}", priceonly));
                 okhttp3.Request request = new okhttp3.Request.Builder()
                         .url("https://api.sandbox.mobilepay.dk/pos/v10/payments")
                         .method("POST", body)
                         .addHeader("Accept", "application/json")
                         .addHeader("content-type", "application/json")
-                        .addHeader("x-ibm-client-id", "1170825e-c923-47c2-bdb7-ef35c7967efc")
+                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
                         .addHeader("X-Mobilepay-Client-System-Version", "2.1.1")
                         .addHeader("X-Mobilepay-Idempotency-Key", java.util.UUID.randomUUID().toString() )
-                        .addHeader("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkE5QTdBQ0NGMTg4NEQwMUQ0QUIwRkZEMTA0OTEyNEI3NEIxRThCQUQiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJxYWVzenhpRTBCMUtzUF9SQkpFa3Qwc2VpNjAifQ.eyJuYmYiOjE2MTgzMjEwNjUsImV4cCI6MTYxODMyNDY2NSwiaXNzIjoiaHR0cHM6Ly9hcGkubW9iaWxlcGF5LmRrL2ludGVncmF0b3ItYXV0aGVudGljYXRpb24iLCJhdWQiOiJodHRwczovL2FwaS5tb2JpbGVwYXkuZGsvaW50ZWdyYXRvci1hdXRoZW50aWNhdGlvbi9yZXNvdXJjZXMiLCJjbGllbnRfaWQiOiIxMTcwODI1ZS1jOTIzLTQ3YzItYmRiNy1lZjM1Yzc5NjdlZmMiLCJpbnRlZ3JhdG9yX2lkIjoiYmQzMjlhNDEtN2U2YS00ODZiLTljZDEtMzc3M2FhY2I3MGM3IiwiaW50ZWdyYXRvcl9uYW1lIjoiU21hcnRTYWxlIFN0dWRlbnQgUHJvamVjdCIsImludGVncmF0b3JjbGllbnRfbmFtZSI6IlNtYXJ0U2FsZSIsIm1lcmNoYW50X3ZhdCI6IkRLOTAwMDAwOTMiLCJqdGkiOiI2MDVCMjYyRTQ2MEY5NTBFNDc3MjdFQ0YxQzkwNUJCOSIsImlhdCI6MTYxODMyMTA2NSwic2NvcGUiOlsiaW50ZWdyYXRvcl9zY29wZSJdfQ.ZQli_vNPxGqXNs4sQC1jBwXOeR-cEImLYgIsRapysnSwyHEISgRuvM5bl3x2vhO3xkcpPsJTKbzrELkljCz7G0Dd_jyhkeNQfbEDUuUXFG0LQZz1MteIAECwwdMujkjsaaSS_W6wVKeN0YSvevalR0-VlStIcyHnhASug1oLqrkob9a6vjvNzGlX8Hndf_2J3q8zjvpsZv3uLeKKYe5IQM-EenegqslKAjLIR7Lvb8PY0DCbutgMNuo7S7z215YK3T0oXSMxDy7x7zRkjjlHdd-JGDZLxlKnAoPyOqXFxZ2agSZXHhf5HCGbBNht3nI527ajiBk7Pc3zSXtaiBJJqw")
+                        .addHeader("Authorization", bearerToken)
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
@@ -202,11 +202,10 @@ public class DetailsActivity extends MainActivity {
                         .url("https://api.sandbox.mobilepay.dk/pos/app/usersimulation/acceptpayment")
                         .method("POST", body)
                         .addHeader("Accept", "application/json")
-                        .addHeader("x-ibm-client-id", "1170825e-c923-47c2-bdb7-ef35c7967efc")
-                        .addHeader("x-ibm-client-secret", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL")
-                        .addHeader("Authorization", "" + accessToken.getAccess_token())
-                        .addHeader("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkE5QTdBQ0NGMTg4NEQwMUQ0QUIwRkZEMTA0OTEyNEI3NEIxRThCQUQiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJxYWVzenhpRTBCMUtzUF9SQkpFa3Qwc2VpNjAifQ.eyJuYmYiOjE2MTgzMDI1NDIsImV4cCI6MTYxODMwNjE0MiwiaXNzIjoiaHR0cHM6Ly9hcGkubW9iaWxlcGF5LmRrL2ludGVncmF0b3ItYXV0aGVudGljYXRpb24iLCJhdWQiOiJodHRwczovL2FwaS5tb2JpbGVwYXkuZGsvaW50ZWdyYXRvci1hdXRoZW50aWNhdGlvbi9yZXNvdXJjZXMiLCJjbGllbnRfaWQiOiIxMTcwODI1ZS1jOTIzLTQ3YzItYmRiNy1lZjM1Yzc5NjdlZmMiLCJpbnRlZ3JhdG9yX2lkIjoiYmQzMjlhNDEtN2U2YS00ODZiLTljZDEtMzc3M2FhY2I3MGM3IiwiaW50ZWdyYXRvcl9uYW1lIjoiU21hcnRTYWxlIFN0dWRlbnQgUHJvamVjdCIsImludGVncmF0b3JjbGllbnRfbmFtZSI6IlNtYXJ0U2FsZSIsIm1lcmNoYW50X3ZhdCI6IkRLOTAwMDAwOTMiLCJqdGkiOiIxQjc0MDhFNzdGNUQxMzRDOTQzRjgwQUUzQzZEQzQ0OCIsImlhdCI6MTYxODMwMjU0Miwic2NvcGUiOlsiaW50ZWdyYXRvcl9zY29wZSJdfQ.Kc0PbceKTqAA5zjJbX_64dyIY7ZtTeqFYM7H7MZFE3X9iT8WuAlzCxIIoDe2qpFNm7uqCaMO9DQC_I6AbpfqZMhDZ4c1H486WMJtXhP9_jYN1OY5T6bD3YmuYIoVs494nwWj6TNjdvGL6YY9ElYtrU62KS4zoK-e0KJfJzg1vO077EXsnDlJxevBbAx-8sl2un079b3cz2tWVTaZvyOdnVqGSecs7jFl-KKc1HkLaJr3whYXUw2S5sPgSO2J57p4XzVQ8MGYNsjrA-Mcij2ubgLoaR0MuNnqOGvYzKE1TXgdeXSHkOoDorowpqemfOP-ITxLKi1SW_Jt11MtHKEklQ")
-                        .addHeader("Content-Type", "application/json")
+                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
+                        .addHeader("x-ibm-client-secret", Constants.CLIENT_CREDENTIALS_SECRET)
+                        .addHeader("Authorization", bearerToken)
+                        .addHeader("Content-Type", "application/*+json")
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
@@ -230,8 +229,8 @@ public class DetailsActivity extends MainActivity {
                 response -> {
                     Gson gson = new GsonBuilder().create();
                     accessToken =  gson.fromJson(response, AccessToken.class);
-                    Log.d("Mobilepay", "Access token set");
-                    Log.d("Mobilepay", accessToken.getAccess_token());
+                    Log.d("MobilepayAuth", "Access token set");
+                    Log.d("MobilepayAuth", accessToken.getAccess_token());
 
                 },
                 error -> Log.d("Mobilepay", "onError: " + error)) {
@@ -265,13 +264,14 @@ public class DetailsActivity extends MainActivity {
                         .url("https://api.sandbox.mobilepay.dk/pos/app/usersimulation/checkin")
                         .method("POST", body)
                         .addHeader("Content-Length", "70")
-                        .addHeader("x-ibm-client-id", "1170825e-c923-47c2-bdb7-ef35c7967efc")
-                        .addHeader("x-ibm-client-secret", "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL")
+                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
+                        .addHeader("x-ibm-client-secret", Constants.CLIENT_CREDENTIALS_SECRET)
                         .addHeader("Accept", "application/json")
                         .addHeader("Content-Type", "application/json")
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
+                    bearerToken = "Bearer " + accessToken.getAccess_token();
                     Log.d("Response", "" + response.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
