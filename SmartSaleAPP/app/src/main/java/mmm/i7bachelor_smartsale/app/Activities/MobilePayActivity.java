@@ -33,10 +33,15 @@ public class MobilePayActivity extends MainActivity {
     }
 
     private void scanBarcode(View view){
-        Uri uri = Uri.parse("mobilepaypos://pos?id=5e6bbcc6-154c-44bb-9a82-45acc1aaea7b&source=qr");
-        Intent pickIntent = new Intent(Intent.ACTION_VIEW, uri);
+        //Uri uri = Uri.parse("mobilepaypos://pos?id=147025836912345=qr");
+        //Intent pickIntent = new Intent(Intent.ACTION_VIEW, uri);
+        //Intent launchIntent = getPackageManager().getLaunchIntentForPackage("dk.danskebank.mobilepay.vendor.sprint");
+        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("dk.danskebank.p2p.ui.login.LoginActivity");
+        if (launchIntent != null) {
+            startActivity(launchIntent);//null pointer check in case package name was not found
+        }
 
-        startActivity(pickIntent);
+        //startActivity(pickIntent);
         Toast toast = Toast.makeText(this, "Opening MobilePay App", Toast.LENGTH_SHORT);
         toast.show();
     }

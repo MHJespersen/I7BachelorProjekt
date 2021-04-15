@@ -27,6 +27,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 
@@ -70,6 +71,7 @@ public class DetailsActivity extends MainActivity {
     private String bearerToken = null;
     private OkHttpClient client = new OkHttpClient().newBuilder().build();
     private boolean TokenReady = false;
+    private String paymentId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,11 +159,11 @@ public class DetailsActivity extends MainActivity {
         // Send User Simulation Checkin.
         sendPoSCheckinRequests(Constants.PoS_CHECKIN_URL);
 
-        //Create PoS, iniate payment
-        sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
+        //Create PoS, initiate payment
+        //sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
 
-        //Initiate payment through the PoS API
-        AcceptPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
+        //Accept payment through the PoS API, on behalf on the user.
+        //AcceptPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
 
         gotoMobilepayQR();
     }
@@ -220,8 +222,8 @@ public class DetailsActivity extends MainActivity {
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
-                    bearerToken = "Bearer " + accessToken.getAccess_token();
                     Log.d("Response", "" + response.toString());
+                    bearerToken = "Bearer " + accessToken.getAccess_token();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -251,6 +253,9 @@ public class DetailsActivity extends MainActivity {
                 try {
                     Response response = client.newCall(request).execute();
                     Log.d("Response", "" + response.toString());
+                    Gson gson = new Gson();
+                    JsonObject responsestring = gson.fromJson (String.valueOf(response), JsonObject.class);
+                    paymentId = responsestring.get("paymentId").getAsString();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -275,6 +280,37 @@ public class DetailsActivity extends MainActivity {
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
+                    Log.d("Response", "" + response.toString());
+                } catch (Exception e) {
+                    Log.d("Exception","" + e);
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void CapturePaymentRequest() throws JSONException {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                MediaType mediaType = MediaType.parse("application/json");
+                String price = textPrice.getText().toString().split(" ")[0].trim();
+                Integer priceonly= Integer.parseInt(price);
+                RequestBody body = RequestBody.create(mediaType, String.format("{\r\n  \"beaconId\": \"147025836912345\"}", priceonly));
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(String.format("https://api.sandbox.mobilepay.dk/pos/v10/payments/%s/capture", paymentId))
+                        .method("POST", body)
+                        .addHeader("Accept", "application/json")
+                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
+                        .addHeader("x-mobilepay-merchant-vat-number", Constants.MERCHANT_VAT)
+                        .addHeader("x-mobilepay-client-system-version", "2.1.1")
+                        .addHeader("Authorization", bearerToken)
+                        .addHeader("Content-Type", "application/*+json")
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    Log.d("Response", "" + response.toString());
+
                 } catch (Exception e) {
                     Log.d("Exception","" + e);
                     e.printStackTrace();
