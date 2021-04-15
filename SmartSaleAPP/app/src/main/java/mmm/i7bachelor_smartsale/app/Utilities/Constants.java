@@ -18,7 +18,7 @@ public class Constants {
     public static final String SANDBOX_URL = "https://api.sandbox.mobilepay.dk/integrator-authentication/connect/token";
     public static final String PoS_CHECKIN_URL = "https://api.sandbox.mobilepay.dk/pos/app/usersimulation/checkin";
     public static final String ACCEPT_PAYMENT_URL = "https://api.sandbox.mobilepay.dk/pos/app/usersimulation/acceptpayment";
-    public static final String NEW_PAYMENT_URL = "https://api.mobilepay.dk/pos/v10/payments";
+    public static final String NEW_PAYMENT_URL = "https://api.sandbox.mobilepay.dk/pos/v10/payments";
     public static final String CLIENT_ID = "1170825e-c923-47c2-bdb7-ef35c7967efc";
     public static final String CLIENT_CREDENTIALS_SECRET = "sE5wD8qP1lQ8uM5wJ0uO0nE3kR8aU5iA2oI5iK0eQ6tB1kN0uL";
     public static final String MERCHANT_VAT = "DK90000093";
