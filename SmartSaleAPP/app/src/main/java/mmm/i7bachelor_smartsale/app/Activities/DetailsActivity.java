@@ -2,6 +2,7 @@ package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.Intent;
 import android.location.Location;
+import android.media.session.MediaSession;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -68,6 +69,7 @@ public class DetailsActivity extends MainActivity {
     private Location location;
     private String bearerToken = null;
     private OkHttpClient client = new OkHttpClient().newBuilder().build();
+    private boolean TokenReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,62 +161,9 @@ public class DetailsActivity extends MainActivity {
         sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
 
         //Initiate payment through the PoS API
-        //AcceptPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
+        AcceptPaymentRequest(Constants.ACCEPT_PAYMENT_URL);
 
         gotoMobilepayQR();
-    }
-
-    private void sendInitiatePaymentRequest(String url) throws JSONException {
-        String price = textPrice.getText().toString().split(" ")[0].trim();
-        Integer priceonly= Integer.parseInt(price);
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(mediaType, String.format("{\r\n    \"posId\":\"5e6bbcc6-154c-44bb-9a82-45acc1aaea7b\",\r\n    \"orderId\":\"Order - 1\",\r\n    \"amount\": %s,\r\n    \"currencyCode\":\"DKK\",\r\n    \"merchantPaymentLabel\": \"TestUserName\",\r\n    \"plannedCaptureDelay\":\"None\"\r\n}", priceonly));
-                okhttp3.Request request = new okhttp3.Request.Builder()
-                        .url("https://api.sandbox.mobilepay.dk/pos/v10/payments")
-                        .method("POST", body)
-                        .addHeader("Accept", "application/json")
-                        .addHeader("content-type", "application/json")
-                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
-                        .addHeader("X-Mobilepay-Client-System-Version", "2.1.1")
-                        .addHeader("X-Mobilepay-Idempotency-Key", java.util.UUID.randomUUID().toString() )
-                        .addHeader("Authorization", bearerToken)
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
-                    Log.d("Response", "" + response.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void AcceptPaymentRequest(String url) throws JSONException {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(mediaType, "{\r\n  \"beaconId\": \"147025836912345\",\r\n  \"phoneNumber\": \"+4520031801\"\r\n}");
-                okhttp3.Request request = new okhttp3.Request.Builder()
-                        .url("https://api.sandbox.mobilepay.dk/pos/app/usersimulation/acceptpayment")
-                        .method("POST", body)
-                        .addHeader("Accept", "application/json")
-                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
-                        .addHeader("x-ibm-client-secret", Constants.CLIENT_CREDENTIALS_SECRET)
-                        .addHeader("Authorization", bearerToken)
-                        .addHeader("Content-Type", "application/*+json")
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
-                } catch (Exception e) {
-                    Log.d("Exception","" + e);
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -229,9 +178,7 @@ public class DetailsActivity extends MainActivity {
                 response -> {
                     Gson gson = new GsonBuilder().create();
                     accessToken =  gson.fromJson(response, AccessToken.class);
-                    Log.d("MobilepayAuth", "Access token set");
-                    Log.d("MobilepayAuth", accessToken.getAccess_token());
-
+                    TokenReady = true;
                 },
                 error -> Log.d("Mobilepay", "onError: " + error)) {
             @Override
@@ -258,6 +205,8 @@ public class DetailsActivity extends MainActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                while(!TokenReady) { }
+                Log.d("Token Checkin", "" + accessToken.getAccess_token());
                 MediaType mediaType = MediaType.parse("application/json");
                 RequestBody body = RequestBody.create(mediaType, "{\r\n  \"beaconId\": \"147025836912345\",\r\n  \"phoneNumber\": \"+4520031801\"\r\n}");
                 okhttp3.Request request = new okhttp3.Request.Builder()
@@ -280,6 +229,59 @@ public class DetailsActivity extends MainActivity {
         });
     }
 
+    private void sendInitiatePaymentRequest(String url) throws JSONException {
+        String price = textPrice.getText().toString().split(" ")[0].trim();
+        Integer priceonly= Integer.parseInt(price);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                while(!TokenReady){}
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(mediaType, String.format("{\r\n    \"posId\":\"5e6bbcc6-154c-44bb-9a82-45acc1aaea7b\",\r\n    \"orderId\":\"Order - 1\",\r\n    \"amount\": %s,\r\n    \"currencyCode\":\"DKK\",\r\n    \"merchantPaymentLabel\": \"TestUserName\",\r\n    \"plannedCaptureDelay\":\"None\"\r\n}", priceonly));
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(url) //https://api.sandbox.mobilepay.dk/pos/v10/payments
+                        .method("POST", body)
+                        .addHeader("Accept", "application/json")
+                        .addHeader("content-type", "application/json")
+                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
+                        .addHeader("X-Mobilepay-Client-System-Version", "2.1.1")
+                        .addHeader("X-Mobilepay-Idempotency-Key", java.util.UUID.randomUUID().toString() )
+                        .addHeader("Authorization", bearerToken)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    Log.d("Response", "" + response.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void AcceptPaymentRequest(String url) throws JSONException {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(mediaType, "{\r\n  \"beaconId\": \"147025836912345\",\r\n  \"phoneNumber\": \"+4520031801\"\r\n}");
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(url)
+                        .method("POST", body)
+                        .addHeader("Accept", "application/json")
+                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
+                        .addHeader("x-ibm-client-secret", Constants.CLIENT_CREDENTIALS_SECRET)
+                        .addHeader("Authorization", bearerToken)
+                        .addHeader("Content-Type", "application/*+json")
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                } catch (Exception e) {
+                    Log.d("Exception","" + e);
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     private void gotoMobilepayQR() {
         Intent intent = new Intent(this, MobilePayActivity.class);
