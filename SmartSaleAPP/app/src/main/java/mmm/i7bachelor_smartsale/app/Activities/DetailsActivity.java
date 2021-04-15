@@ -2,7 +2,6 @@ package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.Intent;
 import android.location.Location;
-import android.media.session.MediaSession;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -28,8 +27,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +58,7 @@ public class DetailsActivity extends MainActivity {
     // widgets
     private TextView textTitle, textPrice, textPriceEur, textDescription, textLocation;
     private ImageView imgItem;
-    private Button btnMessage;
+    private Button btnMessage, mobilepaybtn;
     private ImageButton btnMap;
     private static AccessToken accessToken = new AccessToken();
 
@@ -76,6 +73,7 @@ public class DetailsActivity extends MainActivity {
     private String paymentId = "";
     private final int MOBILEPAY_RESULT_CODE = 100;
     boolean checkedIn = false;
+    boolean paymentCompleted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +99,10 @@ public class DetailsActivity extends MainActivity {
                 selectedItem = Item;
                 textTitle.setText(Item.getTitle());
                 textDescription.setText(Item.getDescription());
+
+                if(Item.getTitle() == "Sold"){
+                    mobilepaybtn.setVisibility(View.GONE);
+                }
 
                 double price = Item.getPrice();
                 // Check price for decimals, if zero, don't show
@@ -129,6 +131,13 @@ public class DetailsActivity extends MainActivity {
                     Glide.with(imgItem).load(R.drawable.emptycart).into(imgItem);
                 }
 
+                if (paymentCompleted){
+                    mobilepaybtn.setVisibility(View.GONE);
+                    selectedItem.setTitle("Solgt");
+                    Log.d("PaymentCaptured", "onChanged: Changed item title to sold");
+                }
+                paymentCompleted = false;
+
                 getExchangeRates(price);
             }
         }
@@ -136,6 +145,7 @@ public class DetailsActivity extends MainActivity {
 
     private void setupUI() {
 
+        mobilepaybtn = findViewById(R.id.mobilepaybtn);
         textTitle = findViewById(R.id.detailsTextTitle);
         imgItem = findViewById(R.id.detailsImage);
         textPrice = findViewById(R.id.detailsTextPrice);
@@ -157,9 +167,14 @@ public class DetailsActivity extends MainActivity {
         //  A. Accept the payment: POST /app/usersimulation/acceptpayment (Done in mobilepay by the user)
         //  B. Cancel payment: POST /app/usersimulation/cancelpaymentbyuser (Done in mobilepay by the user)
 
+        //Authenticate requests and get access token.
         sendAuthenticationRequest(Constants.SANDBOX_URL);
+
+        // Check when user is checked in at mobilepay app and initiate payment af that.
         getCheckedInUsers();
         gotoMobilepayQR();
+
+        //When user returns from mobilepay, cancel payment if the user didnt swipe to accept payment.
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -228,7 +243,7 @@ public class DetailsActivity extends MainActivity {
                         Thread.sleep(4000);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.d("Stacktrace", "Erorr parsing" + e);
+                        Log.d("Stacktrace", "Error parsing" + e);
                     }
                 }
             }
@@ -242,7 +257,7 @@ public class DetailsActivity extends MainActivity {
             @Override
             public void run() {
                 MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(mediaType, String.format("{\r\n    \"posId\":\"5e6bbcc6-154c-44bb-9a82-45acc1aaea7b\",\r\n    \"orderId\":\"Order - 1\",\r\n    \"amount\": %s,\r\n    \"currencyCode\":\"DKK\",\r\n    \"merchantPaymentLabel\": \"TestUserName\",\r\n    \"plannedCaptureDelay\":\"None\"\r\n}", priceonly));
+                RequestBody body = RequestBody.create(mediaType, String.format("{\r\n    \"posId\":\"5e6bbcc6-154c-44bb-9a82-45acc1aaea7b\",\r\n    \"orderId\":\"Order - 1\",\r\n    \"amount\": %s,\r\n    \"currencyCode\":\"DKK\",\r\n    \"merchantPaymentLabel\": \"%s\",\r\n    \"plannedCaptureDelay\":\"None\"\r\n}", priceonly, textTitle.getText()));
                 okhttp3.Request request = new okhttp3.Request.Builder()
                         .url(url) //https://api.sandbox.mobilepay.dk/pos/v10/paymentsq
                         .method("POST", body)
@@ -288,6 +303,8 @@ public class DetailsActivity extends MainActivity {
                 try {
                     Response response = client.newCall(request).execute();
                     Log.d("Response", "" + response.toString());
+                    paymentCompleted = true;
+                    viewModel.setItemSold(selectedItem.getTitle());
 
                 } catch (Exception e) {
                     Log.d("Exception","" + e);

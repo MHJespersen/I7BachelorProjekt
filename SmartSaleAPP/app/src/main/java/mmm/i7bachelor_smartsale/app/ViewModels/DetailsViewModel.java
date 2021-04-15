@@ -20,4 +20,7 @@ public class DetailsViewModel extends ViewModel {
         return repo.getSelectedItem();
     }
 
+    public void setItemSold(String title) {
+        repo.setItemTitleSold(title);
+    }
 }
