@@ -356,31 +356,3 @@ public class DetailsActivity extends MainActivity {
         }
     }
 }
-
-
-/*    private void sendPoSCheckinRequests(String url){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                while(bearerToken.isEmpty()) { }
-                Log.d("Token Checkin", "" + accessToken.getAccess_token());
-                MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(mediaType, "{\r\n  \"beaconId\": \"147025836912345\",\r\n  \"phoneNumber\": \"+4520031801\"\r\n}");
-                okhttp3.Request request = new okhttp3.Request.Builder()
-                        .url("https://api.sandbox.mobilepay.dk/pos/app/usersimulation/checkin")
-                        .method("POST", body)
-                        .addHeader("Content-Length", "70")
-                        .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
-                        .addHeader("x-ibm-client-secret", Constants.CLIENT_CREDENTIALS_SECRET)
-                        .addHeader("Accept", "application/json")
-                        .addHeader("Content-Type", "application/json")
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
-                    Log.d("Response", "" + response.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }*/
