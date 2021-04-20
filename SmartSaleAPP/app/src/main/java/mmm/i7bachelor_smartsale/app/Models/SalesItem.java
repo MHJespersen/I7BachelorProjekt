@@ -38,7 +38,7 @@ public class SalesItem implements Serializable {
                 Float.parseFloat(d.get("price").toString()),
                 d.get("user").toString(), d.get("image").toString(),
                 createLocationPoint(d.getGeoPoint("location")),
-                d.getReference().getPath());
+                d.get("documentPath").toString());
         return s;
     }
 
