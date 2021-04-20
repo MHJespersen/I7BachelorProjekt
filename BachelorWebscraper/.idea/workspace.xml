@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="16780c44-c8ea-4fc4-b9cd-be31c7bb69a5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/DBAharvester.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/DBAharvester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/DBAparser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/DBAparser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/GOGparser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/GOGparser.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +43,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -104,6 +109,11 @@
           <url>file://$PROJECT_DIR$/processors/GOGparser.py</url>
           <line>19</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/processors/DBAharvester.py</url>
+          <line>13</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
