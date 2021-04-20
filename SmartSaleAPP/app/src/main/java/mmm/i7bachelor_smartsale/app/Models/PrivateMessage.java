@@ -21,14 +21,18 @@ public class PrivateMessage  implements Comparable<PrivateMessage> {
     }
 
 
-    public static PrivateMessage fromSnapshot(DocumentSnapshot d) {
-        PrivateMessage message = new PrivateMessage(d.get("Receiver").toString(),
-                d.get("Sender").toString(),
-                d.get("MessageBody").toString(),
-                d.get("MessageDate").toString(),
-                Boolean.parseBoolean(d.get("Read").toString()),
-                d.get("Path").toString());
-        return message;
+    public static PrivateMessage fromSnapshot(DocumentSnapshot doc) {
+        if(doc != null)
+        {
+            PrivateMessage message = new PrivateMessage(doc.get("Receiver").toString(),
+                    doc.get("Sender").toString(),
+                    doc.get("MessageBody").toString(),
+                    doc.get("MessageDate").toString(),
+                    Boolean.parseBoolean(doc.get("Read").toString()),
+                    doc.get("Path").toString());
+            return message;
+        }
+        return new PrivateMessage();
     }
 
     @Override
