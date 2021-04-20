@@ -40,11 +40,7 @@ public class TestMLActivity extends MainActivity {
         setContentView(R.layout.activity_testml);
 
         setupUI();
-
-
     }
-
-    private
 
     private void setupUI() {
         edit_model = findViewById(R.id.edit_model);
