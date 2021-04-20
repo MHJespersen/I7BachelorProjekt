@@ -156,6 +156,7 @@ public class Repository {
                     public void onComplete(@NonNull Task<Void> task) {
                         String UniqueID = DocRef.collection("Messages").document().getId();
                         mmap.put("Sender", privateMessage.getSender());
+                        mmap.put("Receiver", privateMessage.getReceiver());
                         mmap.put("MessageDate", privateMessage.getMessageDate());
                         mmap.put("MessageBody", privateMessage.getMessageBody());
                         mmap.put("Read", false);

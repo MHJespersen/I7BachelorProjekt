@@ -44,6 +44,8 @@ public class TestMLActivity extends MainActivity {
 
     }
 
+    private
+
     private void setupUI() {
         edit_model = findViewById(R.id.edit_model);
         edit_mærke = findViewById(R.id.edit_mærke);
@@ -60,7 +62,7 @@ public class TestMLActivity extends MainActivity {
 
         // https://firebase.google.com/docs/ml/android/use-custom-models
         CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
-                .requireWifi()  // Also possible: .requireCharging() and .requireDeviceIdle()
+                .requireWifi()  // Also possible: .requireCharging() and .requireDeviceIdl"e()
                 .build();
         FirebaseModelDownloader.getInstance()
                 .getModel("ml_test", DownloadType.LOCAL_MODEL_UPDATE_IN_BACKGROUND, conditions)
