@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -288,7 +289,27 @@ public class Repository {
                 }
             });
         }
+    }
 
+    public void setItemTitleSold(String title)
+    {
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    DocumentReference docRef = firestore.collection("SalesItems").document(title);
+                    docRef.update("title", "Sold").addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Itemsold", "Item title set to sold");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(con,"Creating sale Failed", Toast.LENGTH_SHORT);
+                        }
+                    });
+                }
+            });
     }
 
     public void createSale(SalesItem item){
