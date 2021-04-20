@@ -1,7 +1,9 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
+import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,11 +18,14 @@ import org.tensorflow.lite.Interpreter;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,10 +34,11 @@ import mmm.i7bachelor_smartsale.app.R;
 //inspiration til image labeling: https://www.youtube.com/watch?v=lL9t9-tiMlE&ab_channel=EDMTDev
 public class TestMLActivity extends MainActivity {
 
-    EditText edit_overskrift, edit_model, edit_mærke, edit_stand, edit_type, edit_tommer, edit_pris;
+    EditText edit_mærke, edit_stand, edit_tommer;
     TextView textviewpris;
+    TextView textview_pris;
     Button btn_publish;
-    private Interpreter interpreter;
+    Interpreter tflite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,91 +46,50 @@ public class TestMLActivity extends MainActivity {
         setContentView(R.layout.activity_testml);
 
         setupUI();
+
+        try{
+            tflite = new Interpreter(loadModelFile());
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        btn_publish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                float prediction = doInference(edit_mærke.getText().toString(), edit_tommer.getText().toString(), edit_stand.getText().toString());
+                System.out.println(prediction);
+                textview_pris.setText(Float.toString(prediction));
+            }
+        });
     }
 
     private void setupUI() {
-        edit_model = findViewById(R.id.edit_model);
         edit_mærke = findViewById(R.id.edit_mærke);
         edit_stand = findViewById(R.id.edit_stand);
-        edit_type = findViewById(R.id.edit_type);
-        edit_pris = findViewById(R.id.edit_pris);
         textviewpris = findViewById(R.id.textView_testml);
         edit_tommer = findViewById(R.id.edit_tommer);
-        edit_overskrift = findViewById(R.id.edit_overskrift);
+        textview_pris = findViewById(R.id.textView_pris);
         //textviewpris.setText(String.valueOf(prediction));
 
         btn_publish = findViewById(R.id.testml_publish);
-        btn_publish.setOnClickListener(view -> getprediction());
-
-        // https://firebase.google.com/docs/ml/android/use-custom-models
-        CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
-                .requireWifi()  // Also possible: .requireCharging() and .requireDeviceIdl"e()
-                .build();
-        FirebaseModelDownloader.getInstance()
-                .getModel("ml_test", DownloadType.LOCAL_MODEL_UPDATE_IN_BACKGROUND, conditions)
-                .addOnSuccessListener(new OnSuccessListener<CustomModel>() {
-                    @Override
-                    public void onSuccess(CustomModel model) {
-                        // Download complete. Depending on your app, you could enable the ML
-                        // feature, or switch from the local model to the remote model, etc.
-
-                        // The CustomModel object contains the local path of the model file,
-                        // which you can use to instantiate a TensorFlow Lite interpreter.
-                        File modelFile = model.getFile();
-                        if (modelFile != null) {
-                            interpreter = new Interpreter(modelFile);
-                        }
-                    }
-                });
     }
 
-    public void getprediction(){
-        String overskrift = edit_overskrift.getText().toString();
-        String mærke = edit_mærke.getText().toString();
-        String type = edit_type.getText().toString();
-        String model = edit_model.getText().toString();
-        String tommer = edit_tommer.getText().toString();
-        String stand = edit_stand.getText().toString();
-        String pris = edit_pris.getText().toString();
+    private MappedByteBuffer loadModelFile() throws IOException {
+        AssetFileDescriptor fileDescriptor = this.getAssets().openFd("model.tflite");
+        FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());
+        FileChannel fileChannel=inputStream.getChannel();
+        long startOffset = fileDescriptor.getStartOffset();
+        long declareLenght=fileDescriptor.getDeclaredLength();
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY,startOffset,declareLenght);
+    }
 
-
-        //https://www.tensorflow.org/lite/guide/inference
-        // https://www.tensorflow.org/lite/api_docs/java/org/tensorflow/lite/Interpreter
-        ByteBuffer input = ByteBuffer.allocateDirect(224 * 224 * 3 * 4).order(ByteOrder.nativeOrder());
-
-        int bufferSize = 1000 * java.lang.Float.SIZE / java.lang.Byte.SIZE;
-        ByteBuffer modelOutput = ByteBuffer.allocateDirect(bufferSize).order(ByteOrder.nativeOrder());
-        interpreter.run(input, modelOutput);
-
-        modelOutput.rewind();
-        FloatBuffer probabilities = modelOutput.asFloatBuffer();
-        try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(getAssets().open("custom_labels.txt")));
-            for (int i = 0; i < probabilities.capacity(); i++) {
-                String label = reader.readLine();
-                float probability = probabilities.get(i);
-                Log.i("Mltest", String.format("%s: %1.4f", label, probability));
-            }
-        } catch (IOException e) {
-            // File not found?
-        }
-        interpreter.close();
-
-        try {
-            Map<String, Object> inputs = new HashMap<>();
-            inputs.put("overskrift", overskrift);
-            inputs.put("mærke", mærke);
-            inputs.put("type", type);
-            inputs.put("model", model);
-            inputs.put("tommer", tommer);
-            inputs.put("stand", stand);
-            inputs.put("pris", pris);
-            Map<String, Object> outputs = new HashMap<>();
-            //outputs.put("output_1", output1);
-            //interpreter.runForMultipleInputsOutputs(inputs, map_of_indices_to_outputs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private float doInference(String inputString0, String inputString1, String inputString2) {
+        float[] inputVal = new float[3];
+        inputVal[0]=Float.parseFloat(inputString0);
+        inputVal[1]=Float.parseFloat(inputString1);
+        inputVal[2]=Float.parseFloat(inputString2);
+        float[][] output= new float[3][3];
+        tflite.run(inputVal, output);
+        return output[0][0];
     }
 }
