@@ -291,21 +291,23 @@ public class Repository {
         }
     }
 
-    public void setItemTitleSold(String title)
+    public void setItemTitleSold(String path)
     {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    DocumentReference docRef = firestore.collection("SalesItems").document(title);
-                    docRef.update("title", "Sold").addOnSuccessListener(new OnSuccessListener<Void>() {
+                    DocumentReference docRef = firestore.collection("SalesItems").document(path);
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("Itemsold", "Item title set to sold");
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot docs =  task.getResult();
+                            docs.getReference().update("title", "Sold");
+                            Log.d("Itemsold", "Item title set to sold in firebase");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(con,"Creating sale Failed", Toast.LENGTH_SHORT);
+                            Log.d("Itemsold", "Item update to sold failed in firebase: " + e);
                         }
                     });
                 }

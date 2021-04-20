@@ -73,7 +73,6 @@ public class DetailsActivity extends MainActivity {
     private String paymentId = "";
     private final int MOBILEPAY_RESULT_CODE = 100;
     boolean checkedIn = false;
-    boolean paymentCompleted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,29 +87,29 @@ public class DetailsActivity extends MainActivity {
                 .get(DetailsViewModel.class);
 
         setupUI();
-        viewModel.returnSelected().observe(this, updateObserver );
+        viewModel.returnSelected().observe(this, updateObserver);
     }
 
     Observer<SalesItem> updateObserver = new Observer<SalesItem>() {
         @Override
         public void onChanged(SalesItem Item) {
-            if(Item != null)
-            {
+            if (Item != null) {
                 selectedItem = Item;
                 textTitle.setText(Item.getTitle());
                 textDescription.setText(Item.getDescription());
 
-                if(Item.getTitle() == "Sold"){
+                if (Item.getTitle().equals("Sold")) {
                     mobilepaybtn.setVisibility(View.GONE);
+                    Log.d("PaymentCaptured", "onChanged: Changed item title to sold");
                 }
 
                 double price = Item.getPrice();
                 // Check price for decimals, if zero, don't show
                 String sPrice;
                 if (price % 1 == 0) {
-                    sPrice = String.format(java.util.Locale.getDefault(),"%.0f kr", price);
+                    sPrice = String.format(java.util.Locale.getDefault(), "%.0f kr", price);
                 } else {
-                    sPrice = String.format(java.util.Locale.getDefault(),"%.2f kr", price);
+                    sPrice = String.format(java.util.Locale.getDefault(), "%.2f kr", price);
                 }
                 textPrice.setText(sPrice);
 
@@ -118,25 +117,15 @@ public class DetailsActivity extends MainActivity {
                 String sLocation = locationUtility.getCityName(location.getLatitude(), location.getLongitude());
                 textLocation.setText(sLocation);
 
-                if(!Item.getImage().equals(""))
-                {
+                if (!Item.getImage().equals("")) {
                     StorageReference strRef = mStorageRef.getReference().child(Item.getImage());
                     strRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageURL = uri.toString();
                         Glide.with(imgItem).load(imageURL).into(imgItem);
                     }).addOnFailureListener(exception -> Glide.with(imgItem).load(R.drawable.emptycart).into(imgItem));
-                }
-                else
-                {
+                } else {
                     Glide.with(imgItem).load(R.drawable.emptycart).into(imgItem);
                 }
-
-                if (paymentCompleted){
-                    mobilepaybtn.setVisibility(View.GONE);
-                    selectedItem.setTitle("Solgt");
-                    Log.d("PaymentCaptured", "onChanged: Changed item title to sold");
-                }
-                paymentCompleted = false;
 
                 getExchangeRates(price);
             }
@@ -152,7 +141,7 @@ public class DetailsActivity extends MainActivity {
         textPriceEur = findViewById(R.id.detailsTextEur);
         textDescription = findViewById(R.id.detailsTextDesc);
         textLocation = findViewById(R.id.detailsTextLocation);
-        imgItem= findViewById(R.id.detailsImage);
+        imgItem = findViewById(R.id.detailsImage);
         btnMessage = findViewById(R.id.detailsBtnMessage);
         btnMap = findViewById(R.id.detailsBtnMap);
         textDescription.setMovementMethod(new ScrollingMovementMethod());
@@ -179,7 +168,7 @@ public class DetailsActivity extends MainActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendAuthenticationRequest(String url) throws JSONException {
-        if(queue==null){
+        if (queue == null) {
             queue = Volley.newRequestQueue(this);
         }
         //encode client id + secret
@@ -188,21 +177,22 @@ public class DetailsActivity extends MainActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     Gson gson = new GsonBuilder().create();
-                    accessToken =  gson.fromJson(response, AccessToken.class);
+                    accessToken = gson.fromJson(response, AccessToken.class);
                     bearerToken = "Bearer " + accessToken.getAccess_token();
                 },
                 error -> Log.d("Mobilepay", "onError: " + error)) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<String, String>();
                 params.put("Content-Type", "application/x-www-form-urlencoded");
                 params.put("x-ibm-client-id", Constants.CLIENT_ID);
                 params.put("Authorization", "Basic " + encodedAuth);
 
                 return params;
             }
+
             @Override
-            protected Map<String, String> getParams(){
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("grant_type", "client_credentials");
                 params.put("merchant_vat", Constants.MERCHANT_VAT);
@@ -212,13 +202,13 @@ public class DetailsActivity extends MainActivity {
         queue.add(stringRequest);
     }
 
-    private void getCheckedInUsers(){
+    private void getCheckedInUsers() {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                while(true)
-                {
-                while(bearerToken.isEmpty()){}
+                while (true) {
+                    while (bearerToken.isEmpty()) {
+                    }
                     okhttp3.Request request = new okhttp3.Request.Builder()
                             .url("https://api.sandbox.mobilepay.dk/pos/v10/pointofsales/5e6bbcc6-154c-44bb-9a82-45acc1aaea7b/checkin")
                             .method("GET", null)
@@ -234,8 +224,7 @@ public class DetailsActivity extends MainActivity {
                         String jsonData = response.body().string();
                         JSONObject Jobject = new JSONObject(jsonData);
                         boolean isCheckedIn = Jobject.getBoolean("isUserCheckedIn");
-                        if(isCheckedIn)
-                        {
+                        if (isCheckedIn) {
                             Log.d("Bool", "CHECKED IN");
                             sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
                             break;
@@ -265,7 +254,7 @@ public class DetailsActivity extends MainActivity {
                         .addHeader("content-type", "application/json")
                         .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
                         .addHeader("X-Mobilepay-Client-System-Version", "2.1.1")
-                        .addHeader("X-Mobilepay-Idempotency-Key", java.util.UUID.randomUUID().toString() )
+                        .addHeader("X-Mobilepay-Idempotency-Key", java.util.UUID.randomUUID().toString())
                         .addHeader("Authorization", "Bearer " + accessToken.getAccess_token())
                         .build();
                 try {
@@ -288,7 +277,7 @@ public class DetailsActivity extends MainActivity {
             public void run() {
                 MediaType mediaType = MediaType.parse("application/*+json");
                 String price = textPrice.getText().toString().split(" ")[0].trim();
-                Integer priceonly= Integer.parseInt(price);
+                Integer priceonly = Integer.parseInt(price);
                 RequestBody body = RequestBody.create(mediaType, String.format("{\r\n  \"amount\": \"%s\"}", priceonly));
                 okhttp3.Request request = new okhttp3.Request.Builder()
                         .url(String.format("https://api.sandbox.mobilepay.dk/pos/v10/payments/%s/capture", paymentId))
@@ -303,11 +292,9 @@ public class DetailsActivity extends MainActivity {
                 try {
                     Response response = client.newCall(request).execute();
                     Log.d("Response", "" + response.toString());
-                    paymentCompleted = true;
-                    viewModel.setItemSold(selectedItem.getTitle());
 
                 } catch (Exception e) {
-                    Log.d("Exception","" + e);
+                    Log.d("Exception", "" + e);
                     e.printStackTrace();
                 }
             }
@@ -347,8 +334,8 @@ public class DetailsActivity extends MainActivity {
             Callback callback = exchangeRates -> {
                 // What happens on API call completion
                 double eur = exchangeRates.getRates().getEUR();
-                double eurPrice = price*eur;
-                String sPrice = String.format(java.util.Locale.getDefault(),"%.2f \u20ac", eurPrice);
+                double eurPrice = price * eur;
+                String sPrice = String.format(java.util.Locale.getDefault(), "%.2f \u20ac", eurPrice);
                 textPriceEur.setText(sPrice);
             };
             webAPI.loadData(callback);
@@ -362,13 +349,16 @@ public class DetailsActivity extends MainActivity {
             if (resultCode == RESULT_OK) {
                 try {
                     CapturePaymentRequest();
+                    Log.d("document path", "onActivityResult: path: " + selectedItem.getPath());
+                    viewModel.setItemSold(selectedItem.getPath());
                     Toast.makeText(this, ("PAYMENT ACCEPTED"), Toast.LENGTH_LONG).show();
+                    finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-            if (resultCode == RESULT_CANCELED) {
+                if (resultCode == RESULT_CANCELED) {
                     Toast.makeText(this, ("PAYMENT CANCELED"), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
