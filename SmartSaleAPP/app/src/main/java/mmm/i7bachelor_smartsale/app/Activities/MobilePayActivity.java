@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,17 +12,12 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mmm.i7bachelor_smartsale.app.R;
-import mmm.i7bachelor_smartsale.app.Utilities.Constants;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class MobilePayActivity extends MainActivity {
 

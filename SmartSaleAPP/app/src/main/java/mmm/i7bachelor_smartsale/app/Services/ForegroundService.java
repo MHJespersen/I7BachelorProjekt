@@ -20,7 +20,6 @@ import androidx.lifecycle.Observer;
 import java.util.List;
 
 import mmm.i7bachelor_smartsale.app.Activities.InboxActivity;
-import mmm.i7bachelor_smartsale.app.Models.PrivateMessage;
 import mmm.i7bachelor_smartsale.app.Models.Repository;
 import mmm.i7bachelor_smartsale.app.R;
 import mmm.i7bachelor_smartsale.app.Utilities.Constants;
