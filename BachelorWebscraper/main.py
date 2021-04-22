@@ -5,7 +5,7 @@ from processors.DBAparser import DBAParser
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import unittest
-from processors.util import DBA_TV_LINK, GOG_TV_LINK, dba_payload
+from processors.util import DBA_TV_LINK, GOG_TV_LINK, dba_payload, write_to_csv
 import sys
 import requests
 
@@ -33,11 +33,11 @@ class UnitTests(unittest.TestCase):
 
     def testTiles(self):
         self.assertEqual('Find Tv i TV - Køb brugt på DBA ', UnitTests.bsDBA.find('title').get_text(),
-                         "Title for DBA has changed. There might be changes on the website")
+                         "Title for DBA has changed. There may be changes on the website")
 
         self.assertEqual('TV | Nye og brugte fjernsyn billigt til salg på GulogGratis.dk',
                          UnitTests.bsGOG.find('title').get_text(),
-                         "Title for GOG has changed. There might be changes on the website")
+                         "Title for GOG has changed. There may be changes on the website")
 
     def testConnection(self):
         self.assertEqual(UnitTests.DBARes.status_code, 200, "DBA unittest did not return status_code 200")
@@ -47,17 +47,33 @@ class UnitTests(unittest.TestCase):
 if __name__ == '__main__':
     # ---- Unit tests ----
     # Prevent unit tests to read command line arguments and run unittests
-    del sys.argv[1:]
-    unittest.main()
+    #del sys.argv[1:]
+    #unittest.main()
 
     # ---- DBA ----
-    #dba_harvester = DBAHarvester()
-    #rawdata = dba_harvester.harvest()
-    # dba_parser = DBAParser()
-    # dba_parser.parse(rawdata)
+    dba_harvester = DBAHarvester()
+    rawdata = dba_harvester.harvest()
+    assert(type(rawdata) is list)
+    assert(len(rawdata) > 0)
+    dba_parser = DBAParser()
+    parsed_data = dba_parser.parse(rawdata)
+    try:
+        assert (parsed_data[0]["Tommer"].isdigit() is True)
+    except Exception as e:
+        write_to_csv(parsed_data, "unfinished.csv", True)
+
+    write_to_csv(parsed_data, "test.csv", False)
 
     # ---- Gul og Gratis ----
     #gog_harvester = GOGHarvester()
     #rawdata = gog_harvester.harvest()
+    #assert(type(rawdata) is list)
+    #assert(len(rawdata) > 0)
     #gog_parser = GOGParser()
-    #gog_parser.parse(rawdata)
+    #parsed_data = gog_parser.parse(rawdata)
+    #try:
+    #    assert (parsed_data[0]["Tommer"].isdigit() is True)
+    #except Exception as e:
+    #    write_to_csv(parsed_data, "unfinished.csv", True)
+    #write_to_csv(parsed_data, "test.csv", True)
+

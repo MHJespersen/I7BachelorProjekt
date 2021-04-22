@@ -40,7 +40,7 @@ class DBAParser(IParser):
                 self.logger.error("Parser stopped with error: " + str(e))
                 # Evt skriv en state til en .txt fil og send data vi allerede har hentet til write_to_csv
 
-        write_to_csv(parsed_items, "Predictering_Data_TV_DBA.csv", False)
+        return parsed_items
 
     def extract_from_table(self, rows):
         tds = BeautifulSoup(str(rows), "html.parser")
