@@ -1,6 +1,7 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -26,11 +27,11 @@ public class TestMLActivity extends MainActivity {
     TextView textview_pris;
     Button btn_publish;
     Interpreter tflite;
+    File f;
+    MappedByteBuffer tflite_model;
 
-    int model_output;
-
-    Uri f_uri = Uri.fromFile(new File("//assets/model.tflite"));
-    File f = new File(f_uri.getPath());
+    float[] model_output;
+    float[][] output;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +43,13 @@ public class TestMLActivity extends MainActivity {
         btn_publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try (Interpreter interpreter = new Interpreter(f)) {
-                    interpreter.run(doInference(edit_mærke.getText().toString(),edit_stand.getText().toString(),edit_tommer.getText().toString()), model_output);
+                try (Interpreter interpreter = new Interpreter(loadModelFile2())) {
+                    float[] input = doInference(edit_mærke.getText().toString(),edit_stand.getText().toString(),edit_tommer.getText().toString());
+                    interpreter.run(input, output);
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                textview_pris.setText(Float.toString(model_output));
+                //textview_pris.setText(model_output);
                 //float prediction = doInference(edit_mærke.getText().toString(), edit_tommer.getText().toString(), edit_stand.getText().toString());
                 //System.out.println(prediction);
                 //textview_pris.setText(Float.toString(prediction));
@@ -75,13 +77,24 @@ public class TestMLActivity extends MainActivity {
         return fileChannel.map(FileChannel.MapMode.READ_ONLY,startOffset,declareLenght);
     }
 
-    private float doInference(String inputString0, String inputString1, String inputString2) {
+    /** Memory-map the model file in Assets. */
+    private MappedByteBuffer loadModelFile2()
+            throws IOException {
+        AssetFileDescriptor fileDescriptor = getAssets().openFd("model.tflite");
+        FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
+        FileChannel fileChannel = inputStream.getChannel();
+        long startOffset = fileDescriptor.getStartOffset();
+        long declaredLength = fileDescriptor.getDeclaredLength();
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
+    }
+
+    private float[] doInference(String inputString0, String inputString1, String inputString2) {
         float[] inputVal = new float[3];
         inputVal[0]=Float.parseFloat(inputString0);
         inputVal[1]=Float.parseFloat(inputString1);
         inputVal[2]=Float.parseFloat(inputString2);
-        float[][] output= new float[3][3];
-        tflite.run(inputVal, output);
-        return output[0][0];
+        output = new float[1][1];
+        //tflite.run(inputVal, output);
+        return inputVal;
     }
 }

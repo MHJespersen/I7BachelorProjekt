@@ -24,10 +24,9 @@
         android:id="@+id/testml_publish"
         android:layout_width="217dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="39dp"
+        android:layout_marginTop="44dp"
         android:backgroundTint="@color/buttonColor"
         android:text="Publish"
-        app:layout_constraintBottom_toTopOf="@+id/textView_testml"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_stand" />
@@ -36,13 +35,13 @@
         android:id="@+id/edit_mærke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginBottom="41dp"
         android:ems="10"
         android:hint="Mærke"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/edit_tommer"
-        app:layout_constraintStart_toStartOf="@+id/edit_tommer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtCreateSaleHeader" />
 
     <EditText
@@ -72,13 +71,13 @@
         android:id="@+id/edit_tommer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="46dp"
         android:ems="10"
         android:hint="Tommer"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/edit_stand"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/edit_mærke"
         app:layout_constraintTop_toBottomOf="@+id/edit_mærke" />
 
     <TextView
