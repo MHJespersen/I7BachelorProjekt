@@ -57,7 +57,7 @@ public class Repository {
         return(INSTANCE);
     }
 
-    private Repository()
+    Repository()
     {
         ConvoAndUnread = new MutableLiveData<>();
         PrivateMessagesList = new MutableLiveData<>();

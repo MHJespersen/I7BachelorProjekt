@@ -1,8 +1,6 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 
 import org.tensorflow.lite.Interpreter;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
@@ -29,10 +26,7 @@ public class TestMLActivity extends MainActivity implements AdapterView.OnItemSe
     TextView textviewpris;
     TextView textview_pris;
     Button btn_publish;
-    Interpreter tflite;
-    MappedByteBuffer tflite_model;
 
-    float[] model_output;
     float[][] output;
 
     @Override
@@ -41,8 +35,6 @@ public class TestMLActivity extends MainActivity implements AdapterView.OnItemSe
         setContentView(R.layout.activity_testml);
 
         setupUI();
-
-        //file = loadModelFile();
 
         btn_publish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,16 +46,12 @@ public class TestMLActivity extends MainActivity implements AdapterView.OnItemSe
                     ex.printStackTrace();
                 }
                 textview_pris.setText(""+output[0][0]);
-                //float prediction = doInference(edit_mærke.getText().toString(), edit_tommer.getText().toString(), edit_stand.getText().toString());
-                //System.out.println(prediction);
-                //textview_pris.setText(Float.toString(prediction));
             }
         });
     }
 
     /** Memory-map the model file in Assets. */
-    private MappedByteBuffer loadModelFile2()
-            throws IOException {
+    private MappedByteBuffer loadModelFile2() throws IOException {
         AssetFileDescriptor fileDescriptor = getAssets().openFd("model.tflite");
         FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
         FileChannel fileChannel = inputStream.getChannel();
@@ -78,7 +66,6 @@ public class TestMLActivity extends MainActivity implements AdapterView.OnItemSe
         inputVal[1]=Float.parseFloat(inputString1);
         inputVal[2]=Float.parseFloat(inputString2);
         output = new float[1][1];
-        //tflite.run(inputVal, output);
         return inputVal;
     }
 
