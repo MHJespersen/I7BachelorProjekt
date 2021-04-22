@@ -10,6 +10,7 @@
       <change beforePath="$PROJECT_DIR$/processors/DBAharvester.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/DBAharvester.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/processors/DBAparser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/DBAparser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/processors/GOGparser.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/GOGparser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processors/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/processors/util.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,11 +110,6 @@
           <url>file://$PROJECT_DIR$/processors/GOGparser.py</url>
           <line>19</line>
           <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/processors/DBAharvester.py</url>
-          <line>13</line>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
