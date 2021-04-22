@@ -20,6 +20,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Spinner
+        android:id="@+id/maerkeSpinner"
+        android:layout_width="159dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="63dp"
+        android:layout_marginEnd="7dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCreateSaleHeader" />
+
+    <Spinner
+        android:id="@+id/tommerSpinner"
+        android:layout_width="159dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="7dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/maerkeSpinner" />
+
+    <Spinner
+        android:id="@+id/standSpinner"
+        android:layout_width="159dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="44dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/testml_publish"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <Button
         android:id="@+id/testml_publish"
         android:layout_width="217dp"
@@ -41,6 +74,7 @@
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/edit_tommer"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.134"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtCreateSaleHeader" />
 
