@@ -42,6 +42,8 @@ public class TestMLActivity extends MainActivity implements AdapterView.OnItemSe
 
         setupUI();
 
+        file = loadModelFile();
+
         btn_publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
