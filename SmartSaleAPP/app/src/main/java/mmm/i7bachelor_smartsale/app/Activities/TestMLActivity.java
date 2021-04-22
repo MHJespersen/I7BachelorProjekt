@@ -46,7 +46,6 @@ public class TestMLActivity extends MainActivity {
     int model_output;
 
     Uri f_uri = Uri.fromFile(new File("//assets/model.tflite"));
-
     File f = new File(f_uri.getPath());
 
     @Override
@@ -56,25 +55,18 @@ public class TestMLActivity extends MainActivity {
 
         setupUI();
 
-        try (Interpreter interpreter = new Interpreter(f)) {
-            interpreter.run(doInference(edit_mærke.getText().toString(),edit_stand.getText().toString(),edit_tommer.getText().toString()), model_output);
-        }
-
-        /*
-        try{
-            tflite = new Interpreter(f);
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-         */
-
         btn_publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float prediction = doInference(edit_mærke.getText().toString(), edit_tommer.getText().toString(), edit_stand.getText().toString());
-                System.out.println(prediction);
-                textview_pris.setText(Float.toString(prediction));
+                try (Interpreter interpreter = new Interpreter(f)) {
+                    interpreter.run(doInference(edit_mærke.getText().toString(),edit_stand.getText().toString(),edit_tommer.getText().toString()), model_output);
+                }catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                textview_pris.setText(Float.toString(model_output));
+                //float prediction = doInference(edit_mærke.getText().toString(), edit_tommer.getText().toString(), edit_stand.getText().toString());
+                //System.out.println(prediction);
+                //textview_pris.setText(Float.toString(prediction));
             }
         });
     }
