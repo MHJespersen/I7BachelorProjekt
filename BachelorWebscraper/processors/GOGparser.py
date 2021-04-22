@@ -41,7 +41,7 @@ class GOGParser(IParser):
                 self.logger.error("Harvesting stopped with error: " + str(e))
                 # Evt skriv en state til en .txt fil og send data vi allerede har hentet til write_to_csv
 
-        write_to_csv(parsed_items, "Predictering_Data_TV_GOG.csv", True)
+        return parsed_items
 
     def extract_from_table(self, section):
         values = [str(items.string).replace('"', '') for items in section]
