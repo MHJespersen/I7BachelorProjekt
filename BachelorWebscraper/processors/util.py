@@ -29,7 +29,16 @@ def write_to_csv(harvested_items, FILENAME, newFile=False):
     except IOError as e:
         logger.warning("Failed to write .csv" + str(e))
 
+
 # ----------- DBA -----------
+
+dba_payload = {
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive"
+}
 
 DBA_LINK = "https://www.dba.dk/"
 DBA_TV_LINK = "https://www.dba.dk/billede-og-lyd/tv-og-tilbehoer/tv/?soeg=tv"
@@ -43,7 +52,6 @@ FB_STARTPAGE_LINK = "https://da-dk.facebook.com/"
 FB_LOGIN_LINK = 'https://da-dk.facebook.com/login/device-based/regular/login/'
 EMAIL = 'Datasamperen@outlook.dk'
 PASSWORD = 'D@t@samlerenpaafacebook'
-
 
 # ----------- Gul&Gratis -----------
 
