@@ -42,7 +42,7 @@ public class TestMLActivity extends MainActivity implements AdapterView.OnItemSe
 
         setupUI();
 
-        file = loadModelFile();
+        //file = loadModelFile();
 
         btn_publish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +53,7 @@ public class TestMLActivity extends MainActivity implements AdapterView.OnItemSe
                 }catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                //textview_pris.setText(model_output);
+                textview_pris.setText(""+output[0][0]);
                 //float prediction = doInference(edit_mærke.getText().toString(), edit_tommer.getText().toString(), edit_stand.getText().toString());
                 //System.out.println(prediction);
                 //textview_pris.setText(Float.toString(prediction));
