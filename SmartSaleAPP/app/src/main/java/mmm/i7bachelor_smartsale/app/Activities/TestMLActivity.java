@@ -1,6 +1,7 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.Context;
 import com.google.firebase.ml.modeldownloader.CustomModel;
 import com.google.firebase.ml.modeldownloader.CustomModelDownloadConditions;
 import com.google.firebase.ml.modeldownloader.DownloadType;
@@ -20,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -40,6 +43,12 @@ public class TestMLActivity extends MainActivity {
     Button btn_publish;
     Interpreter tflite;
 
+    int model_output;
+
+    Uri f_uri = Uri.fromFile(new File("//assets/model.tflite"));
+
+    File f = new File(f_uri.getPath());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +56,18 @@ public class TestMLActivity extends MainActivity {
 
         setupUI();
 
+        try (Interpreter interpreter = new Interpreter(f)) {
+            interpreter.run(doInference(edit_mærke.getText().toString(),edit_stand.getText().toString(),edit_tommer.getText().toString()), model_output);
+        }
+
+        /*
         try{
-            tflite = new Interpreter(loadModelFile());
+            tflite = new Interpreter(f);
         }catch (Exception ex) {
             ex.printStackTrace();
         }
+
+         */
 
         btn_publish.setOnClickListener(new View.OnClickListener() {
             @Override

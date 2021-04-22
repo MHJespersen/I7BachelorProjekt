@@ -9,64 +9,85 @@
     <TextView
         android:id="@+id/txtCreateSaleHeader"
         android:layout_width="159dp"
-        android:layout_height="62dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginBottom="63dp"
         android:gravity="center"
         android:text="@string/txtCreateSaleHeader"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="113dp" />
+        app:layout_constraintBottom_toTopOf="@+id/edit_mærke"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/testml_publish"
         android:layout_width="217dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="39dp"
         android:backgroundTint="@color/buttonColor"
         android:text="Publish"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="407dp" />
+        app:layout_constraintBottom_toTopOf="@+id/textView_testml"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_stand" />
 
     <EditText
         android:id="@+id/edit_mærke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="41dp"
         android:ems="10"
         android:hint="Mærke"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="125dp" />
+        app:layout_constraintBottom_toTopOf="@+id/edit_tommer"
+        app:layout_constraintStart_toStartOf="@+id/edit_tommer"
+        app:layout_constraintTop_toBottomOf="@+id/txtCreateSaleHeader" />
 
     <EditText
         android:id="@+id/edit_stand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
         android:ems="10"
         android:hint="Stand"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="97dp"
-        tools:layout_editor_absoluteY="302dp" />
+        app:layout_constraintBottom_toTopOf="@+id/testml_publish"
+        app:layout_constraintStart_toStartOf="@+id/edit_tommer"
+        app:layout_constraintTop_toBottomOf="@+id/edit_tommer" />
 
     <TextView
         android:id="@+id/textView_testml"
         android:layout_width="137dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="26dp"
         android:text="Predicted pris: "
-        tools:layout_editor_absoluteX="137dp"
-        tools:layout_editor_absoluteY="494dp" />
+        app:layout_constraintBottom_toTopOf="@+id/textView_pris"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testml_publish" />
 
     <EditText
         android:id="@+id/edit_tommer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="46dp"
         android:ems="10"
         android:hint="Tommer"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="97dp"
-        tools:layout_editor_absoluteY="211dp" />
+        app:layout_constraintBottom_toTopOf="@+id/edit_stand"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_mærke" />
 
     <TextView
         android:id="@+id/textView_pris"
         android:layout_width="128dp"
-        android:layout_height="60dp"
-        tools:layout_editor_absoluteX="141dp"
-        tools:layout_editor_absoluteY="539dp" />
+        android:layout_height="0dp"
+        android:layout_marginBottom="132dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_testml" />
 </androidx.constraintlayout.widget.ConstraintLayout>
