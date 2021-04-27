@@ -61,6 +61,12 @@ public class InstrumentedTest {
         //https://developer.android.com/training/testing/unit-testing/local-unit-tests
         //https://stackoverflow.com/questions/2321829/android-asynctask-testing-with-android-test-framework
 
+        /**
+         *  testConnection clears the local firestore cache, to ensure that we get elements over the network
+         *  We get a specific element from firestore that we know exsits and tests if the result is null or not
+         *  We do not care what is in the result in this test, only that we received something.
+         *  We Use onSuccess instead of OnComplete to ensure we hit onFailure, if there is no internet
+         */
         @Test
         public void testConnection() throws InterruptedException {
             final CountDownLatch signal = new CountDownLatch(1);
@@ -70,7 +76,6 @@ public class InstrumentedTest {
             firestore.collection("SalesItems").document(ouch_document_path).get()
             .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
-                //Use onSuccess instead of OnComplete to ensure we hit onFailure, if there is no internet
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     assertNotNull(documentSnapshot);
                     Log.d("Test", "In onComplete");
@@ -87,6 +92,12 @@ public class InstrumentedTest {
             signal.await();
         }
 
+        /**
+         *  In this test we use onComplete, which will get hit even if the fetch fails.
+         *  that's because our insert will fail, if we do not have the expected title and we already tested that we have a connection
+         *  By getting the result and asserting that the title is correct, we show that we can read properties from elements
+         *  like the way we do in our Repository
+         */
         @Test
         public void test_hardcoded_path_title_is_unchanged() throws InterruptedException {
             final CountDownLatch signal = new CountDownLatch(1);
