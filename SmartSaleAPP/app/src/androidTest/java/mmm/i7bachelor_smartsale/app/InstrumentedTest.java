@@ -49,6 +49,10 @@ public class InstrumentedTest {
         auth = FirebaseAuth.getInstance();
     }
 
+    /**
+     * The context is used to instantiate Firestore.
+     * We test the package name in the context to ensure our tests instantiate Firestore like our application does
+     */
     @Test
     public void Test_correct_context_is_used() {
         // Context of the app under test.
