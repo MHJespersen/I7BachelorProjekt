@@ -3,8 +3,8 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/104fcb7dbf83218c0056b7357a270aae/jetified-facebook-core-8.1.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a624f4f52d8dc462c803210fa16c7ff3/jetified-facebook-core-8.1.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a624f4f52d8dc462c803210fa16c7ff3/jetified-facebook-core-8.1.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a624f4f52d8dc462c803210fa16c7ff3/jetified-facebook-core-8.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/104fcb7dbf83218c0056b7357a270aae/jetified-facebook-core-8.1.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/104fcb7dbf83218c0056b7357a270aae/jetified-facebook-core-8.1.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.android/facebook-core/8.1.0/7604c25cac6d4db809a2381b4530610d35fe2d57/facebook-core-8.1.0-javadoc.jar!/" />

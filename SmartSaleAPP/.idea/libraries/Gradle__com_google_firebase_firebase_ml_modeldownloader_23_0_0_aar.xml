@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.firebase:firebase-ml-modeldownloader:23.0.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6e61e324c709bdca2fa9bf79e2fa66bc/jetified-firebase-ml-modeldownloader-23.0.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6e61e324c709bdca2fa9bf79e2fa66bc/jetified-firebase-ml-modeldownloader-23.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6e61e324c709bdca2fa9bf79e2fa66bc/jetified-firebase-ml-modeldownloader-23.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ff7cf4f487032eb550e447ecda8df7fa/jetified-firebase-ml-modeldownloader-23.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ff7cf4f487032eb550e447ecda8df7fa/jetified-firebase-ml-modeldownloader-23.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ff7cf4f487032eb550e447ecda8df7fa/jetified-firebase-ml-modeldownloader-23.0.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-ml-modeldownloader/23.0.0/d7a20f1f214a083c01ff4d0c43d66e1a4a685164/firebase-ml-modeldownloader-23.0.0-javadoc.jar!/" />

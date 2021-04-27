@@ -5,8 +5,12 @@ import android.content.Context;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import mmm.i7bachelor_smartsale.app.Models.Repository;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,5 +39,23 @@ public class ExampleInstrumentedTest {
     public void emailValidator_CorrectEmailSimple_ReturnsTrue() {
         //assertThat(TestMLActivity.getprediction());
         //assertThat(EmailValidator.isValidEmail("name@email.com")).isTrue();
+    }
+
+    public static class RepositoryTest {
+
+        private Context context;
+
+        private FirebaseFirestore firestore;
+        Repository repository;
+
+        //https://stackoverflow.com/questions/47926382/how-to-configure-shorten-command-line-method-for-whole-project-in-intellij
+        //https://developer.android.com/training/testing/unit-testing/local-unit-tests
+
+        @Test
+        public void setItemTitleSold() {
+            repository = Repository.getInstance(context);
+            String d = repository.getString();
+            assertEquals(d, "test", "test");
+        }
     }
 }

@@ -22,7 +22,7 @@ android {
         versionName "1.0"
         minSdkVersion 21
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
 
@@ -98,3 +98,4 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
 
 }
+apply plugin: 'com.google.gms.google-services'

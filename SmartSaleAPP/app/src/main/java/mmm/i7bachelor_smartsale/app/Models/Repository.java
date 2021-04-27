@@ -43,13 +43,14 @@ public class Repository {
     private MutableLiveData<List<PrivateMessage>> PrivateMessagesList;
     private MutableLiveData<List<SalesItem>> MarketsList;
     private MutableLiveData<List<Pair<String, Integer>>> ConvoAndUnread;
+    public String d = "test";
 
     private ExecutorService executor;
     private static Context con;
 
     public static Repository getInstance(Context context) {
+        con = context;
         if (INSTANCE == null) {
-            con = context;
             INSTANCE = new Repository();
             Log.d("Repo", "Created Instance: ");
         }
@@ -67,7 +68,10 @@ public class Repository {
         executor = Executors.newSingleThreadExecutor();
         auth = FirebaseAuth.getInstance();
     }
-
+    public String getString()
+    {
+        return d;
+    }
     public GeoPoint GeoCreater(Location l){
         GeoPoint geo = new GeoPoint(l.getLatitude(), l.getLongitude());
         return geo;
@@ -316,7 +320,6 @@ public class Repository {
                     @SuppressLint("ShowToast")
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(con,"Creating sale Failed", Toast.LENGTH_SHORT);
                     }
                 });
     }
