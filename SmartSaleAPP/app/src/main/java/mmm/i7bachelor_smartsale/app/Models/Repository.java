@@ -157,12 +157,6 @@ public class Repository {
                             public void onComplete(@NonNull Task task) {
                                 Log.d("PrivateMessages", "Completed");
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("PrivateMessages", "Failed");
-                            }
                         });
             }
         });
@@ -284,11 +278,6 @@ public class Repository {
                 DocumentSnapshot docs =  task.getResult();
                 docs.getReference().update("title", "Sold");
                 Log.d("Itemsold", "Item title set to sold in firebase");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Itemsold", "Item update to sold failed in firebase: " + e);
             }
         });
     }
