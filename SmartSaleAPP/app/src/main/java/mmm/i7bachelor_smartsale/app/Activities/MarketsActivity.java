@@ -36,7 +36,6 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
         itemList.setLayoutManager(new LinearLayoutManager(context));
         itemList.setAdapter(adapter);
         searchView = findViewById(R.id.marketSearch);
-        itemList.getRecycledViewPool().setMaxRecycledViews(1,0);
         viewModel = new ViewModelProvider(context, new MarketsViewModelFactory(this.getApplicationContext())).get(MarketsViewModel.class);
         viewModel.getItems().observe(this, updateObserver);
     }
@@ -59,10 +58,6 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
     // https://stackoverflow.com/questions/48314254/how-to-get-text-from-searchview/48314286
     public void Search() {
     //search for items in database.
-        if(searchView.getQuery().toString() !=null)
-        {
-
-        }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
