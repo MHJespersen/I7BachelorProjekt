@@ -150,6 +150,7 @@ public class Repository {
                 mmap.put("MessageDate", privateMessage.getMessageDate());
                 mmap.put("MessageBody", privateMessage.getMessageBody());
                 mmap.put("Read", false);
+                mmap.put("Receiver", privateMessage.getReceiver());
                 mmap.put("Path", UniqueID);
                 DocRef.collection("Messages").document(UniqueID).set(mmap)
                         .addOnCompleteListener(new OnCompleteListener() {
