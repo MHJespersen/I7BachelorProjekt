@@ -98,10 +98,10 @@ public class DetailsActivity extends MainActivity {
                 textTitle.setText(Item.getTitle());
                 textDescription.setText(Item.getDescription());
 
-                if (Item.getTitle().equals("Sold")) {
+                if (Item.getTitle().equals("Sold"))
                     mobilepaybtn.setVisibility(View.GONE);
-                    Log.d("PaymentCaptured", "onChanged: Changed item title to sold");
-                }
+                else
+                    mobilepaybtn.setVisibility(View.VISIBLE);
 
                 double price = Item.getPrice();
                 // Check price for decimals, if zero, don't show

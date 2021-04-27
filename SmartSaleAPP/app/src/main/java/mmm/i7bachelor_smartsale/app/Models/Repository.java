@@ -100,37 +100,32 @@ public class Repository {
     // https://firebase.google.com/docs/firestore/query-data/listen
     private void setMarketsList()
     {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                FirebaseFirestore database = FirebaseFirestore.getInstance();
-                database.collection("SalesItems")
-                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot snapshopValue,
-                                                @Nullable FirebaseFirestoreException error) {
-                                ArrayList<SalesItem> updatedListOfItems = new ArrayList<>();
-                                if(snapshopValue != null && !snapshopValue.isEmpty())
-                                {
-                                    for (DocumentSnapshot item: snapshopValue.getDocuments()) {
-                                        SalesItem newItem = new SalesItem(
-                                                item.get("title").toString(),
-                                                item.get("description").toString(),
-                                                Float.parseFloat(item.get("price").toString()),
-                                                item.get("user").toString(),
-                                                item.get("image").toString(),
-                                                SalesItem.createLocationPoint(item.get(
-                                                        "location", GeoPoint.class)),
-                                                item.get("documentPath").toString()
-                                        );
-                                        updatedListOfItems.add(newItem);
-                                    }
-                                }
-                                MarketsList.setValue(updatedListOfItems);
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection("SalesItems")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshopValue,
+                                        @Nullable FirebaseFirestoreException error) {
+                        ArrayList<SalesItem> updatedListOfItems = new ArrayList<>();
+                        if(snapshopValue != null && !snapshopValue.isEmpty())
+                        {
+                            for (DocumentSnapshot item: snapshopValue.getDocuments()) {
+                                SalesItem newItem = new SalesItem(
+                                        item.get("title").toString(),
+                                        item.get("description").toString(),
+                                        Float.parseFloat(item.get("price").toString()),
+                                        item.get("user").toString(),
+                                        item.get("image").toString(),
+                                        SalesItem.createLocationPoint(item.get(
+                                                "location", GeoPoint.class)),
+                                        item.get("documentPath").toString()
+                                );
+                                updatedListOfItems.add(newItem);
                             }
-                        });
-            }
-        });
+                        }
+                        MarketsList.setValue(updatedListOfItems);
+                    }
+                });
     }
 
     //Adding data
@@ -138,42 +133,37 @@ public class Repository {
     //https://stackoverflow.com/questions/51234670/firestore-oncompletelistener
     public void sendMessage(PrivateMessage privateMessage)
     {
-        executor.execute(new Runnable() {
+        Map<String, Object> mmap = new HashMap<>();
+        Map<String, Object> cmap = new HashMap<>();
+        cmap.put("Initialized", "");
+        DocumentReference DocRef = firestore.collection("PrivateMessages").
+                document(privateMessage.getReceiver()).
+                collection("Conversations").
+                document(auth.getCurrentUser().getEmail());
+        //To avoid having virtual documents in firebase that we can only see subcollections of.
+        //We add the cmap to initialize and make the possibly new document non-virtual.
+        DocRef.set(cmap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void run() {
-                Map<String, Object> mmap = new HashMap<>();
-                Map<String, Object> cmap = new HashMap<>();
-                cmap.put("Initialized", "");
-                DocumentReference DocRef = firestore.collection("PrivateMessages").
-                        document(privateMessage.getReceiver()).
-                        collection("Conversations").
-                        document(auth.getCurrentUser().getEmail());
-                //To avoid having virtual documents in firebase that we can only see subcollections of.
-                //We add the cmap to initialize and make the possibly new document non-virtual.
-                DocRef.set(cmap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String UniqueID = DocRef.collection("Messages").document().getId();
-                        mmap.put("Sender", privateMessage.getSender());
-                        mmap.put("MessageDate", privateMessage.getMessageDate());
-                        mmap.put("MessageBody", privateMessage.getMessageBody());
-                        mmap.put("Read", false);
-                        mmap.put("Path", UniqueID);
-                        DocRef.collection("Messages").document(UniqueID).set(mmap)
-                                .addOnCompleteListener(new OnCompleteListener() {
-                                    @Override
-                                    public void onComplete(@NonNull Task task) {
-                                        Log.d("PrivateMessages", "Completed");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("PrivateMessages", "Failed");
-                                    }
-                                });
-                    }
-                });
+            public void onComplete(@NonNull Task<Void> task) {
+                String UniqueID = DocRef.collection("Messages").document().getId();
+                mmap.put("Sender", privateMessage.getSender());
+                mmap.put("MessageDate", privateMessage.getMessageDate());
+                mmap.put("MessageBody", privateMessage.getMessageBody());
+                mmap.put("Read", false);
+                mmap.put("Path", UniqueID);
+                DocRef.collection("Messages").document(UniqueID).set(mmap)
+                        .addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+                                Log.d("PrivateMessages", "Completed");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("PrivateMessages", "Failed");
+                            }
+                        });
             }
         });
     }
@@ -269,22 +259,17 @@ public class Repository {
     {
         if(!Convo.isEmpty())
         {
-            executor.execute(new Runnable() {
+            firestore.collection("PrivateMessages").
+                    document(auth.getCurrentUser().getEmail()).
+                    collection("Conversations").document(Convo)
+                    .collection("Messages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
-                public void run() {
-                    firestore.collection("PrivateMessages").
-                            document(auth.getCurrentUser().getEmail()).
-                            collection("Conversations").document(Convo)
-                            .collection("Messages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                           List<DocumentSnapshot> docs =  task.getResult().getDocuments();
-                           for(DocumentSnapshot doc : docs)
-                           {
-                               doc.getReference().update("Read", true);
-                           }
-                        }
-                    });
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    List<DocumentSnapshot> docs =  task.getResult().getDocuments();
+                    for(DocumentSnapshot doc : docs)
+                    {
+                        doc.getReference().update("Read", true);
+                    }
                 }
             });
         }
@@ -292,56 +277,46 @@ public class Repository {
 
     public void setItemTitleSold(String path)
     {
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    DocumentReference docRef = firestore.collection("SalesItems").document(path);
-                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            DocumentSnapshot docs =  task.getResult();
-                            docs.getReference().update("title", "Sold");
-                            Log.d("Itemsold", "Item title set to sold in firebase");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("Itemsold", "Item update to sold failed in firebase: " + e);
-                        }
-                    });
-                }
-            });
-    }
-
-    public void createSale(SalesItem item){
-        executor.execute(new Runnable() {
+        DocumentReference docRef = firestore.collection("SalesItems").document(path);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void run() {
-                GeoPoint geo = GeoCreater(item.getLocation());
-                Map<String, Object> map  = new HashMap<>();
-                CollectionReference CollRef = firestore.collection("SalesItems");
-                String UniqueID = CollRef.document().getId();
-                map.put("description", item.getDescription());
-                map.put("image", item.getImage());
-                map.put("location", geo);
-                map.put("price", item.getPrice());
-                map.put("title", item.getTitle());
-                map.put("user", item.getUser());
-                map.put("documentPath", UniqueID);
-                CollRef.document(UniqueID).set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.d("Testing", "Completed");
-                    }
-                })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @SuppressLint("ShowToast")
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(con,"Creating sale Failed", Toast.LENGTH_SHORT);
-                            }
-                        });
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot docs =  task.getResult();
+                docs.getReference().update("title", "Sold");
+                Log.d("Itemsold", "Item title set to sold in firebase");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Itemsold", "Item update to sold failed in firebase: " + e);
             }
         });
     }
-}
+
+    public void createSale(SalesItem item){
+        GeoPoint geo = GeoCreater(item.getLocation());
+        Map<String, Object> map  = new HashMap<>();
+        CollectionReference CollRef = firestore.collection("SalesItems");
+        String UniqueID = CollRef.document().getId();
+        map.put("description", item.getDescription());
+        map.put("image", item.getImage());
+        map.put("location", geo);
+        map.put("price", item.getPrice());
+        map.put("title", item.getTitle());
+        map.put("user", item.getUser());
+        map.put("documentPath", UniqueID);
+        CollRef.document(UniqueID).set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("Testing", "Completed");
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @SuppressLint("ShowToast")
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(con,"Creating sale Failed", Toast.LENGTH_SHORT);
+                    }
+                });
+    }
+    }

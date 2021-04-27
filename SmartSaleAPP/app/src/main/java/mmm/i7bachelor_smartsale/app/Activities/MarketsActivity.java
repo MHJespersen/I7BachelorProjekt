@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
+import mmm.i7bachelor_smartsale.app.Adapter.ConversationAdapter;
 import mmm.i7bachelor_smartsale.app.Adapter.MarketAdapter;
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;
@@ -28,10 +29,14 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_markets);
         context = this;
+        setContentView(R.layout.activity_markets);
         itemList = findViewById(R.id.rcvItems);
+        adapter = new MarketAdapter(context);
+        itemList.setLayoutManager(new LinearLayoutManager(context));
+        itemList.setAdapter(adapter);
         searchView = findViewById(R.id.marketSearch);
+        itemList.getRecycledViewPool().setMaxRecycledViews(1,0);
         viewModel = new ViewModelProvider(context, new MarketsViewModelFactory(this.getApplicationContext())).get(MarketsViewModel.class);
         viewModel.getItems().observe(this, updateObserver);
     }
@@ -41,9 +46,6 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
     Observer<List<SalesItem>> updateObserver = new Observer<List<SalesItem>>() {
         @Override
         public void onChanged(List<SalesItem> UpdatedItems) {
-            adapter = new MarketAdapter(context);
-            itemList.setLayoutManager(new LinearLayoutManager(context));
-            itemList.setAdapter(adapter);
             adapter.updateSalesItemList(UpdatedItems);
         }
     };

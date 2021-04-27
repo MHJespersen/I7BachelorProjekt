@@ -98,7 +98,9 @@ public class MarketAdapter extends RecyclerView.Adapter<MarketAdapter.ItemViewHo
     @Override
     public int getItemCount()
     {
-        return itemList.size();
+        if(itemList != null)
+            return itemList.size();
+        return 0;
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener

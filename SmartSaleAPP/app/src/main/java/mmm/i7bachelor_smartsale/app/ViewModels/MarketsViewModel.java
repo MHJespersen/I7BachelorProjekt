@@ -39,8 +39,6 @@ public class MarketsViewModel extends ViewModel {
     }
 
     public void SetSelected(int index) {
-        String d = salesitemLiveData.getValue().get(index).getPath();
-        String k = salesitemLiveData.getValue().get(index).getDescription();
         repository.setSelectedItem(salesitemLiveData.getValue().get(index).getPath());
     }
 }
