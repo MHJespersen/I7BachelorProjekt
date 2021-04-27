@@ -43,7 +43,6 @@ public class Repository {
     private MutableLiveData<List<PrivateMessage>> PrivateMessagesList;
     private MutableLiveData<List<SalesItem>> MarketsList;
     private MutableLiveData<List<Pair<String, Integer>>> ConvoAndUnread;
-    public String d = "test";
 
     private ExecutorService executor;
     private static Context con;
@@ -64,13 +63,9 @@ public class Repository {
         PrivateMessagesList = new MutableLiveData<>();
         SelectedItemLive = new MutableLiveData<>();
         MarketsList = new MutableLiveData<>();
-        firestore = FirebaseFirestore.getInstance();
         executor = Executors.newSingleThreadExecutor();
+        firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-    }
-    public String getString()
-    {
-        return d;
     }
     public GeoPoint GeoCreater(Location l){
         GeoPoint geo = new GeoPoint(l.getLatitude(), l.getLongitude());
@@ -298,7 +293,8 @@ public class Repository {
         });
     }
 
-    public void createSale(SalesItem item){
+    public void createSale(SalesItem item)
+{
         GeoPoint geo = GeoCreater(item.getLocation());
         Map<String, Object> map  = new HashMap<>();
         CollectionReference CollRef = firestore.collection("SalesItems");
@@ -323,4 +319,4 @@ public class Repository {
                     }
                 });
     }
-    }
+}
