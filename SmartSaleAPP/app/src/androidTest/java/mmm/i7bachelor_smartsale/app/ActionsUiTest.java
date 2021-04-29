@@ -2,10 +2,13 @@ package mmm.i7bachelor_smartsale.app;
 
 import androidx.test.rule.ActivityTestRule;
 
+import com.android21buttons.fragmenttestrule.FragmentTestRule;
+
 import org.junit.Rule;
 import org.junit.Test;
 
 import mmm.i7bachelor_smartsale.app.Activities.CreateSaleActivity;
+import mmm.i7bachelor_smartsale.app.Activities.LoginActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -15,7 +18,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static bolts.Task.delay;
 
-//@RunWith(AndroidJUnit4.class)
 public class ActionsUiTest {
 
     //Perform UI click test.
@@ -24,8 +26,10 @@ public class ActionsUiTest {
     // Inspect result
 
     @Rule
-    public ActivityTestRule<CreateSaleActivity> createSaleActiviy =
-            new ActivityTestRule<CreateSaleActivity>(CreateSaleActivity.class);
+    public FragmentTestRule<?, CreateSaleActivity> fragmentTestRule =
+            FragmentTestRule.create(CreateSaleActivity.class);
+    //public ActivityTestRule<CreateSaleActivity> CreateSaleActivity =
+      //      new ActivityTestRule<CreateSaleActivity>(CreateSaleActivity.class);
 
 
     @Test

@@ -60,6 +60,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.1"
+    androidTestImplementation 'com.21buttons:fragment-test-rule:2.0.1'
 
     //Firebase
     // Declare the dependency for the Firebase SDK for Google Analytics

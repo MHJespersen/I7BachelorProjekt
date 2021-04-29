@@ -19,10 +19,8 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 
-import static com.google.android.gms.tasks.Tasks.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
