@@ -42,7 +42,7 @@
         android:id="@+id/txtCreateSaleHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/txtCreateSaleHeader"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"

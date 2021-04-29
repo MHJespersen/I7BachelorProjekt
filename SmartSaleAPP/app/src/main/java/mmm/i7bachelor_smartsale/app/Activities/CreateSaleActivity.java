@@ -1,6 +1,7 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -63,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
@@ -155,6 +157,11 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
         if (!isTrackingLocation) {
             startTrackingLocation();
         }
+        double predictedPrice = ((FragmentHandler) getActivity()).getPredictedPrice();
+        if(predictedPrice != 0)
+        {
+            price.setText(String.valueOf(predictedPrice));
+        }
     }
 
     @Override
@@ -180,8 +187,16 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
         dropdown.setOnItemSelectedListener(this);
     }
 
+    @SuppressLint("SetTextI18n")
     private void setupUI() {
         resetSuggestions();
+        price = getView().findViewById(R.id.createSaleTextPrice);
+        title = getView().findViewById(R.id.createSaleTextTitle);
+        itemImage = getView().findViewById(R.id.imgTaken);
+        saleHeader = getView().findViewById(R.id.txtCreateSaleHeader);
+        description = getView().findViewById(R.id.editTxtEnterDescription);
+        location = getView().findViewById(R.id.createSaleTextLocation);
+        mlconfidencevalue = getView().findViewById(R.id.textViewmlconfidence);
         btnCreate = getView().findViewById(R.id.btnPublish);
         btnCreate.setOnClickListener(view -> {
             //Save file:
@@ -218,14 +233,6 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
             getLocationPermission();
             getDeviceLocation();
         });
-
-        price = getView().findViewById(R.id.createSaleTextPrice);
-        title = getView().findViewById(R.id.createSaleTextTitle);
-        itemImage = getView().findViewById(R.id.imgTaken);
-        saleHeader = getView().findViewById(R.id.txtCreateSaleHeader);
-        description = getView().findViewById(R.id.editTxtEnterDescription);
-        location = getView().findViewById(R.id.createSaleTextLocation);
-        mlconfidencevalue = getView().findViewById(R.id.textViewmlconfidence);
     }
 
     //Camera Code inspired by:

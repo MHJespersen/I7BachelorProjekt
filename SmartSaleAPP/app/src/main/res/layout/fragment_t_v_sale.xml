@@ -4,15 +4,101 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.TVSaleFragment">
+    tools:context=".Activities.TVSaleFragment"
+    android:background="@color/backgroundColor">
 
     <TextView
-        android:text="TVSalesFragment"
-        android:textSize="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/Header"
+        android:layout_width="316dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="52dp"
+        android:gravity="center"
+        android:text="Set TV information to get a price prediction"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"></TextView>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtCreateSaleHeader"
+        android:layout_width="159dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/txtCreateSaleHeader"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/Header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/maerkeSpinner"
+        android:layout_width="159dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="172dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCreateSaleHeader" />
+
+    <TextView
+        android:id="@+id/textView_pris"
+        android:layout_width="143dp"
+        android:layout_height="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.776"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_predict"
+        app:layout_constraintVertical_bias="0.502" />
+
+    <TextView
+        android:id="@+id/textView_testml"
+        android:layout_width="108dp"
+        android:layout_height="30dp"
+        android:text="Predicted pris: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textView_pris"
+        app:layout_constraintHorizontal_bias="0.575"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_predict"
+        app:layout_constraintVertical_bias="0.508" />
+
+    <Spinner
+        android:id="@+id/standSpinner"
+        android:layout_width="159dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="52dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tommerSpinner" />
+
+    <Button
+        android:id="@+id/btn_predict"
+        android:layout_width="213dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/buttonColor"
+        android:onClick="predictPrice"
+        android:text="Predict"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/standSpinner" />
+
+    <Spinner
+        android:id="@+id/tommerSpinner"
+        android:layout_width="159dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="52dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/maerkeSpinner" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

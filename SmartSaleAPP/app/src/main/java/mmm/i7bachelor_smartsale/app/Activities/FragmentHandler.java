@@ -11,6 +11,7 @@ import mmm.i7bachelor_smartsale.app.R;
 public class FragmentHandler extends MainActivity {
 
     Switch toggleSaleType;
+    static double price = 0;
     TVSaleFragment TVFragment = new TVSaleFragment();
     CreateSaleActivity GeneralFragment = new CreateSaleActivity();
 
@@ -31,9 +32,11 @@ public class FragmentHandler extends MainActivity {
             setGeneralFragment();
     }
 
+    public void setPredictedPrice(double price) { this.price = price; }
+    public double getPredictedPrice() { return this.price; }
     private void setTVFragment()
     {
-        getSupportFragmentManager()
+       getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.FLFragment, TVFragment)
                 .commit();
