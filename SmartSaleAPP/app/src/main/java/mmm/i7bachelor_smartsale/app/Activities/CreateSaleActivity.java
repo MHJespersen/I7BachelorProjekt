@@ -313,14 +313,9 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         int resizedHeight = maxDimension;
 
         if (originalHeight > originalWidth) {
-            resizedHeight = maxDimension;
             resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
         } else if (originalWidth > originalHeight) {
-            resizedWidth = maxDimension;
             resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
-        } else if (originalHeight == originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = maxDimension;
         }
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
@@ -336,8 +331,7 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
             Log.d(APP_TAG, "failed to create directory");
         }
         //Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-        return file;
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
     //Get the thumbnail
@@ -462,8 +456,7 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     }
 
     private void getCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             CameraPermissionGranted = true;
         } else {
@@ -477,15 +470,13 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_CAMERA:{
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     CameraPermissionGranted = true;
                 }
             }
             case PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermissionGranted = true;
                 }
             }
@@ -497,9 +488,6 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
             if (locationManager == null) {
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             }
-
-            long minTime = MIN_TIME_BETWEEN_LOCATION_UPDATES;
-            float minDistance = MIN_DISTANCE_MOVED_BETWEEN_LOCATION_UPDATES;
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
             criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
@@ -507,7 +495,9 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
             if (locationManager != null) {
                 try {
                     //Use criteria to chose best provider
-                    locationManager.requestLocationUpdates(minTime, minDistance, criteria, locationListener, null);
+                    locationManager.requestLocationUpdates(MIN_TIME_BETWEEN_LOCATION_UPDATES,
+                            MIN_DISTANCE_MOVED_BETWEEN_LOCATION_UPDATES, criteria, locationListener,
+                            null);
                 } catch (SecurityException ex) {
                     // user has disabled location permission - need to validate this permission for newer versions?
                     Log.d(TAG, "startTrackingLocation: User has disabled location services");
@@ -524,18 +514,11 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
 
     private void stopTrackingLocation() {
         try {
-            try {
-                locationManager.removeUpdates(locationListener);
-                isTrackingLocation = false;
-                Log.d(TAG, "stopTrackingLocation");
-
-            } catch (SecurityException ex) {
-                // user has disabled location permission - need to validate this permission for newer versions?
-                Log.d(TAG, "stopTrackingLocation: User has disabled location services");
-            }
+            locationManager.removeUpdates(locationListener);
+            isTrackingLocation = false;
+            Log.d(TAG, "stopTrackingLocation");
 
         } catch (Exception ex) {
-            // if listener is null
             Log.e("TRACKER", "Error stopping location tracking", ex);
         }
     }
@@ -543,20 +526,15 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.d(Constants.CREATE_SALE_ACTIVITY, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
+            Log.d(Constants.CREATE_SALE_ACTIVITY, "onLocationChanged: "
+                    + location.getLatitude() + ", " + location.getLongitude());
         }
-
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
         @Override
-        public void onProviderEnabled(String provider) {
-        }
-
+        public void onProviderEnabled(String provider) {}
         @Override
-        public void onProviderDisabled(String provider) {
-        }
+        public void onProviderDisabled(String provider) {}
     };
 
     //When selecting items in the dropdown, handle these selections.
@@ -568,10 +546,6 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
             mlconfidencevalue.setText("Score: " + suggestionsMap.get(text).substring(0,5));
         }
     }
-
-
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) {}
 }
