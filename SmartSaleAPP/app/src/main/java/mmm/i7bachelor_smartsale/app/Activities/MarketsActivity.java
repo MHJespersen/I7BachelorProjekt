@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-import mmm.i7bachelor_smartsale.app.Adapter.ConversationAdapter;
 import mmm.i7bachelor_smartsale.app.Adapter.MarketAdapter;
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;

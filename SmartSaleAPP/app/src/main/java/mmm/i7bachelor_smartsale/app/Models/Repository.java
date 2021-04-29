@@ -5,7 +5,6 @@ import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
