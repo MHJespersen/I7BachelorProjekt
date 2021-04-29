@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void OpenProfile() {
-        Intent intent = new Intent(this, InboxActivity.class);
+        Intent intent = new Intent(this, ProfilePageActivity.class);
         startActivity(intent);
     }
 

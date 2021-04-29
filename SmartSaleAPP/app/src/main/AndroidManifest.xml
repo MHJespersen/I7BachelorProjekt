@@ -53,6 +53,7 @@
             android:exported="false" />
 
         <activity android:name=".Activities.MainActivity" />
+        <activity android:name=".Activities.ProfilePageActivity" />
         <activity android:name=".Activities.InboxActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

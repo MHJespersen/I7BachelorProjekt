@@ -16,12 +16,19 @@ public class ProfilePageActivity extends MainActivity {
     EditText etEmail, etName, etPhone;
     ImageView userimage;
     Button btnUpdateImage, btnUpdateName, btnUpdateEmail, btnUpdatePhone, btnUpdatePwd;
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profilepage);
+        auth = FirebaseAuth.getInstance();
 
+        setupUI();
+    }
+
+    // https://firebase.google.com/docs/auth/android/manage-users
+    private void setupUI() {
         etEmail = findViewById(R.id.etEmail);
         etName = findViewById(R.id.etName);
         etPhone = findViewById(R.id.etPhone);
@@ -32,49 +39,33 @@ public class ProfilePageActivity extends MainActivity {
         btnUpdatePhone = findViewById(R.id.btnUpdatePhone);
         btnUpdatePwd = findViewById(R.id.btnUpdatePwd);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                // if the user is logged in, display their info on the screen
-            etEmail.setText(user.getEmail());
-            etName.setText(user.getDisplayName());
-            etPhone.setText(user.getPhoneNumber());
-            userimage.setImageURI(user.getPhotoUrl());
+        FirebaseUser user = auth.getCurrentUser();
+        // if the user is logged in, display their info on the screen
+        etEmail.setText(user.getEmail());
+        etName.setText(user.getDisplayName());
+        etPhone.setText(user.getPhoneNumber());
+        userimage.setImageURI(user.getPhotoUrl());
 
-
-            // https://heartbeat.fritz.ai/implementing-social-login-and-user-profile-management-in-android-with-firebase-de1cbd982d44
+        // https://heartbeat.fritz.ai/implementing-social-login-and-user-profile-management-in-android-with-firebase-de1cbd982d44
         //https://firebase.google.com/docs/auth/android/manage-users
-        btnUpdateImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnUpdateImage.setOnClickListener(v -> {
 
-            }
         });
 
-        btnUpdateName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnUpdateName.setOnClickListener(v -> {
 
-            }
         });
 
-        btnUpdateEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnUpdateEmail.setOnClickListener(v -> {
 
-            }
         });
 
-        btnUpdatePhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnUpdatePhone.setOnClickListener(v -> {
 
-            }
         });
 
-        btnUpdatePwd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnUpdatePwd.setOnClickListener(v -> {
 
-            }
         });
     }
 }
