@@ -15,10 +15,12 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <queries>
-        <!-- Allow map to open in Google Maps app-->
+
+        <!-- Allow map to open in Google Maps app -->
         <package android:name="com.google.android.apps.maps" />
 
         <!-- Camera -->
@@ -26,8 +28,6 @@
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
     </queries>
-
-
 
     <application
         android:allowBackup="true"
@@ -37,24 +37,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.I7BachelorProjekt"
         tools:ignore="ExtraText">
-
+        <activity android:name=".Activities.FragmentHandler"></activity>
         <!-- ML Metadata to download model locally when installing app -->
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="label" />
-
         <!--
         <meta-data tools:replace="android:value"
          android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
         -->
-
         <service
             android:name=".Services.ForegroundService"
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".Activities.MainActivity"/>
+        <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.InboxActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -73,10 +71,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.MarketsActivity" />
-        <activity android:name=".Activities.DetailsActivity"/>
-        <activity android:name=".Activities.ViewConversationActivity"/>
-        <activity android:name=".Activities.MobilePayActivity"/>
-        <activity android:name=".Activities.TestMLActivity"/>
+        <activity android:name=".Activities.DetailsActivity" />
+        <activity android:name=".Activities.ViewConversationActivity" />
+        <activity android:name=".Activities.MobilePayActivity" />
+        <activity android:name=".Activities.TestMLActivity" />
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" />
@@ -113,7 +111,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
     </application>
 
 </manifest>

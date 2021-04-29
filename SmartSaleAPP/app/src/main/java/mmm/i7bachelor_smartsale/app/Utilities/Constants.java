@@ -5,6 +5,7 @@ public class Constants {
     //Activities
     //CreateSale
     public static final String CREATE_SALE_ACTIVITY = "CreateSaleActivity";
+    public static final String EMPTY_CART_PNG = "emptycart.png";
 
     //ProfilePage
     public static final String PROFILE_PAGE_ACTIVITY = "ProfilePageActivity";

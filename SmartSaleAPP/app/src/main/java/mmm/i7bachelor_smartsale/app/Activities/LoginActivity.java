@@ -129,4 +129,9 @@ public class LoginActivity extends MainActivity {
             Intent TestML = new Intent(this, TestMLActivity.class);
             startActivity(TestML);
     }
+
+    public void GotoFragmentView(View view) {
+        Intent Fragments = new Intent(this, FragmentHandler.class);
+        startActivity(Fragments);
+    }
 }

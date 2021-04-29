@@ -1,6 +1,7 @@
 package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,7 +16,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,9 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -38,6 +43,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.storage.FirebaseStorage;
@@ -57,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import mmm.i7bachelor_smartsale.app.Models.SalesItem;
 import mmm.i7bachelor_smartsale.app.R;
@@ -65,10 +72,11 @@ import mmm.i7bachelor_smartsale.app.Utilities.LocationUtility;
 import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModel;
 import mmm.i7bachelor_smartsale.app.ViewModels.CreateSaleViewModelFactory;
 
+import static android.content.Context.LOCATION_SERVICE;
 import static mmm.i7bachelor_smartsale.app.R.string.created_sale;
 import static mmm.i7bachelor_smartsale.app.R.string.missing_title;
 
-public class CreateSaleActivity extends MainActivity implements AdapterView.OnItemSelectedListener {
+public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //upload
     private FirebaseStorage firebaseStorage;
@@ -106,21 +114,25 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private Spinner dropdown;
     private Map<String, String> suggestionsMap;
     private ArrayList<String> suggestions;
+    FirebaseAuth auth;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_createsale, container, false);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_createsale);
         firebaseStorage = FirebaseStorage.getInstance();
-        locationUtility = new LocationUtility(this);
+        auth = FirebaseAuth.getInstance();
+        locationUtility = new LocationUtility(this.getActivity());
         // Calling / creating ViewModel with the factory pattern is inspired from:
         // https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
-        viewModel = new ViewModelProvider(this, new CreateSaleViewModelFactory(this.getApplicationContext()))
+        viewModel = new ViewModelProvider(this, new CreateSaleViewModelFactory(this.getActivity().getApplicationContext()))
                 .get(CreateSaleViewModel.class);
-
-        setupUI();
-
-        startTrackingLocation();
 
         if (savedInstanceState != null && !savedInstanceState.isEmpty()) {
             if (!savedInstanceState.getString(KEY_PHOTO).isEmpty()) {
@@ -130,9 +142,14 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
             }
         }
     }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        setupUI();
+        startTrackingLocation();
+    }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         if (!isTrackingLocation) {
@@ -141,13 +158,13 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         stopTrackingLocation();
         super.onPause();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         if (isTrackingLocation) {
             stopTrackingLocation();
         }
@@ -157,15 +174,15 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private void resetSuggestions()
     {   suggestions = new ArrayList<String>(Arrays.asList(new String("Tag suggestions")));
         suggestionsMap = new HashMap<String, String>();
-        dropdown = findViewById(R.id.createSaleSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, suggestions);
+        dropdown = getActivity().findViewById(R.id.createSaleSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, suggestions);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(this);
     }
 
     private void setupUI() {
         resetSuggestions();
-        btnCreate = findViewById(R.id.btnPublish);
+        btnCreate = getView().findViewById(R.id.btnPublish);
         btnCreate.setOnClickListener(view -> {
             //Save file:
             if (photoFile != null) {
@@ -190,25 +207,25 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
 
         });
 
-        btnCapture = findViewById(R.id.btnTakePhoto);
+        btnCapture = getView().findViewById(R.id.btnTakePhoto);
         btnCapture.setOnClickListener(view -> {
             getCameraPermission();
             buttonCapture();
         });
 
-        btnGetLocation = findViewById(R.id.createSaleBtnGetLocation);
+        btnGetLocation = getView().findViewById(R.id.createSaleBtnGetLocation);
         btnGetLocation.setOnClickListener(view -> {
             getLocationPermission();
             getDeviceLocation();
         });
 
-        price = findViewById(R.id.createSaleTextPrice);
-        title = findViewById(R.id.createSaleTextTitle);
-        itemImage = findViewById(R.id.imgTaken);
-        saleHeader = findViewById(R.id.txtCreateSaleHeader);
-        description = findViewById(R.id.editTxtEnterDescription);
-        location = findViewById(R.id.createSaleTextLocation);
-        mlconfidencevalue = findViewById(R.id.textViewmlconfidence);
+        price = getView().findViewById(R.id.createSaleTextPrice);
+        title = getView().findViewById(R.id.createSaleTextTitle);
+        itemImage = getView().findViewById(R.id.imgTaken);
+        saleHeader = getView().findViewById(R.id.txtCreateSaleHeader);
+        description = getView().findViewById(R.id.editTxtEnterDescription);
+        location = getView().findViewById(R.id.createSaleTextLocation);
+        mlconfidencevalue = getView().findViewById(R.id.textViewmlconfidence);
     }
 
     //Camera Code inspired by:
@@ -226,11 +243,11 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
                 photoFile = getPhotoFileUri(photoFileName);
                 //Wrap file object into a content provider, Required for API >= 24
                 //See  https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-                Uri fileProvider = FileProvider.getUriForFile(CreateSaleActivity.this, "mmm.fileprovider", photoFile);
+                Uri fileProvider = FileProvider.getUriForFile(CreateSaleActivity.this.getActivity(), "mmm.fileprovider", photoFile);
                 cInt.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
                 // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
                 // So as long as the result is not null, it's safe to use the intent.
-                if (cInt.resolveActivity(getPackageManager()) != null) {
+                if (cInt.resolveActivity(getActivity().getPackageManager()) != null) {
                     resetSuggestions();
                     startActivityForResult(cInt, REQUEST_IMAGE_CAPTURE);
                 }
@@ -313,14 +330,9 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         int resizedHeight = maxDimension;
 
         if (originalHeight > originalWidth) {
-            resizedHeight = maxDimension;
             resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
         } else if (originalWidth > originalHeight) {
-            resizedWidth = maxDimension;
             resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
-        } else if (originalHeight == originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = maxDimension;
         }
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
@@ -330,26 +342,25 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+        File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
         //Create the storage dir if it doesn't exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(APP_TAG, "failed to create directory");
         }
         //Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-        return file;
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
     //Get the thumbnail
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == getActivity().RESULT_OK) {
                 Bitmap bp = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 try {
                     //For machine learning with images
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(photoFile));
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), Uri.fromFile(photoFile));
                     // Scale down bitmap size
                     bitmap = scaleBitmapDown(bitmap, 640);
                     runDetector(bitmap);
@@ -357,14 +368,14 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
                     e.printStackTrace();
                 }
                 itemImage.setImageBitmap(bp);
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, getString(R.string.canceled), Toast.LENGTH_LONG).show();
+            } else if (resultCode == getActivity().RESULT_CANCELED) {
+                Toast.makeText(this.getActivity(), getString(R.string.canceled), Toast.LENGTH_LONG).show();
             }
         }
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (photoFile != null) {
             outState.putString(KEY_PHOTO, photoFile.getAbsolutePath());
             super.onSaveInstanceState(outState);
@@ -382,17 +393,17 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         if (photoFileName != null) {
             salesItem.setImage(photoFileName);
         } else {
-            salesItem.setImage("emptycart.png");
+            salesItem.setImage(Constants.EMPTY_CART_PNG);
         }
         //set price
-        if (price.getText().toString() != null && !price.getText().toString().equals("")) {
+        if (price.getText() != null && !price.getText().toString().equals("")) {
             salesItem.setPrice(Double.parseDouble(price.getText().toString()));
         }
         else {
             salesItem.setPrice(0.0);
         }
         //set location
-        if (location.getText().toString() != null) {
+        if (location.getText() != null) {
             if (lastLocation == null) {
                 Location loc = locationUtility.getLocationFromString(location.getText().toString());
                 salesItem.setLocation(loc);
@@ -400,18 +411,18 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
                 salesItem.setLocation(lastLocation);
             }
         }
-        if (description.getText().toString() != null) {
+        if (description.getText() != null) {
             salesItem.setDescription(description.getText().toString());
         }
-        if (title.getText().toString() != null && !title.getText().toString().equals("")) {
+        if (title.getText() != null && !title.getText().toString().equals("")) {
             salesItem.setTitle(title.getText().toString());
             salesItem.setUser(auth.getCurrentUser().getEmail());
             viewModel.updateSalesItem(salesItem);
-            Toast.makeText(this, created_sale, Toast.LENGTH_LONG).show();
-            finish();
+            Toast.makeText(this.getContext(), created_sale, Toast.LENGTH_LONG).show();
+            getActivity().finish();
         }
         else {
-            Toast.makeText(this, missing_title, Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(), missing_title, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -420,12 +431,12 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     // Also from L8 demo 2/3
 
     private void getDeviceLocation() {
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getContext());
 
         try {
             if (locationPermissionGranted) {
                 Task<Location> locationResult = fusedLocationClient.getLastLocation();
-                locationResult.addOnCompleteListener(this, task -> {
+                locationResult.addOnCompleteListener((Activity) this.getContext(), task -> {
                     if (task.isSuccessful()) {
                         lastLocation = task.getResult();
                         if (lastLocation != null) {
@@ -436,7 +447,7 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
                             Log.d(Constants.CREATE_SALE_ACTIVITY, "getDeviceLocation: " + s);
                             location.setText(s);
                         } else {
-                            Toast.makeText(this, getString(R.string.location_not_found), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this.getContext(), getString(R.string.location_not_found), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Log.d(Constants.CREATE_SALE_ACTIVITY, "Current location is null. Using defaults.");
@@ -450,24 +461,23 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     }
 
     private void getLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(this.getContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
         } else {
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions(this.getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_LOCATION);
         }
     }
 
     private void getCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(this.getContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             CameraPermissionGranted = true;
         } else {
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions(this.getActivity(),
                     new String[]{Manifest.permission.CAMERA},
                     PERMISSIONS_REQUEST_CAMERA);
         }
@@ -477,15 +487,13 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_CAMERA:{
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     CameraPermissionGranted = true;
                 }
             }
             case PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermissionGranted = true;
                 }
             }
@@ -495,11 +503,8 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private void startTrackingLocation() {
         try {
             if (locationManager == null) {
-                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
             }
-
-            long minTime = MIN_TIME_BETWEEN_LOCATION_UPDATES;
-            float minDistance = MIN_DISTANCE_MOVED_BETWEEN_LOCATION_UPDATES;
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
             criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
@@ -507,7 +512,9 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
             if (locationManager != null) {
                 try {
                     //Use criteria to chose best provider
-                    locationManager.requestLocationUpdates(minTime, minDistance, criteria, locationListener, null);
+                    locationManager.requestLocationUpdates(MIN_TIME_BETWEEN_LOCATION_UPDATES,
+                            MIN_DISTANCE_MOVED_BETWEEN_LOCATION_UPDATES, criteria, locationListener,
+                            null);
                 } catch (SecurityException ex) {
                     // user has disabled location permission - need to validate this permission for newer versions?
                     Log.d(TAG, "startTrackingLocation: User has disabled location services");
@@ -524,18 +531,11 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
 
     private void stopTrackingLocation() {
         try {
-            try {
-                locationManager.removeUpdates(locationListener);
-                isTrackingLocation = false;
-                Log.d(TAG, "stopTrackingLocation");
-
-            } catch (SecurityException ex) {
-                // user has disabled location permission - need to validate this permission for newer versions?
-                Log.d(TAG, "stopTrackingLocation: User has disabled location services");
-            }
+            locationManager.removeUpdates(locationListener);
+            isTrackingLocation = false;
+            Log.d(TAG, "stopTrackingLocation");
 
         } catch (Exception ex) {
-            // if listener is null
             Log.e("TRACKER", "Error stopping location tracking", ex);
         }
     }
@@ -543,20 +543,15 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.d(Constants.CREATE_SALE_ACTIVITY, "onLocationChanged: " + location.getLatitude() + ", " + location.getLongitude());
+            Log.d(Constants.CREATE_SALE_ACTIVITY, "onLocationChanged: "
+                    + location.getLatitude() + ", " + location.getLongitude());
         }
-
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
         @Override
-        public void onProviderEnabled(String provider) {
-        }
-
+        public void onProviderEnabled(String provider) {}
         @Override
-        public void onProviderDisabled(String provider) {
-        }
+        public void onProviderDisabled(String provider) {}
     };
 
     //When selecting items in the dropdown, handle these selections.
@@ -568,10 +563,6 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
             mlconfidencevalue.setText("Score: " + suggestionsMap.get(text).substring(0,5));
         }
     }
-
-
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) {}
 }
