@@ -382,17 +382,17 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
         if (photoFileName != null) {
             salesItem.setImage(photoFileName);
         } else {
-            salesItem.setImage("emptycart.png");
+            salesItem.setImage(Constants.EMPTY_CART_PNG);
         }
         //set price
-        if (price.getText().toString() != null && !price.getText().toString().equals("")) {
+        if (price.getText() != null && !price.getText().toString().equals("")) {
             salesItem.setPrice(Double.parseDouble(price.getText().toString()));
         }
         else {
             salesItem.setPrice(0.0);
         }
         //set location
-        if (location.getText().toString() != null) {
+        if (location.getText() != null) {
             if (lastLocation == null) {
                 Location loc = locationUtility.getLocationFromString(location.getText().toString());
                 salesItem.setLocation(loc);
@@ -400,10 +400,10 @@ public class CreateSaleActivity extends MainActivity implements AdapterView.OnIt
                 salesItem.setLocation(lastLocation);
             }
         }
-        if (description.getText().toString() != null) {
+        if (description.getText() != null) {
             salesItem.setDescription(description.getText().toString());
         }
-        if (title.getText().toString() != null && !title.getText().toString().equals("")) {
+        if (title.getText() != null && !title.getText().toString().equals("")) {
             salesItem.setTitle(title.getText().toString());
             salesItem.setUser(auth.getCurrentUser().getEmail());
             viewModel.updateSalesItem(salesItem);
