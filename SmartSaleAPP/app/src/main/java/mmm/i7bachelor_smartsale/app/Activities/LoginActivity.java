@@ -112,21 +112,16 @@ public class LoginActivity extends MainActivity {
             startActivity(Markets);
     }
 
-    public void MakeASale(View view) {
+    public void GotoFragmentView(View view) {
         if(auth.getCurrentUser() != null)
         {
-            Intent Markets = new Intent(this, CreateSaleActivity.class);
-            startActivity(Markets);
+            Intent Fragments = new Intent(this, FragmentHandler.class);
+            startActivity(Fragments);
         }
         else
         {
             view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake));
             Toast.makeText(this, getString(R.string.log_in_first), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void GotoFragmentView(View view) {
-        Intent Fragments = new Intent(this, FragmentHandler.class);
-        startActivity(Fragments);
     }
 }
