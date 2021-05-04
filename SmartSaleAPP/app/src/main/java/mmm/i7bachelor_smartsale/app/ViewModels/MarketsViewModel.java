@@ -22,20 +22,12 @@ public class MarketsViewModel extends ViewModel {
         repository = Repository.getInstance(context);
     }
 
+    //Lyt efter om der tilføjes noget til listen, f.eks fra CreateSaleViewet
+    //Hvis noget tilføjes (fra en anden bruger) skal dette opdateres i vores liste, hvilket gøres her.
     public LiveData<List<SalesItem>> getItems()
     {
-        UpdateList();
+        salesitemLiveData = repository.getItems();
         return salesitemLiveData;
-    }
-
-    private void UpdateList()
-    {
-        //Lyt efter om der tilføjes noget til listen, f.eks fra CreateSaleViewet
-        //Hvis noget tilføjes (fra en anden bruger) skal dette opdateres i vores liste, hvilket gøres her.
-        if(salesitemLiveData != null)
-        {
-            salesitemLiveData = repository.getItems();
-        }
     }
 
     public void SetSelected(int index) {
