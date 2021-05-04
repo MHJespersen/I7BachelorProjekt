@@ -6,6 +6,8 @@ public class Constants {
     //CreateSale
     public static final String CREATE_SALE_ACTIVITY = "CreateSaleActivity";
     public static final String EMPTY_CART_PNG = "emptycart.png";
+    public static final String APP_TAG = "SmartSale";
+    public static final String TAG = "CreateSaleActivity";
 
     //ProfilePage
     public static final String PROFILE_PAGE_ACTIVITY = "ProfilePageActivity";
@@ -26,8 +28,6 @@ public class Constants {
     public static final String BEACON_ID = "147025836912345";
     public static final String CORRELATION_ID = "70bd51d7-da28-46b0-b26f-d19e2a44490a";
     public static final String POS_ID = "5e6bbcc6-154c-44bb-9a82-45acc1aaea7b";
-
-
 
     //Inbox
     public static final String INBOX_ACTIVITY = "InboxActivity";

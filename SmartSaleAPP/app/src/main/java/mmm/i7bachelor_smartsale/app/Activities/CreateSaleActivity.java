@@ -89,9 +89,6 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
     private SalesItem salesItem;
     private LocationUtility locationUtility;
 
-    final String APP_TAG = "SmartSale";
-    private static final String TAG = "CreateSaleActivity";
-
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final long MIN_TIME_BETWEEN_LOCATION_UPDATES = 5 * 1000;    // milliseconds
     private static final float MIN_DISTANCE_MOVED_BETWEEN_LOCATION_UPDATES = 1;  // meters
@@ -100,7 +97,6 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
     private static final String KEY_PHOTO = "photo";
     private static boolean locationPermissionGranted = false;
     private static boolean CameraPermissionGranted = false;
-
 
     private LocationManager locationManager;
     private Location lastLocation = null;
@@ -208,12 +204,12 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Save();
-                        Log.d("Successfull upload!", APP_TAG);
+                        Log.d("Successfull upload!", Constants.APP_TAG);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("Unsuccesfull upload!", APP_TAG);
+                        Log.d("Unsuccesfull upload!", Constants.APP_TAG);
                     }
                 });
             } else {
@@ -349,10 +345,10 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+        File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constants.APP_TAG);
         //Create the storage dir if it doesn't exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-            Log.d(APP_TAG, "failed to create directory");
+            Log.d(Constants.APP_TAG, "failed to create directory");
         }
         //Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
@@ -524,12 +520,12 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
                             null);
                 } catch (SecurityException ex) {
                     // user has disabled location permission - need to validate this permission for newer versions?
-                    Log.d(TAG, "startTrackingLocation: User has disabled location services");
+                    Log.d(Constants.TAG, "startTrackingLocation: User has disabled location services");
                 }
             }
 
             isTrackingLocation = true;
-            Log.d(TAG, "startTrackingLocation");
+            Log.d(Constants.TAG, "startTrackingLocation");
 
         } catch (Exception ex) {
             Log.e("TRACKER", "Error starting location tracking", ex);
@@ -540,7 +536,7 @@ public class CreateSaleActivity extends Fragment implements AdapterView.OnItemSe
         try {
             locationManager.removeUpdates(locationListener);
             isTrackingLocation = false;
-            Log.d(TAG, "stopTrackingLocation");
+            Log.d(Constants.TAG, "stopTrackingLocation");
 
         } catch (Exception ex) {
             Log.e("TRACKER", "Error stopping location tracking", ex);
