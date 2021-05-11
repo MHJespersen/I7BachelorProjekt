@@ -54,12 +54,6 @@ public class InboxActivity extends MainActivity implements InboxAdapter.IMessage
         Intent ViewMessage = new Intent(this, ViewConversationActivity.class);
         startActivity(ViewMessage);
     }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
     //Let MainActivity know that the inbox is closed.
     @Override
     public void onBackPressed() {

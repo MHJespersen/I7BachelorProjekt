@@ -157,89 +157,88 @@ public class DetailsActivity extends MainActivity {
         //  B. Cancel payment: POST /app/usersimulation/cancelpaymentbyuser (Done in mobilepay by the user)
 
         //Authenticate requests and get access token.
-        sendAuthenticationRequest(Constants.SANDBOX_URL);
-
+        viewModel.sendMPAuth();
         // Check when user is checked in at mobilepay app and initiate payment af that.
-        getCheckedInUsers();
+        viewModel.listenForUsers(textPrice.getText().toString(), textTitle.getText().toString());
         gotoMobilepayQR();
 
         //When user returns from mobilepay, cancel payment if the user didnt swipe to accept payment.
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void sendAuthenticationRequest(String url) throws JSONException {
-        if (queue == null) {
-            queue = Volley.newRequestQueue(this);
-        }
-        //encode client id + secret
-        String authString = (Constants.CLIENT_ID + ":" + "hEt5IUrYrVY8pKnyp2SAOvWAqqpIzC3qqAAz9tOA3JE");
-        String encodedAuth = Base64.getEncoder().encodeToString(authString.getBytes());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    Gson gson = new GsonBuilder().create();
-                    accessToken = gson.fromJson(response, AccessToken.class);
-                    bearerToken = "Bearer " + accessToken.getAccess_token();
-                },
-                error -> Log.d("Mobilepay", "onError: " + error)) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/x-www-form-urlencoded");
-                params.put("x-ibm-client-id", Constants.CLIENT_ID);
-                params.put("Authorization", "Basic " + encodedAuth);
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    private void sendAuthenticationRequest(String url) throws JSONException {
+//        if (queue == null) {
+//            queue = Volley.newRequestQueue(this);
+//        }
+//        //encode client id + secret
+//        String authString = (Constants.CLIENT_ID + ":" + "hEt5IUrYrVY8pKnyp2SAOvWAqqpIzC3qqAAz9tOA3JE");
+//        String encodedAuth = Base64.getEncoder().encodeToString(authString.getBytes());
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+//                response -> {
+//                    Gson gson = new GsonBuilder().create();
+//                    accessToken = gson.fromJson(response, AccessToken.class);
+//                    bearerToken = "Bearer " + accessToken.getAccess_token();
+//                },
+//                error -> Log.d("Mobilepay", "onError: " + error)) {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("Content-Type", "application/x-www-form-urlencoded");
+//                params.put("x-ibm-client-id", Constants.CLIENT_ID);
+//                params.put("Authorization", "Basic " + encodedAuth);
+//
+//                return params;
+//            }
+//
+//            @Override
+//            protected Map<String, String> getParams() {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("grant_type", "client_credentials");
+//                params.put("merchant_vat", Constants.MERCHANT_VAT);
+//                return params;
+//            }
+//        };
+//        queue.add(stringRequest);
+//    }
+//
+//    private void getCheckedInUsers() {
+//        executor.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    while (bearerToken.isEmpty()) {
+//                    }
+//                    okhttp3.Request request = new okhttp3.Request.Builder()
+//                            .url("https://api.sandbox.mobilepay.dk/pos/v10/pointofsales/5e6bbcc6-154c-44bb-9a82-45acc1aaea7b/checkin")
+//                            .method("GET", null)
+//                            .addHeader("Authorization", "Bearer " + accessToken.getAccess_token())
+//                            .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
+//                            .addHeader("Accept", "application/json")
+//                            .addHeader("Content-Type", "application/json")
+//                            .addHeader("X-Mobilepay-Client-System-Version", "2.1.1")
+//                            .build();
+//                    try {
+//                        Response response = client.newCall(request).execute();
+//                        Log.d("Response", "" + response);
+//                        String jsonData = response.body().string();
+//                        JSONObject Jobject = new JSONObject(jsonData);
+//                        boolean isCheckedIn = Jobject.getBoolean("isUserCheckedIn");
+//                        if (isCheckedIn) {
+//                            Log.d("Bool", "CHECKED IN");
+//                            sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
+//                            break;
+//                        }
+//                        Thread.sleep(4000);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        Log.d("Stacktrace", "Error parsing" + e);
+//                    }
+//                }
+//            }
+//        });
+//    }
 
-                return params;
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("grant_type", "client_credentials");
-                params.put("merchant_vat", Constants.MERCHANT_VAT);
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-    }
-
-    private void getCheckedInUsers() {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    while (bearerToken.isEmpty()) {
-                    }
-                    okhttp3.Request request = new okhttp3.Request.Builder()
-                            .url("https://api.sandbox.mobilepay.dk/pos/v10/pointofsales/5e6bbcc6-154c-44bb-9a82-45acc1aaea7b/checkin")
-                            .method("GET", null)
-                            .addHeader("Authorization", "Bearer " + accessToken.getAccess_token())
-                            .addHeader("x-ibm-client-id", Constants.CLIENT_ID)
-                            .addHeader("Accept", "application/json")
-                            .addHeader("Content-Type", "application/json")
-                            .addHeader("X-Mobilepay-Client-System-Version", "2.1.1")
-                            .build();
-                    try {
-                        Response response = client.newCall(request).execute();
-                        Log.d("Response", "" + response);
-                        String jsonData = response.body().string();
-                        JSONObject Jobject = new JSONObject(jsonData);
-                        boolean isCheckedIn = Jobject.getBoolean("isUserCheckedIn");
-                        if (isCheckedIn) {
-                            Log.d("Bool", "CHECKED IN");
-                            sendInitiatePaymentRequest(Constants.NEW_PAYMENT_URL);
-                            break;
-                        }
-                        Thread.sleep(4000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.d("Stacktrace", "Error parsing" + e);
-                    }
-                }
-            }
-        });
-    }
-
-    // We have to sleep this thread as
+  /*  // We have to sleep this thread as
     private void sendInitiatePaymentRequest(String url) throws JSONException {
         Integer priceonly = Integer.parseInt(textPrice.getText().toString().split(" ")[0].trim());
         executor.execute(new Runnable() {
@@ -269,7 +268,7 @@ public class DetailsActivity extends MainActivity {
                 }
             }
         });
-    }
+    }*/
 
     private void CapturePaymentRequest() throws JSONException {
         executor.execute(new Runnable() {
@@ -348,7 +347,7 @@ public class DetailsActivity extends MainActivity {
         if (requestCode == MOBILEPAY_RESULT_CODE) {
             if (resultCode == RESULT_OK) {
                 try {
-                    CapturePaymentRequest();
+                    viewModel.CapturePayment(textPrice.getText().toString());
                     Log.d("document path", "onActivityResult: path: " + selectedItem.getPath());
                     viewModel.setItemSold(selectedItem.getPath());
                     Toast.makeText(this, ("PAYMENT ACCEPTED"), Toast.LENGTH_LONG).show();
