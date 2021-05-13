@@ -2,21 +2,18 @@ package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.json.JSONException;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import org.tensorflow.lite.Interpreter;
 
 import java.io.FileInputStream;
@@ -25,7 +22,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
 import mmm.i7bachelor_smartsale.app.R;
-import mmm.i7bachelor_smartsale.app.Utilities.Constants;
 
 public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelectedListener{
 
@@ -81,7 +77,7 @@ public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     /** Memory-map the model file in Assets. */
-    private MappedByteBuffer loadModelFile2() throws IOException {
+    private MappedByteBuffer loadModelFile() throws IOException {
         AssetFileDescriptor fileDescriptor = getActivity().getAssets().openFd("model.tflite");
         FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
         FileChannel fileChannel = inputStream.getChannel();
@@ -107,7 +103,7 @@ public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelect
             @Override
             public void onClick(View view) {
                 try (
-                        Interpreter interpreter = new Interpreter(loadModelFile2())) {
+                        Interpreter interpreter = new Interpreter(loadModelFile())) {
                     float[] input = doInference(String.valueOf(MærkeEnum.valueOf(mærke).ordinal())
                             ,String.valueOf(StandEnum.valueOf(stand).ordinal()), tommer);
                     interpreter.run(input, output);
