@@ -2,13 +2,10 @@ package mmm.i7bachelor_smartsale.app;
 
 import androidx.test.rule.ActivityTestRule;
 
-import com.android21buttons.fragmenttestrule.FragmentTestRule;
-
 import org.junit.Rule;
 import org.junit.Test;
 
-import mmm.i7bachelor_smartsale.app.Activities.CreateSaleActivity;
-import mmm.i7bachelor_smartsale.app.Activities.LoginActivity;
+import mmm.i7bachelor_smartsale.app.Activities.SendMessageActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -26,35 +23,31 @@ public class ActionsUiTest {
     // Inspect result
 
     @Rule
-    public FragmentTestRule<?, CreateSaleActivity> fragmentTestRule =
-            FragmentTestRule.create(CreateSaleActivity.class);
-    //public ActivityTestRule<CreateSaleActivity> CreateSaleActivity =
-      //      new ActivityTestRule<CreateSaleActivity>(CreateSaleActivity.class);
+    public ActivityTestRule<SendMessageActivity> SendMessageActivity =
+            new ActivityTestRule<SendMessageActivity>(SendMessageActivity.class);
 
 
     @Test
     public void clickable_buttons_test(){
         //Check if buttons are clickable
-        onView(withId(R.id.createSaleBtnGetLocation))
+        onView(withId(R.id.sendMessageBtnCancel))
                 .check(matches(isClickable()));
-        onView(withId(R.id.createSaleSpinner))
+        onView(withId(R.id.sendMessageBtnSend))
                 .check(matches(isClickable()));
-        onView(withId(R.id.btnPublish))
-                .check(matches(isClickable()));
-        onView(withId(R.id.btnTakePhoto))
+        onView(withId(R.id.sendMessageInputMessage))
                 .check(matches(isClickable()));
     }
 
     @Test
     public void Text_input_test(){
         //Check field does not contain input.
-        onView(withId(R.id.editTxtEnterDescription)).check(matches((withText(""))));
+        onView(withId(R.id.sendMessageInputMessage)).check(matches((withText(""))));
 
         //Input text and check whether it holds the text value
         delay(1000);
-        onView(withId(R.id.editTxtEnterDescription))
+        onView(withId(R.id.sendMessageInputMessage))
                 .perform(typeText("test"));
-        onView(withId(R.id.editTxtEnterDescription))
+        onView(withId(R.id.sendMessageInputMessage))
                 .check(matches(withText("test")));
 
     }

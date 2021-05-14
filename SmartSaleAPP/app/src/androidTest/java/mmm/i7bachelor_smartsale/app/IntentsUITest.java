@@ -7,6 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import mmm.i7bachelor_smartsale.app.Activities.CreateSaleActivity;
+import mmm.i7bachelor_smartsale.app.Activities.FragmentHandler;
 import mmm.i7bachelor_smartsale.app.Activities.LoginActivity;
 import mmm.i7bachelor_smartsale.app.Activities.MarketsActivity;
 
@@ -34,9 +35,9 @@ public class IntentsUITest {
     @Test
     public void open_createsaleactivity_test() {
         Intents.init();
-        onView(withId(R.id.CreateASale)).perform(click());
+        onView(withId(R.id.Fragmentbutton)).perform(click());
 
-        intended(hasComponent(CreateSaleActivity.class.getName()));
+        intended(hasComponent(FragmentHandler.class.getName()));
         Intents.release();
     }
 }

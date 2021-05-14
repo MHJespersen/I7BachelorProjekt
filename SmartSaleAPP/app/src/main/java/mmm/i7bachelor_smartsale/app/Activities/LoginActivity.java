@@ -2,8 +2,10 @@ package mmm.i7bachelor_smartsale.app.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,11 +28,13 @@ public class LoginActivity extends MainActivity {
     private LoginViewModel viewModel;
     FirebaseAuth auth;
     LoginActivity context;
+    Button logoutbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        logoutbtn = findViewById(R.id.LogoutBtn);
         context = this;
         // Calling / creating ViewModel with the factory pattern is inspired from: https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
         viewModel = new ViewModelProvider(this,
@@ -79,6 +83,9 @@ public class LoginActivity extends MainActivity {
 
         if(requestCode == Constants.REQUEST_LOGIN) {
             if (resultCode == RESULT_OK) {
+                if (auth.getCurrentUser() != null){
+                    logoutbtn.setVisibility(View.VISIBLE);
+                }
                 Toast.makeText(context, getString(R.string.logged_in_as) + " " + auth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                 //Invalidate menu bar to load buttons and user Email
                 viewModel.InitMessages();
@@ -102,8 +109,9 @@ public class LoginActivity extends MainActivity {
             Toast.makeText(this, getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
             invalidateOptionsMenu();
         } else {
+            logoutbtn = findViewById(R.id.LogoutBtn);
+            logoutbtn.setVisibility(View.GONE);
             Toast.makeText(this, getString(R.string.logged_out_already), Toast.LENGTH_SHORT).show();
-
         }
     }
 

@@ -41,7 +41,8 @@ public class LoginUiTest {
         delay(2000);
         onView(withText("SIGN IN"))
                 .perform(click());
-        onView(withId(R.layout.activity_login)).check(matches(isDisplayed()));
+        delay(2000);
+        onView(withId(R.id.SignInBtn)).check(matches(isDisplayed()));
     }
 
     @Test
