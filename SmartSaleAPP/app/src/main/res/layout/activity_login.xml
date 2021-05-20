@@ -27,7 +27,6 @@
         android:backgroundTint="@color/buttonColor"
         android:onClick="LogOut"
         android:text="@string/btn_logout"
-        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Fragmentbutton" />
