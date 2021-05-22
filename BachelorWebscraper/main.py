@@ -65,15 +65,15 @@ if __name__ == '__main__':
     write_to_csv(parsed_data, "test.csv", False)
 
     # ---- Gul og Gratis ----
-    #gog_harvester = GOGHarvester()
-    #rawdata = gog_harvester.harvest()
-    #assert(type(rawdata) is list)
-    #assert(len(rawdata) > 0)
-    #gog_parser = GOGParser()
-    #parsed_data = gog_parser.parse(rawdata)
-    #try:
-    #    assert (parsed_data[0]["Tommer"].isdigit() is True)
-    #except Exception as e:
-    #    write_to_csv(parsed_data, "unfinished.csv", True)
-    #write_to_csv(parsed_data, "test.csv", True)
+    gog_harvester = GOGHarvester()
+    rawdata = gog_harvester.harvest()
+    assert(type(rawdata) is list)
+    assert(len(rawdata) > 0)
+    gog_parser = GOGParser()
+    parsed_data = gog_parser.parse(rawdata)
+    try:
+       assert (parsed_data[0]["Tommer"].isdigit() is True)
+    except Exception as e:
+       write_to_csv(parsed_data, "unfinished.csv", True)
+    write_to_csv(parsed_data, "test.csv", True)
 

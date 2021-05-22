@@ -13,7 +13,7 @@ LOGGING_NAME = "ScraperLogging"
 
 # Overskriv til ny fil -> set type til 'w' og sæt writer.writeheader()
 # Tilføj til eksisterende data -> set type til 'a' og udkommenter writer.writeheader()
-def write_to_csv(harvested_items, FILENAME, newFile=False):
+def write_to_csv(items, FILENAME, newFile=False):
     logger = logging.getLogger(LOGGING_NAME)
     logger.info("Saving data to .csv")
     filename = os.path.join(FILE_DIR, FILENAME)
@@ -23,7 +23,7 @@ def write_to_csv(harvested_items, FILENAME, newFile=False):
             writer = csv.DictWriter(file, fieldnames=CSV_COLUMNS, delimiter='|')
             if newFile:
                 writer.writeheader()
-            for data in harvested_items:
+            for data in items:
                 writer.writerow(data)
             logger.info("Saving data to .csv completed")
     except IOError as e:
@@ -40,8 +40,6 @@ dba_payload = {
     "Connection": "keep-alive"
 }
 
-DBA_LINK = "https://www.dba.dk/"
-DBA_TV_LINK = "https://www.dba.dk/billede-og-lyd/tv-og-tilbehoer/tv/?soeg=tv"
 DBA_TV_LINK_M_SIDE_P_LOW = "https://www.dba.dk/billede-og-lyd/tv-og-tilbehoer/tv/side-{}/?soeg=tv&sort=price&pris=(200-1000)"
 DBA_TV_LINK_M_SIDE_P_HIGH = "https://www.dba.dk/billede-og-lyd/tv-og-tilbehoer/tv/side-{}/?soeg=tv&sort=price&pris=(1001-100000)"
 FILE_NAME_DBA = 'Predictering_Data_TV_DBA.csv'
@@ -56,8 +54,6 @@ PASSWORD = 'D@t@samlerenpaafacebook'
 # ----------- Gul&Gratis -----------
 
 GOG_GENERAL_LINK = "https://www.guloggratis.dk/"
-GOG_FJERNSYN_LINK = "https://www.guloggratis.dk/s/q-fjernsyn/"
 GOG_TV_LINK = "https://www.guloggratis.dk/elektronik/radio-tv/tv/?order=asc&price=100-&sort=price"
-GOG_TV_LINK_WPAGES = "https://www.guloggratis.dk/elektronik/radio-tv/tv/?order=asc&page={}&price=100-&sort=price"
 GOG_FJERNSYN_LINK_WPAGES = "https://www.guloggratis.dk/s/q-fjernsyn/?order=asc&price=100-&page={}&sort=price"
 FILE_NAME_GOG = 'Predictering_Data_TV_GOG.csv'
