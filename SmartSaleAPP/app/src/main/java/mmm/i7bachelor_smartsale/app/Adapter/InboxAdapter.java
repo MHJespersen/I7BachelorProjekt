@@ -41,7 +41,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxViewHol
 
     @SuppressLint("NewApi")
     public void updateMessageList(List<Pair<String, Integer>> list){
-
         uniqueNamesAndStatus = list;
         notifyDataSetChanged();
     }

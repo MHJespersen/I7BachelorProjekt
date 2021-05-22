@@ -17,6 +17,7 @@ public class ViewMessageViewModel extends ViewModel {
         repo = Repository.getInstance(context);
     }
     public LiveData<List<PrivateMessage>> PBMessages;
+
     public LiveData<List<PrivateMessage>> getMessages()
     {
         PBMessages = repo.getPrivateMessages();

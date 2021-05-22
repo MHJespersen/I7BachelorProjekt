@@ -39,7 +39,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +93,7 @@ public class Repository {
         GeoPoint geo = new GeoPoint(l.getLatitude(), l.getLongitude());
         return geo;
     }
+    public FirebaseAuth getFirebaseAuth() { return auth; }
 
     public void setSelectedItem(String ItemID)
     {

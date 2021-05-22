@@ -8,25 +8,30 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import mmm.i7bachelor_smartsale.app.Models.Repository;
 import mmm.i7bachelor_smartsale.app.R;
+import mmm.i7bachelor_smartsale.app.ViewModels.LoginViewModel;
+import mmm.i7bachelor_smartsale.app.ViewModels.LoginViewModelFactory;
+import mmm.i7bachelor_smartsale.app.ViewModels.MainActivityViewModel;
+import mmm.i7bachelor_smartsale.app.ViewModels.MainActivityViewModelFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     //Inspired from: https://stackoverflow.com/questions/17889240/reuse-the-action-bar-in-all-the-activities-of-app
     FirebaseAuth auth;
-    Repository repo;
     static Boolean MessagesOpen = false;
     int LAUNCH_INBOX_ACTIVTY = 100;
-
+    private MainActivityViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        auth = FirebaseAuth.getInstance();
-        repo = Repository.getInstance(this);
+        viewModel = viewModel = new ViewModelProvider(this,
+                new MainActivityViewModelFactory(this.getApplicationContext())).get(MainActivityViewModel.class);
+        auth = viewModel.getFirebaseAuth();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

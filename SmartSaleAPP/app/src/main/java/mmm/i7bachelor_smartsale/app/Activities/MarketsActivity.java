@@ -39,7 +39,6 @@ public class MarketsActivity extends MainActivity implements MarketAdapter.IItem
         viewModel.getItems().observe(this, updateObserver);
     }
 
-    //Tilføjet for at kunne starte på firebase - Hvis noget tilføjes til listen bliver det opdaget her
     //Inspired from https://medium.com/@atifmukhtar/recycler-view-with-mvvm-livedata-a1fd062d2280
     Observer<List<SalesItem>> updateObserver = new Observer<List<SalesItem>>() {
         @Override
