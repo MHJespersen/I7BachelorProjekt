@@ -150,6 +150,7 @@ public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelect
             else
             {
                 mærke = parent.getItemAtPosition(position).toString();
+                String test = String.valueOf(MærkeEnum.valueOf(mærke).ordinal());
                 if(mærke.equals("B&O"))
                     mærke = "BogO";
             }

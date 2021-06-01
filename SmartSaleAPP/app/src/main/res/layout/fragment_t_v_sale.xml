@@ -59,7 +59,7 @@
         android:id="@+id/textView_testml"
         android:layout_width="108dp"
         android:layout_height="30dp"
-        android:text="Predicted pris: "
+        android:text="@string/Predicted_price"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textView_pris"
         app:layout_constraintHorizontal_bias="0.575"
@@ -84,8 +84,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/buttonColor"
-        android:onClick="predictPrice"
-        android:text="Predict"
+        android:text="@string/Predict"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/standSpinner" />

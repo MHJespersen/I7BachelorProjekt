@@ -66,6 +66,15 @@
     <string name="missing_title">Title must be set</string>
     <string name="label_mobilepay">Buy with:</string>
     <string name="label_mobilepayQR">Press the QR Code to start payment in MobilePay APP</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Message">Message</string>
+    <string name="Predict">Predict></string>
+    <string name="Predicted_price">Predicted pris: </string>
+    <string name="Predict_price_info">Set TV information to get a price prediction</string>
+    <string name="Update_Password">Update Password</string>
+    <string name="Update_Phone_number">Update Phone Number</string>
+    <string name="Update_Email">Update Email</string>
+    <string name="Update_Username">Update Username</string>
+    <string name="Update_Avatar">Update Image</string>
+    <string name="Create_Name_Sale">CREATE NEW SALE</string>
+    <string name="TV_Sale">TVSale</string>
 </resources>

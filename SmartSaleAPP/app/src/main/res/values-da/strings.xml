@@ -66,5 +66,15 @@
     <string name="missing_title">Title must be set</string>
     <string name="label_mobilepay">Køb med:</string>
     <string name="label_mobilepayQR">Tryk på QR koden for at start betalingen i Mobilepay App</string>
-
+    <string name="Message">Besked</string>
+    <string name="Predict">Få pris></string>
+    <string name="Predicted_price">Foreslået pris: </string>
+    <string name="Predict_price_info">Indsæt TV information for at få prisforslag</string>
+    <string name="Update_Password">Ændre kode</string>
+    <string name="Update_Phone_number">Opdater telefon nr.</string>
+    <string name="Update_Email">Opdater Email</string>
+    <string name="Update_Username">Opdater brugernavn</string>
+    <string name="Update_Avatar">Opdater Avatar</string>
+    <string name="Create_Name_Sale">Opret Nyt Salg</string>
+    <string name="TV_Sale">TVSalg</string>
 </resources>

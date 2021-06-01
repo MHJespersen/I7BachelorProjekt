@@ -19,7 +19,7 @@ android:layout_height="match_parent">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Update Image" />
+            android:text="@string/Update_Avatar" />
 
         <EditText
             android:id="@+id/etName"
@@ -32,7 +32,7 @@ android:layout_height="match_parent">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Update Name" />
+            android:text="@string/Update_Username" />
 
         <EditText
             android:id="@+id/etEmail"
@@ -47,7 +47,7 @@ android:layout_height="match_parent">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Update Email" />
+            android:text="@string/Update_Email" />
 
         <EditText
             android:id="@+id/etPhone"
@@ -62,7 +62,7 @@ android:layout_height="match_parent">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Update Phone" />
+            android:text="@string/Update_Phone_number" />
 
         <EditText
             android:id="@+id/etPassword"
@@ -76,7 +76,7 @@ android:layout_height="match_parent">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Update Password" />
+            android:text="@string/Update_Password" />
 
     </LinearLayout>
 </ScrollView>
