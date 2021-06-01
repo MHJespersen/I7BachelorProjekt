@@ -26,20 +26,25 @@ import mmm.i7bachelor_smartsale.app.R;
 public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelectedListener{
 
     private enum StandEnum {
-        Stand,
-        Ny,
-        God,
-        Brugt
+        Defective,
+        Good,
+        Decent,
+        Perfect
     }
     //Created this way to be able to hold special characters
     private enum MærkeEnum{
-        Mærke("Mærke"),
-        LG("LG"),
-        Samsung("Samsung"),
-        Panasonic("Panasonic"),
-        Philips("Philips"),
-        Sony("Sony"),
-        BogO("B&O");
+        AOC("AOC"),
+        Acer("Acer"),
+        AlfaView("AlfaView"),
+        Amitech("Amitech"),
+        Other("Other"),
+        BogO("B&O"),
+        Beko("Beko"),
+        Blaupunkt("Blaupunkt"),
+        Denver("Denver"),
+        Finlux("Finlux"),
+        Funai("Funai"),
+        Grundig("Grundig");
 
         private String value;
         MærkeEnum(String value)
@@ -52,6 +57,9 @@ public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelect
         }
     }
 
+    TextView textView_Brand;
+    TextView textView_Inches;
+    TextView textView_Condition;
     TextView textviewpris;
     TextView textview_pris;
     Button btn_predict;
@@ -96,6 +104,10 @@ public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void setupUI() {
+
+        textView_Brand = getView().findViewById(R.id.txtBrand);
+        textView_Inches = getView().findViewById(R.id.txtInches);
+        textView_Condition = getView().findViewById(R.id.txtCondition);
         textviewpris = getView().findViewById(R.id.textView_testml);
         textview_pris = getView().findViewById(R.id.textView_pris);
         btn_predict = getView().findViewById(R.id.btn_predict);
@@ -120,9 +132,10 @@ public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelect
         Spinner tommerDropdown = getView().findViewById(R.id.tommerSpinner);
         Spinner standDropdown = getView().findViewById(R.id.standSpinner);
         //create a list of items for the spinner.
-        String[] maerker = new String[]{"Mærke", "B&O", "Samsung", "Panasonic", "Philips", "Sony","LG",};
+        String[] maerker = new String[]{"AOC", "Acer", "AlfaView", "Amitech", "Other", "Arena","B&O", "Beko",
+        "Blaupunkt", "Dantax", "Denver", "Finlux", "Funai", "Grundig"};
         String[] tommer = new String[]{"Tommer", "42", "46", "50", "55", "60","32"};
-        String[] stand = new String[]{"Stand", "God", "Brugt", "Ny"};
+        String[] stand = new String[]{"Defective", "Good", "Decent", "Perfect"};
 
         //create an adapter to describe how the items are displayed, adapters are used in several places in android.
         //There are multiple variations of this, but this is the basic variant.

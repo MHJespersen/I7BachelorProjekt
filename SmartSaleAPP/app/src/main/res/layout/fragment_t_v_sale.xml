@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/txtBrand"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.TVSaleFragment"
-    android:background="@color/backgroundColor">
+    android:background="@color/backgroundColor"
+    tools:context=".Activities.TVSaleFragment">
 
     <TextView
         android:id="@+id/Header"
@@ -99,5 +100,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/maerkeSpinner" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brand"
+        tools:layout_editor_absoluteX="179dp"
+        tools:layout_editor_absoluteY="196dp" />
+
+    <TextView
+        android:id="@+id/txtInches"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inches"
+        tools:layout_editor_absoluteX="173dp"
+        tools:layout_editor_absoluteY="290dp" />
+
+    <TextView
+        android:id="@+id/txtCondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Condition"
+        tools:layout_editor_absoluteX="176dp"
+        tools:layout_editor_absoluteY="389dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
