@@ -67,7 +67,7 @@
     <string name="label_mobilepay">Buy with:</string>
     <string name="label_mobilepayQR">Press the QR Code to start payment in MobilePay APP</string>
     <string name="Message">Message</string>
-    <string name="Predict">Predict></string>
+    <string name="Predict">Predict</string>
     <string name="Predicted_price">Predicted pris: </string>
     <string name="Predict_price_info">Set TV information to get a price prediction</string>
     <string name="Update_Password">Update Password</string>

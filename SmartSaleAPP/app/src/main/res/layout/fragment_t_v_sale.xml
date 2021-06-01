@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/txtBrand"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
@@ -11,20 +10,24 @@
     <TextView
         android:id="@+id/Header"
         android:layout_width="316dp"
-        android:layout_height="140dp"
-        android:layout_marginTop="52dp"
+        android:layout_height="74dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginEnd="47dp"
+        android:layout_marginBottom="79dp"
         android:gravity="center"
         android:text="Set TV information to get a price prediction"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/txtBrand"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCreateSaleHeader" />
 
     <TextView
         android:id="@+id/txtCreateSaleHeader"
         android:layout_width="159dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="23dp"
         android:gravity="center"
         android:text="@string/txtCreateSaleHeader"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -37,55 +40,60 @@
     <Spinner
         android:id="@+id/maerkeSpinner"
         android:layout_width="159dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="172dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="29dp"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/txtInches"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtCreateSaleHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/txtBrand" />
 
     <TextView
         android:id="@+id/textView_pris"
-        android:layout_width="143dp"
-        android:layout_height="28dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_testml"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.776"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_predict"
-        app:layout_constraintVertical_bias="0.502" />
+        app:layout_constraintStart_toEndOf="@+id/textView_testml"
+        app:layout_constraintTop_toTopOf="@+id/textView_testml" />
 
     <TextView
         android:id="@+id/textView_testml"
-        android:layout_width="108dp"
-        android:layout_height="30dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="58dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginBottom="19dp"
         android:text="@string/Predicted_price"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textView_pris"
-        app:layout_constraintHorizontal_bias="0.575"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_predict"
-        app:layout_constraintVertical_bias="0.508" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_predict" />
 
     <Spinner
         android:id="@+id/standSpinner"
         android:layout_width="159dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="52dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="43dp"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/btn_predict"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tommerSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCondition" />
 
     <Button
         android:id="@+id/btn_predict"
         android:layout_width="213dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="46dp"
         android:backgroundTint="@color/buttonColor"
         android:text="@string/Predict"
+        app:layout_constraintBottom_toTopOf="@+id/textView_testml"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/standSpinner" />
@@ -93,36 +101,45 @@
     <Spinner
         android:id="@+id/tommerSpinner"
         android:layout_width="159dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="52dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/txtCondition"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/maerkeSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/txtInches" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtBrand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:text="Brand"
-        tools:layout_editor_absoluteX="179dp"
-        tools:layout_editor_absoluteY="196dp" />
+        app:layout_constraintBottom_toTopOf="@+id/maerkeSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Header" />
 
     <TextView
         android:id="@+id/txtInches"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
         android:text="Inches"
-        tools:layout_editor_absoluteX="173dp"
-        tools:layout_editor_absoluteY="290dp" />
+        app:layout_constraintBottom_toTopOf="@+id/tommerSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/maerkeSpinner" />
 
     <TextView
         android:id="@+id/txtCondition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="84dp"
+        android:layout_height="0dp"
         android:text="Condition"
-        tools:layout_editor_absoluteX="176dp"
-        tools:layout_editor_absoluteY="389dp" />
+        app:layout_constraintBottom_toTopOf="@+id/standSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tommerSpinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

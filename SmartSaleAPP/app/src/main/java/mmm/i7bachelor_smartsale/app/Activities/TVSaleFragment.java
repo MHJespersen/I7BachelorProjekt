@@ -104,7 +104,6 @@ public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     private void setupUI() {
-
         textView_Brand = getView().findViewById(R.id.txtBrand);
         textView_Inches = getView().findViewById(R.id.txtInches);
         textView_Condition = getView().findViewById(R.id.txtCondition);
@@ -163,7 +162,6 @@ public class TVSaleFragment extends Fragment implements AdapterView.OnItemSelect
             else
             {
                 mærke = parent.getItemAtPosition(position).toString();
-                String test = String.valueOf(MærkeEnum.valueOf(mærke).ordinal());
                 if(mærke.equals("B&O"))
                     mærke = "BogO";
             }
