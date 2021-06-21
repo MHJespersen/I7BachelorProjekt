@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 if(!MessagesOpen)
                 {
                     OpenProfile();
-                    MessagesOpen = true;
                 }
                 return true;
             case R.id.messagesTxt:
